@@ -1832,26 +1832,28 @@ section {
 
   <!-- Influence Pattern Cards - Stacked -->
   <style>
-    .card-stack { position: relative; max-width: 700px; margin: 0 auto; min-height: 320px; padding-bottom: 20px; }
+    .card-stack { position: relative; max-width: 700px; margin: 0 auto; min-height: 320px; padding-bottom: 24px; }
     .card-stack-item {
       position: absolute; top: 0; left: 0; right: 0;
       padding: 28px 32px; border-radius: 6px;
       opacity: 0; pointer-events: none; cursor: pointer;
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.35s ease, transform 0.35s ease;
     }
     .card-stack-item.active {
-      opacity: 1; transform: translateY(0) scale(1);
-      pointer-events: auto; z-index: 3;
+      opacity: 1; transform: translate(0, 0);
+      pointer-events: auto; z-index: 4;
     }
     .card-stack-item.peek-1 {
-      opacity: 1; pointer-events: none; z-index: 2;
-      transform: translateY(8px) scale(0.97);
-      clip-path: inset(calc(100% - 10px) 0 0 0);
+      opacity: 0.7; pointer-events: none; z-index: 3;
+      transform: translate(6px, 6px);
     }
     .card-stack-item.peek-2 {
-      opacity: 1; pointer-events: none; z-index: 1;
-      transform: translateY(16px) scale(0.94);
-      clip-path: inset(calc(100% - 10px) 0 0 0);
+      opacity: 0.45; pointer-events: none; z-index: 2;
+      transform: translate(12px, 12px);
+    }
+    .card-stack-item.peek-3 {
+      opacity: 0.25; pointer-events: none; z-index: 1;
+      transform: translate(18px, 18px);
     }
     .card-stack-title { font-size: 13px; letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase; }
     .card-stack-body { font-size: 15.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 14px; }
@@ -1959,13 +1961,13 @@ section {
     let current = 0;
 
     function showCard(idx) {
-      cards.forEach(c => c.classList.remove('active', 'peek-1', 'peek-2'));
+      cards.forEach(c => c.classList.remove('active', 'peek-1', 'peek-2', 'peek-3'));
       dots.forEach(d => d.classList.remove('active'));
       cards[idx].classList.add('active');
-      const next1 = (idx + 1) % cards.length;
-      const next2 = (idx + 2) % cards.length;
-      cards[next1].classList.add('peek-1');
-      cards[next2].classList.add('peek-2');
+      const remaining = cards.length - 1 - idx;
+      if (remaining >= 1) cards[(idx + 1) % cards.length].classList.add('peek-1');
+      if (remaining >= 2) cards[(idx + 2) % cards.length].classList.add('peek-2');
+      if (remaining >= 3) cards[(idx + 3) % cards.length].classList.add('peek-3');
       dots[idx].classList.add('active');
       counter.textContent = String(idx + 1).padStart(2, '0') + ' / 06';
       current = idx;
