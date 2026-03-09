@@ -1193,11 +1193,15 @@ section {
 }
 
 /* ============ BADGE SHOWCASE ============ */
-.badge-showcase { display: flex; justify-content: center; align-items: flex-end; gap: 36px; margin: 24px auto 30px; flex-wrap: wrap; }
-.badge-showcase .badge-item { text-align: center; transition: transform 0.3s ease, filter 0.3s ease; cursor: default; }
-.badge-showcase .badge-item:hover { transform: scale(1.05); }
-.badge-showcase .badge-item:hover svg { filter: brightness(1.4) drop-shadow(0 0 12px rgba(57,255,20,0.5)); }
-.badge-showcase .badge-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; color: rgba(57,255,20,0.5); }
+.badge-showcase { display: flex; flex-direction: column; gap: 20px; max-width: 700px; margin: 24px auto 30px; }
+.badge-showcase .badge-item { display: flex; align-items: center; gap: 24px; padding: 20px 24px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); border-radius: 8px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: default; }
+.badge-showcase .badge-item:hover { transform: translateX(4px); }
+.badge-showcase .badge-item:nth-child(1):hover { border-color: rgba(255,215,0,0.3); }
+.badge-showcase .badge-item:nth-child(2):hover { border-color: rgba(192,192,192,0.3); }
+.badge-showcase .badge-item:nth-child(3):hover { border-color: rgba(205,127,50,0.3); }
+.badge-showcase .badge-item svg { flex-shrink: 0; }
+.badge-showcase .badge-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+.badge-showcase .badge-desc { font-size: 13px; color: var(--text); line-height: 1.7; margin-top: 6px; }
 
 /* ============ EMBEDDED MINI-DASHBOARD ============ */
 .mini-dashboard {
@@ -1908,43 +1912,6 @@ section {
   </div>
 
   <div class="badge-showcase">
-    <!-- Silver Badge -->
-    <div class="badge-item">
-      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(192,192,192,0.2));">
-        <defs>
-          <linearGradient id="silverStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#E8E8E8"/>
-            <stop offset="50%" stop-color="#C0C0C0"/>
-            <stop offset="100%" stop-color="#808080"/>
-          </linearGradient>
-          <pattern id="silverScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
-            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(192,192,192,0.06)" stroke-width="1"/>
-          </pattern>
-          <filter id="silverGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <!-- Hexagonal shield shape -->
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(192,192,192,0.1)" stroke="url(#silverStroke)" stroke-width="1.5"/>
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#silverScanlines)"/>
-        <!-- Inner frame lines -->
-        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-        <!-- Grid overlay -->
-        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <!-- Star symbol -->
-        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#C0C0C0" stroke-width="1.2" filter="url(#silverGlow)"/>
-        <!-- SILVER text -->
-        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="3" fill="#C0C0C0">SILVER</text>
-        <!-- Data readout decorations -->
-        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(192,192,192,0.3)" letter-spacing="1">TIER::02</text>
-      </svg>
-      <div class="badge-label">Outstanding Work</div>
-      <div style="font-size: 11px; color: var(--text); text-align: center; max-width: 140px; line-height: 1.5; margin-top: 4px;">Published in class showcase.</div>
-    </div>
-
     <!-- Gold Badge -->
     <div class="badge-item">
       <svg width="150" height="170" viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 10px rgba(255,215,0,0.25));">
@@ -1982,8 +1949,43 @@ section {
         <line x1="20" y1="38" x2="28" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
         <line x1="122" y1="38" x2="130" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
       </svg>
-      <div class="badge-label">Top Submission</div>
-      <div style="font-size: 11px; color: var(--text); text-align: center; max-width: 140px; line-height: 1.5; margin-top: 4px;">Showcased to future cohorts.</div>
+      <div>
+        <div class="badge-label" style="color: #FFD700;">Gold :: Top Submission</div>
+        <div class="badge-desc">The highest tier of recognition. Work that would genuinely belong on the front page. Showcased to future cohorts as the benchmark of what's possible in this module.</div>
+      </div>
+    </div>
+
+    <!-- Silver Badge -->
+    <div class="badge-item">
+      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(192,192,192,0.2));">
+        <defs>
+          <linearGradient id="silverStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E8E8E8"/>
+            <stop offset="50%" stop-color="#C0C0C0"/>
+            <stop offset="100%" stop-color="#808080"/>
+          </linearGradient>
+          <pattern id="silverScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
+            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(192,192,192,0.06)" stroke-width="1"/>
+          </pattern>
+          <filter id="silverGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(192,192,192,0.1)" stroke="url(#silverStroke)" stroke-width="1.5"/>
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#silverScanlines)"/>
+        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#C0C0C0" stroke-width="1.2" filter="url(#silverGlow)"/>
+        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="3" fill="#C0C0C0">SILVER</text>
+        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(192,192,192,0.3)" letter-spacing="1">TIER::02</text>
+      </svg>
+      <div>
+        <div class="badge-label" style="color: #C0C0C0;">Silver :: Outstanding Work</div>
+        <div class="badge-desc">Outstanding work that demonstrates strong analytical thinking and polished visual execution. Published in the class showcase as exemplary work for peer learning.</div>
+      </div>
     </div>
 
     <!-- Bronze Badge -->
@@ -2019,8 +2021,10 @@ section {
         <!-- Data readout decorations -->
         <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(205,127,50,0.3)" letter-spacing="1">TIER::03</text>
       </svg>
-      <div class="badge-label">Strong Submission</div>
-      <div style="font-size: 11px; color: var(--text); text-align: center; max-width: 140px; line-height: 1.5; margin-top: 4px;">Solid design thinking demonstrated.</div>
+      <div>
+        <div class="badge-label" style="color: #CD7F32;">Bronze :: Strong Submission</div>
+        <div class="badge-desc">A strong submission demonstrating solid design thinking, evidence-based choices, and clear communication of insights. Portfolio-worthy work you can be proud of.</div>
+      </div>
     </div>
   </div>
 
