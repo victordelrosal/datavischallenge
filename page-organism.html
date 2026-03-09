@@ -527,6 +527,14 @@ section {
   color: var(--cyan);
 }
 
+.expandable-content.open {
+  max-height: 600px !important;
+}
+#mission-arrow.open,
+#brainstorm-arrow.open {
+  transform: rotate(180deg);
+}
+
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.15; }
   50% { opacity: 0.35; }
@@ -1480,21 +1488,51 @@ section {
       <span class="leader-line"></span>
     </div>
 
-    <!-- Mission statement -->
-    <div style="max-width: 700px; margin: 28px auto 0; padding: 24px 28px; border-left: 3px solid var(--green); background: rgba(57,255,20,0.04); border-radius: 0 8px 8px 0;">
-      <p style="font-size: 15px; color: var(--cyan); line-height: 1.6; margin: 0 0 14px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; font-size: 11px;">The Scenario</p>
-      <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 0 0 14px 0;">
-        Imagine you've been given a <span style="color: var(--green); font-weight: 600;">once-in-a-lifetime opportunity</span>. Your data visualisation will be published on the front page of the <span style="color: var(--cyan);">New York Times</span>, the <span style="color: var(--cyan);">Financial Times</span>, the <span style="color: var(--cyan);">Irish Times</span>, or any of the world's top 50 newspapers. Full page, above the fold. Every decision-maker on the planet will see it.
+    <!-- Mission statement (expandable) -->
+    <div id="mission-box" onclick="document.getElementById('mission-expand').classList.toggle('open');document.getElementById('mission-arrow').classList.toggle('open');" style="max-width: 700px; margin: 28px auto 0; padding: 20px 28px; border-left: 3px solid var(--green); background: rgba(57,255,20,0.04); border-radius: 0 8px 8px 0; cursor: pointer; transition: all 0.3s;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <p style="font-size: 11px; color: var(--cyan); line-height: 1.6; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;">The Scenario</p>
+        <span id="mission-arrow" style="color: var(--green); font-size: 18px; transition: transform 0.3s; display: inline-block;">&#9662;</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text); line-height: 1.7; margin: 10px 0 0 0;">
+        Your visualisation on the front page of the world's top newspapers. One image to influence every decision-maker on the planet. <span style="color: var(--green); font-size: 11px;">Click to read more</span>
       </p>
-      <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 0 0 14px 0;">
-        This single image has the power to <span style="color: var(--green); font-weight: 600;">sway how world leaders think, act, and allocate resources</span>. It can shift public opinion, redirect funding, spark policy change, or save lives.
+      <div id="mission-expand" class="expandable-content" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
+        <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 14px 0 14px 0;">
+          Imagine you've been given a <span style="color: var(--green); font-weight: 600;">once-in-a-lifetime opportunity</span>. Your data visualisation will be published on the front page of the <span style="color: var(--cyan);">New York Times</span>, the <span style="color: var(--cyan);">Financial Times</span>, the <span style="color: var(--cyan);">Irish Times</span>, or any of the world's top 50 newspapers. Full page, above the fold. Every decision-maker on the planet will see it.
+        </p>
+        <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 0 0 14px 0;">
+          This single image has the power to <span style="color: var(--green); font-weight: 600;">sway how world leaders think, act, and allocate resources</span>. It can shift public opinion, redirect funding, spark policy change, or save lives.
+        </p>
+        <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 0 0 14px 0;">
+          <span style="color: var(--orange); font-weight: 600;">What would you visualise?</span> What story, grounded in provable facts and real datasets, is so compelling that it deserves that front page? What non-obvious insight, hidden in the data, could change the conversation?
+        </p>
+        <p style="font-size: 14px; color: rgba(200,200,200,0.8); line-height: 1.9; margin: 0; font-style: italic;">
+          Your challenge: craft that visualisation. Back it with evidence. Design it to be understood in seconds and remembered for years.
+        </p>
+      </div>
+    </div>
+
+    <!-- Brainstorm deliverable callout (expandable) -->
+    <div onclick="document.getElementById('brainstorm-expand').classList.toggle('open');document.getElementById('brainstorm-arrow').classList.toggle('open');" style="max-width: 700px; margin: 16px auto 0; padding: 16px 24px; border: 1px solid rgba(255,107,0,0.3); background: rgba(255,107,0,0.05); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <p style="font-size: 11px; letter-spacing: 3px; color: var(--orange); text-transform: uppercase; font-weight: 600; margin: 0;">First Deliverable: Brainstorm Document</p>
+        <span id="brainstorm-arrow" style="color: var(--orange); font-size: 18px; transition: transform 0.3s; display: inline-block;">&#9662;</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text); line-height: 1.7; margin: 8px 0 0 0;">
+        Due <strong style="color: var(--orange);">Tue 10 Mar, 4:30 PM</strong>: Word doc with 3 project ideas, messages, pros/cons. <span style="color: var(--orange); font-size: 11px;">Click for details</span>
       </p>
-      <p style="font-size: 14px; color: var(--white); line-height: 1.9; margin: 0 0 14px 0;">
-        <span style="color: var(--orange); font-weight: 600;">What would you visualise?</span> What story, grounded in provable facts and real datasets, is so compelling that it deserves that front page? What non-obvious insight, hidden in the data, could change the conversation?
-      </p>
-      <p style="font-size: 14px; color: rgba(200,200,200,0.8); line-height: 1.9; margin: 0; font-style: italic;">
-        Your challenge: craft that visualisation. Back it with evidence. Design it to be understood in seconds and remembered for years.
-      </p>
+      <div id="brainstorm-expand" class="expandable-content" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
+        <p style="font-size: 13px; color: var(--white); line-height: 1.8; margin: 12px 0 10px 0;">
+          Submit a Word document (max 500 words, ~2 pages) containing:
+        </p>
+        <div style="font-size: 13px; color: var(--text); line-height: 1.9; padding-left: 16px; border-left: 2px solid rgba(255,107,0,0.2);">
+          <p style="margin: 0 0 6px 0;"><span style="color: var(--orange);">1.</span> At least <strong style="color: var(--white);">3 project ideas</strong> your team is considering</p>
+          <p style="margin: 0 0 6px 0;"><span style="color: var(--orange);">2.</span> For each idea: the <strong style="color: var(--white);">key message</strong> you'd want to convey</p>
+          <p style="margin: 0 0 6px 0;"><span style="color: var(--orange);">3.</span> Notes, <strong style="color: var(--white);">pros and cons</strong> for each direction</p>
+          <p style="margin: 0;"><span style="color: var(--orange);">4.</span> Internal team <strong style="color: var(--white);">discussion and reasoning</strong></p>
+        </div>
+      </div>
     </div>
 
     <div class="coordinates">[ module: 9DATAV, weight: 0.400 ] :: scroll to explore brief</div>
@@ -1517,9 +1555,9 @@ section {
         position: relative;
         z-index: 1;
       " onmouseover="this.style.transform='translateY(2px)';this.style.boxShadow='0 4px 0 #8B2500, 0 6px 14px rgba(255,85,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 0 #8B2500, 0 8px 20px rgba(255,85,0,0.4), 0 0 40px rgba(255,85,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';">
-        <div style="font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-bottom: 4px;">&#9888; Team Registration Deadline</div>
+        <div style="font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-bottom: 4px;">&#9888; Due Tomorrow</div>
         <div style="font-size: 22px; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Tue 10 Mar, 4:30 PM</div>
-        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px;">Submission via Moodle (link to be posted)</div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px;">Team registration + Brainstorm document (Word, max 500 words)</div>
       </div>
     </div>
 
@@ -2060,8 +2098,8 @@ section {
       <div class="gantt-bar">
         <div class="gantt-bar-fill"></div>
         <div class="gantt-date">10 Mar 2026</div>
-        <div class="gantt-label">Challenge Launch</div>
-        <div class="gantt-desc">Briefing in class, 2:00 PM. Teams formed. <strong style="color:var(--orange);">Team registration deadline: 4:30 PM.</strong></div>
+        <div class="gantt-label">Launch + Brainstorm Due</div>
+        <div class="gantt-desc">Briefing in class, 2:00 PM. Teams formed. <strong style="color:var(--orange);">By 4:30 PM: submit team registration + Brainstorm Doc</strong> (Word, max 500 words / ~2 pages): at least 3 project ideas, 3 messages you'd like to convey, with notes, pros and cons, and internal team discussion.</div>
       </div>
     </div>
     <div class="gantt-item">
