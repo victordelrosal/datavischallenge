@@ -426,21 +426,15 @@ section {
   font-weight: 800;
   color: var(--white);
   letter-spacing: -0.03em;
-  line-height: 1.4;
-  margin-bottom: -0.4em;
+  line-height: 1.5;
+  margin-bottom: 0;
   padding: 0 20px;
-  overflow: visible;
+  overflow: visible !important;
   max-width: 100vw;
-  box-sizing: border-box;
-  display: inline-block;
-  transform: translateZ(0);
-  will-change: transform;
+  display: flow-root;
 }
 .hero-content h1::after {
-  content: '';
-  display: block;
-  height: 0.3em;
-  width: 100%;
+  display: none;
 }
 
 .gradient-text {
@@ -449,12 +443,12 @@ section {
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  padding-bottom: 0.5em !important;
+  padding-bottom: 0.25em;
+  margin-bottom: -0.25em;
+  display: inline-block;
+  vertical-align: top;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  background-origin: border-box;
-  display: inline-block;
-  vertical-align: bottom;
 }
 
 .hero-content h1 .highlight {
@@ -1528,7 +1522,7 @@ section {
     </div>
 
     <!-- Mission statement (expandable) -->
-    <div id="mission-box" onclick="document.getElementById('mission-expand').classList.toggle('open');document.getElementById('mission-arrow').classList.toggle('open');" style="max-width: 700px; margin: 28px auto 0; padding: 20px 28px; border-left: 3px solid var(--green); background: rgba(57,255,20,0.04); border-radius: 0 8px 8px 0; cursor: pointer; transition: all 0.3s;">
+    <div id="mission-box" onclick="document.getElementById('mission-expand').classList.toggle('open');document.getElementById('mission-arrow').classList.toggle('open');" style="max-width: 700px; margin: 50px auto 0; padding: 20px 28px; border-left: 3px solid var(--green); background: rgba(57,255,20,0.04); border-radius: 0 8px 8px 0; cursor: pointer; transition: all 0.3s;">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <p style="font-size: 11px; color: var(--cyan); line-height: 1.6; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;">The Scenario</p>
         <span id="mission-arrow" style="color: var(--green); font-size: 18px; transition: transform 0.3s; display: inline-block;">&#9662;</span>
