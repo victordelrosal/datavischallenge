@@ -1830,76 +1830,143 @@ section {
     A head of state has 90 seconds between briefings. A CEO scans 200 slides a week. A minister sees ten reports before lunch. Your visualisation gets one glance. What makes that glance reshape a decision?
   </p>
 
-  <!-- Influence Pattern Cards -->
-  <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+  <!-- Influence Pattern Cards - Stacked -->
+  <style>
+    .card-stack { position: relative; max-width: 700px; margin: 0 auto; min-height: 320px; }
+    .card-stack-item {
+      position: absolute; top: 0; left: 0; right: 0;
+      padding: 28px 32px; border-radius: 6px;
+      opacity: 0; transform: translateY(20px) scale(0.97);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none; cursor: pointer;
+    }
+    .card-stack-item.active {
+      opacity: 1; transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .card-stack-title { font-size: 13px; letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase; }
+    .card-stack-body { font-size: 15.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 14px; }
+    .card-stack-hint { font-size: 14px; line-height: 1.6; }
+    .card-stack-nav { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+    .card-stack-dot {
+      width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+      background: transparent; cursor: pointer; transition: all 0.3s;
+    }
+    .card-stack-dot.active { background: var(--green); border-color: var(--green); }
+    .card-stack-counter {
+      text-align: center; margin-bottom: 12px;
+      font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.3);
+    }
+  </style>
 
-    <!-- Pattern 1: Make the Invisible Visible -->
-    <div style="border: 1px solid rgba(57,255,20,0.12); background: rgba(57,255,20,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; text-transform: uppercase;">01 :: Make the Invisible Visible</div>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 10px;">
+  <div class="card-stack-counter" id="card-counter">01 / 06</div>
+
+  <div class="card-stack" id="cardStack">
+    <!-- Pattern 1 -->
+    <div class="card-stack-item active" style="border: 1px solid rgba(57,255,20,0.15); background: rgba(57,255,20,0.04);" data-index="0">
+      <div class="card-stack-title" style="color: var(--green);">01 :: Make the Invisible Visible</div>
+      <p class="card-stack-body">
         The most powerful visualisations reveal what people <em>couldn't see</em> in the raw numbers. Hans Rosling didn't show GDP tables; he showed 200 years of progress animated in 4 minutes, and world leaders changed their mental model of global poverty overnight.
       </p>
-      <p style="font-size: 11px; color: rgba(0,229,255,0.6); line-height: 1.5;">
+      <p class="card-stack-hint" style="color: rgba(0,229,255,0.6);">
         Ask yourself: what pattern is hiding in this data that, once seen, cannot be unseen?
       </p>
     </div>
 
-    <!-- Pattern 2: One Chart, One Insight -->
-    <div style="border: 1px solid rgba(0,229,255,0.12); background: rgba(0,229,255,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase;">02 :: One Chart, One Insight, One Action</div>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 10px;">
+    <!-- Pattern 2 -->
+    <div class="card-stack-item" style="border: 1px solid rgba(0,229,255,0.15); background: rgba(0,229,255,0.04);" data-index="1">
+      <div class="card-stack-title" style="color: var(--cyan);">02 :: One Chart, One Insight, One Action</div>
+      <p class="card-stack-body">
         A dashboard with 47 metrics changes nothing. Florence Nightingale's single polar area diagram convinced the British War Office to fund sanitation reforms. It worked because it carried one devastating message: <em>more soldiers die from preventable disease than from combat</em>. The action was obvious.
       </p>
-      <p style="font-size: 11px; color: rgba(0,229,255,0.6); line-height: 1.5;">
+      <p class="card-stack-hint" style="color: rgba(0,229,255,0.6);">
         If a CEO can't articulate what to do differently after seeing your chart, it hasn't influenced anything.
       </p>
     </div>
 
-    <!-- Pattern 3: Provable, Not Persuasive -->
-    <div style="border: 1px solid rgba(255,107,0,0.12); background: rgba(255,107,0,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--orange); margin-bottom: 8px; text-transform: uppercase;">03 :: Grounded in Evidence, Not Opinion</div>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 10px;">
+    <!-- Pattern 3 -->
+    <div class="card-stack-item" style="border: 1px solid rgba(255,107,0,0.15); background: rgba(255,107,0,0.04);" data-index="2">
+      <div class="card-stack-title" style="color: var(--orange);">03 :: Grounded in Evidence, Not Opinion</div>
+      <p class="card-stack-body">
         Decision-makers are surrounded by people trying to sell them something. What cuts through? Data that can withstand scrutiny. Every number traceable to a source. Every scale honest. Every encoding truthful. The FT's COVID tracker influenced government policy across Europe because every data point was verifiable and updated daily.
       </p>
-      <p style="font-size: 11px; color: rgba(0,229,255,0.6); line-height: 1.5;">
+      <p class="card-stack-hint" style="color: rgba(0,229,255,0.6);">
         Influence built on distortion collapses. Influence built on evidence compounds.
       </p>
     </div>
 
-    <!-- Pattern 4: Emotional Resonance Through Honesty -->
-    <div style="border: 1px solid rgba(57,255,20,0.12); background: rgba(57,255,20,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; text-transform: uppercase;">04 :: Felt, Not Just Read</div>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 10px;">
+    <!-- Pattern 4 -->
+    <div class="card-stack-item" style="border: 1px solid rgba(57,255,20,0.15); background: rgba(57,255,20,0.04);" data-index="3">
+      <div class="card-stack-title" style="color: var(--green);">04 :: Felt, Not Just Read</div>
+      <p class="card-stack-body">
         The NYT's "An Incalculable Loss" front page listed 1,000 COVID victims' names in text. No chart. No axis. Just names. It made a number <em>feel</em> like people. The best data visualisations don't just inform, they create a moment of emotional recognition that makes inaction feel impossible.
       </p>
-      <p style="font-size: 11px; color: rgba(0,229,255,0.6); line-height: 1.5;">
+      <p class="card-stack-hint" style="color: rgba(0,229,255,0.6);">
         Data tells you what happened. Great visualisation makes you feel why it matters.
       </p>
     </div>
 
-    <!-- Pattern 5: Design for the Audience's Mental Model -->
-    <div style="border: 1px solid rgba(0,229,255,0.12); background: rgba(0,229,255,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase;">05 :: Know Your Decision-Maker</div>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 10px;">
+    <!-- Pattern 5 -->
+    <div class="card-stack-item" style="border: 1px solid rgba(0,229,255,0.15); background: rgba(0,229,255,0.04);" data-index="4">
+      <div class="card-stack-title" style="color: var(--cyan);">05 :: Know Your Decision-Maker</div>
+      <p class="card-stack-body">
         A finance minister thinks in budgets and fiscal quarters. A health minister thinks in mortality rates and hospital capacity. A CEO thinks in market share and growth curves. The same climate dataset demands a completely different visualisation depending on who needs to act. Match the encoding to the audience's existing mental model, and the insight lands instantly.
       </p>
-      <p style="font-size: 11px; color: rgba(0,229,255,0.6); line-height: 1.5;">
+      <p class="card-stack-hint" style="color: rgba(0,229,255,0.6);">
         The question isn't "what chart type?" but "who decides, and what framework do they already use?"
       </p>
     </div>
 
-    <!-- Pattern 6: The Front-Page Test -->
-    <div style="border: 1px solid rgba(255,107,0,0.12); background: rgba(255,107,0,0.03); padding: 20px 24px; border-radius: 4px;">
-      <div style="font-size: 10px; letter-spacing: 3px; color: var(--orange); margin-bottom: 8px; text-transform: uppercase;">06 :: The Front-Page Test</div>
-      <p style="font-size: 13px; color: var(--white); line-height: 1.8; text-align: center; padding: 10px 0;">
+    <!-- Pattern 6 -->
+    <div class="card-stack-item" style="border: 1px solid rgba(255,107,0,0.15); background: rgba(255,107,0,0.04);" data-index="5">
+      <div class="card-stack-title" style="color: var(--orange);">06 :: The Front-Page Test</div>
+      <p class="card-stack-body" style="color: var(--white); text-align: center;">
         "Would this visualisation survive the front page of the Financial Times? Would an editor stake the paper's reputation on its accuracy? Would a prime minister pause their morning and say: we need to talk about this?"
       </p>
-      <p style="font-size: 11px; color: rgba(57,255,20,0.5); text-align: center;">
+      <p class="card-stack-hint" style="color: rgba(57,255,20,0.5); text-align: center;">
         If the answer is yes, you've built something that matters.
       </p>
     </div>
-
   </div>
+
+  <div class="card-stack-nav" id="cardDots">
+    <div class="card-stack-dot active" data-index="0"></div>
+    <div class="card-stack-dot" data-index="1"></div>
+    <div class="card-stack-dot" data-index="2"></div>
+    <div class="card-stack-dot" data-index="3"></div>
+    <div class="card-stack-dot" data-index="4"></div>
+    <div class="card-stack-dot" data-index="5"></div>
+  </div>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <span style="font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 1px;">CLICK CARD TO ADVANCE</span>
+  </div>
+
+  <script>
+  (function() {
+    const cards = document.querySelectorAll('#cardStack .card-stack-item');
+    const dots = document.querySelectorAll('#cardDots .card-stack-dot');
+    const counter = document.getElementById('card-counter');
+    let current = 0;
+
+    function showCard(idx) {
+      cards.forEach(c => c.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      cards[idx].classList.add('active');
+      dots[idx].classList.add('active');
+      counter.textContent = String(idx + 1).padStart(2, '0') + ' / 06';
+      current = idx;
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => showCard((current + 1) % cards.length));
+    });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => showCard(parseInt(dot.dataset.index)));
+    });
+  })();
+  </script>
 
   <!-- Real-World Examples Bar -->
   <div style="max-width: 800px; margin: 40px auto 0; border-top: 1px solid rgba(57,255,20,0.1); padding-top: 24px;">
