@@ -1616,27 +1616,21 @@ section {
 
     <div class="coordinates">[ module: 9DATAV, weight: 0.400 ] :: shortlink: <span style="color: var(--cyan); font-weight: 600;">vdr.me/dvc</span> :: scroll to explore brief</div>
 
-    <!-- Team deadline alert button -->
-    <div style="margin-top: 24px; display: inline-block; cursor: pointer; position: relative;">
+    <!-- Team deadline alert button (deprecated - past date) -->
+    <div style="margin-top: 24px; display: inline-block; position: relative; opacity: 0.35; pointer-events: none;">
       <div style="
         padding: 16px 36px;
-        background: linear-gradient(145deg, #FF8C00, #FF5500, #CC3300);
+        background: linear-gradient(145deg, #555, #444, #333);
         border-radius: 12px;
-        box-shadow:
-          0 6px 0 #8B2500,
-          0 8px 20px rgba(255,85,0,0.4),
-          0 0 40px rgba(255,85,0,0.15),
-          inset 0 1px 0 rgba(255,255,255,0.25),
-          inset 0 -2px 4px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 0 #222, 0 6px 12px rgba(0,0,0,0.3);
         text-align: center;
-        transform: translateY(0);
-        transition: transform 0.1s, box-shadow 0.1s;
         position: relative;
         z-index: 1;
-      " onmouseover="this.style.transform='translateY(2px)';this.style.boxShadow='0 4px 0 #8B2500, 0 6px 14px rgba(255,85,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 0 #8B2500, 0 8px 20px rgba(255,85,0,0.4), 0 0 40px rgba(255,85,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';">
-        <div style="font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-bottom: 4px;">&#9888; Due</div>
-        <div style="font-size: 22px; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Tue 10 Mar, 4:30 PM</div>
-        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px;">Team registration + Brainstorm document (Word, max 500 words)</div>
+        text-decoration: line-through;
+      ">
+        <div style="font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 4px;">&#10003; Completed</div>
+        <div style="font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.5); text-decoration: line-through;">Tue 10 Mar, 4:30 PM</div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px;">Team registration + Brainstorm document</div>
       </div>
     </div>
 
