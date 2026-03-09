@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23050510'/%3E%3Crect x='5' y='18' width='5' height='9' rx='1' fill='%2300e5ff'/%3E%3Crect x='13' y='10' width='5' height='17' rx='1' fill='%23f59e42'/%3E%3Crect x='21' y='5' width='5' height='22' rx='1' fill='%23ff6b6b'/%3E%3C/svg%3E">
+<title>Data Visualisation Innovation Challenge 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0A0E1A;
+  --green: #39FF14;
+  --cyan: #00E5FF;
+  --orange: #FF6B00;
+  --grid: rgba(255,255,255,0.04);
+  --grid-strong: rgba(255,255,255,0.08);
+  --text: #D0D0D0;
+  --white: #FFFFFF;
+  --dim: rgba(57,255,20,0.15);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+  cursor: none;
+}
+
+/* ============ CUSTOM CURSOR (from composite-dark, adapted to organism palette) ============ */
+#cursor {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  width: 8px; height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 9998;
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,107,0,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width 0.25s, height 0.25s, opacity 0.2s;
+}
+
+/* ============ FILM GRAIN OVERLAY ============ */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9997;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ============ COORDINATE GRID OVERLAY ============ */
+#grid-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.grid-number {
+  position: fixed;
+  font-size: 9px;
+  color: rgba(57,255,20,0.2);
+  font-family: 'JetBrains Mono', monospace;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ============ BACKGROUND TOPOLOGY ============ */
+#topology-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+/* ============ MAIN CONTENT ============ */
+main {
+  position: relative;
+  z-index: 3;
+}
+
+/* ============ NAVIGATION AXIS ============ */
+#nav-axis {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 48px;
+  z-index: 100;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(57,255,20,0.15);
+}
+
+#nav-axis svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-tick { cursor: pointer; }
+.nav-tick text {
+  fill: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  transition: fill 0.3s;
+}
+.nav-tick:hover text { fill: var(--green); }
+.nav-tick line {
+  stroke: rgba(57,255,20,0.4);
+  transition: stroke 0.3s;
+}
+.nav-tick:hover line { stroke: var(--green); }
+
+#playhead {
+  transition: cx 0.3s ease;
+}
+
+/* ============ SECTION STYLING ============ */
+section {
+  min-height: 100vh;
+  padding: 100px 40px 60px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  section { padding: 80px 20px 40px; }
+}
+
+/* ============ AXIS LABEL HEADINGS ============ */
+.axis-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 60px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+
+.axis-heading.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.axis-heading .tick-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.axis-heading .tick-mark {
+  width: 2px;
+  height: 20px;
+  background: var(--green);
+}
+
+.axis-heading .tick-minor {
+  width: 1px;
+  height: 10px;
+  background: rgba(57,255,20,0.4);
+}
+
+.axis-heading h2 {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+.axis-heading .axis-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--green), transparent);
+}
+
+.axis-heading .axis-value {
+  font-size: 10px;
+  color: rgba(57,255,20,0.5);
+  letter-spacing: 2px;
+}
+
+/* ============ SPARKLINE CARDS ============ */
+.spark-card {
+  position: relative;
+  padding: 30px;
+  margin: 20px 0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.spark-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.spark-card svg.spark-border {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.spark-border path {
+  fill: none;
+  stroke: rgba(57,255,20,0.2);
+  stroke-width: 1.5;
+  transition: stroke 0.4s;
+}
+
+.spark-card:hover .spark-border path {
+  stroke: rgba(57,255,20,0.5);
+}
+
+/* ============ DATA POINT BUTTONS ============ */
+.data-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 10px 20px;
+  position: relative;
+  text-decoration: none;
+}
+
+.data-btn .dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.data-btn .dot::after {
+  content: '';
+  position: absolute;
+  top: -4px; left: -4px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--green);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.data-btn:hover .dot {
+  box-shadow: 0 0 20px var(--green);
+  transform: scale(1.3);
+}
+
+.data-btn:hover .dot::after {
+  opacity: 1;
+  animation: pulse-ring 1.5s infinite;
+}
+
+.data-btn:hover { color: var(--white); }
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ============ ANNOTATION TEXT ============ */
+.annotation {
+  position: relative;
+  padding-left: 30px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 700px;
+}
+
+.annotation::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--cyan), transparent);
+}
+
+.annotation::after {
+  content: '';
+  position: absolute;
+  left: -3px; top: 0;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* ============ LOLLIPOP LISTS ============ */
+.lollipop-list {
+  list-style: none;
+  padding: 0;
+}
+
+.lollipop-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.5s ease;
+}
+
+.lollipop-list li.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.lollipop-list li .lollipop-line {
+  width: 40px;
+  height: 1px;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.lollipop-list li .lollipop-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  flex-shrink: 0;
+}
+
+.lollipop-list li span {
+  font-size: 13px;
+}
+
+/* ============ SECTION DIVIDERS (animated sparklines) ============ */
+.section-divider {
+  width: 100%;
+  height: 60px;
+  overflow: visible;
+}
+
+.section-divider path {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 1.5;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  transition: stroke-dashoffset 2s ease;
+}
+
+.section-divider.visible path {
+  stroke-dashoffset: 0;
+}
+
+/* ============ HERO ============ */
+#hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+#hero-radials {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vmin; height: 90vmin;
+  pointer-events: none;
+}
+
+#hero-radials line {
+  stroke: rgba(57,255,20,0.08);
+  stroke-width: 0.5;
+}
+
+#hero-radials circle.origin {
+  fill: var(--green);
+  filter: drop-shadow(0 0 12px var(--green));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+.hero-content .chart-title-label {
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: rgba(57,255,20,0.6);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hero-content h1 {
+  font-size: clamp(1.8rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.hero-content h1 .highlight {
+  color: var(--green);
+  text-shadow: 0 0 30px rgba(57,255,20,0.4);
+}
+
+.hero-content .subtitle-annotation {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: var(--cyan);
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.subtitle-annotation .leader-line {
+  width: 40px;
+  height: 1px;
+  background: var(--cyan);
+}
+
+.hero-content .coordinates {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 24px;
+  letter-spacing: 3px;
+}
+
+/* ============ HERO CTA BUTTONS ============ */
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.hero-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.hero-cta-btn.primary {
+  background: rgba(57,255,20,0.15);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.hero-cta-btn.primary::before {
+  content: '';
+  position: absolute; inset: -3px;
+  background: var(--green);
+  filter: blur(18px);
+  opacity: 0.15;
+  z-index: -1;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.hero-cta-btn.primary:hover {
+  background: rgba(57,255,20,0.25);
+  box-shadow: 0 0 30px rgba(57,255,20,0.3);
+  color: var(--white);
+}
+
+.hero-cta-btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+}
+
+.hero-cta-btn.ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+/* ============ FLOATING DATA CARDS ============ */
+.float-card {
+  position: absolute;
+  background: rgba(10,14,26,0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(57,255,20,0.15);
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.float-card .fc-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+.float-card .fc-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 2px;
+}
+
+.float-card.fc-1 { top: 25%; right: 10%; animation: floatY 6s ease-in-out infinite; }
+.float-card.fc-2 { bottom: 28%; left: 6%; animation: floatY 7s ease-in-out infinite reverse; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* ============ COUNTDOWN GAUGES ============ */
+#countdown-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.gauge {
+  width: 100px; height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.gauge svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge .gauge-bg {
+  fill: none;
+  stroke: rgba(57,255,20,0.1);
+  stroke-width: 3;
+}
+
+.gauge .gauge-fill {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px var(--green));
+  transition: stroke-dashoffset 1s ease;
+}
+
+.gauge .gauge-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--white);
+  position: relative;
+  z-index: 2;
+}
+
+.gauge .gauge-label {
+  font-size: 9px;
+  color: rgba(57,255,20,0.6);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 2;
+  margin-top: 2px;
+}
+
+/* ============ CATEGORIES (Quadrant Scatter) ============ */
+#categories-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  #categories-grid { grid-template-columns: 1fr; }
+}
+
+#categories-grid::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(57,255,20,0.2);
+}
+
+#categories-grid::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(57,255,20,0.2);
+}
+
+@media (max-width: 768px) {
+  #categories-grid::before, #categories-grid::after { display: none; }
+}
+
+.quadrant {
+  padding: 40px;
+  position: relative;
+  min-height: 280px;
+}
+
+.quadrant .q-label {
+  font-size: 9px;
+  color: rgba(57,255,20,0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.quadrant h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.quadrant:nth-child(1) h3 { color: var(--green); }
+.quadrant:nth-child(2) h3 { color: var(--cyan); }
+.quadrant:nth-child(3) h3 { color: var(--orange); }
+.quadrant:nth-child(4) h3 { color: #B388FF; }
+
+.quadrant p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.quadrant .lo-tags {
+  margin-top: 12px;
+  font-size: 9px;
+  color: rgba(57,255,20,0.5);
+  letter-spacing: 1px;
+}
+
+.quadrant .scatter-dots {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  opacity: 0.15;
+}
+
+/* ============ DELIVERABLES CARDS ============ */
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .deliverables-grid { grid-template-columns: 1fr; }
+}
+
+.deliverable-card {
+  position: relative;
+  padding: 30px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.deliverable-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.deliverable-card svg.spark-border {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.deliverable-card .d-weight {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green);
+  opacity: 0.3;
+  position: absolute;
+  top: 16px;
+  right: 24px;
+}
+
+.deliverable-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.deliverable-card p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+/* ============ PRIZES (Bubble Chart) ============ */
+#prizes-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding: 40px 0;
+}
+
+.prize-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.prize-bubble.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.prize-bubble .bubble {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  cursor: default;
+  transition: all 0.3s;
+}
+
+.prize-bubble:nth-child(1) .bubble {
+  width: 180px; height: 180px;
+  background: radial-gradient(circle at 30% 30%, rgba(57,255,20,0.2), rgba(57,255,20,0.05));
+  border: 2px solid rgba(57,255,20,0.4);
+  box-shadow: 0 0 40px rgba(57,255,20,0.1), inset 0 0 40px rgba(57,255,20,0.05);
+}
+
+.prize-bubble:nth-child(2) .bubble {
+  width: 140px; height: 140px;
+  background: radial-gradient(circle at 30% 30%, rgba(0,229,255,0.2), rgba(0,229,255,0.05));
+  border: 2px solid rgba(0,229,255,0.4);
+  box-shadow: 0 0 30px rgba(0,229,255,0.1), inset 0 0 30px rgba(0,229,255,0.05);
+}
+
+.prize-bubble:nth-child(3) .bubble {
+  width: 110px; height: 110px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,107,0,0.2), rgba(255,107,0,0.05));
+  border: 2px solid rgba(255,107,0,0.4);
+  box-shadow: 0 0 25px rgba(255,107,0,0.1), inset 0 0 25px rgba(255,107,0,0.05);
+}
+
+.prize-bubble:nth-child(4) .bubble {
+  width: 90px; height: 90px;
+  background: radial-gradient(circle at 30% 30%, rgba(179,136,255,0.2), rgba(179,136,255,0.05));
+  border: 2px solid rgba(179,136,255,0.4);
+  box-shadow: 0 0 20px rgba(179,136,255,0.1);
+}
+
+.prize-bubble .bubble:hover {
+  transform: scale(1.08);
+}
+
+.prize-bubble .amount {
+  font-size: clamp(14px, 2vw, 22px);
+  font-weight: 700;
+  color: var(--white);
+}
+
+.prize-bubble .prize-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text);
+  opacity: 0.7;
+  max-width: 120px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.prize-bubble .place-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.prize-bubble:nth-child(1) .place-label { color: var(--green); }
+.prize-bubble:nth-child(2) .place-label { color: var(--cyan); }
+.prize-bubble:nth-child(3) .place-label { color: var(--orange); }
+.prize-bubble:nth-child(4) .place-label { color: #B388FF; }
+
+/* ============ TIMELINE (Gantt) ============ */
+#gantt-timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-left: 40px;
+}
+
+.gantt-axis {
+  position: absolute;
+  left: 20px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--green), rgba(57,255,20,0.1));
+}
+
+.gantt-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  position: relative;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s ease;
+}
+
+.gantt-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.gantt-item .gantt-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.gantt-item:nth-child(even) .gantt-dot {
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+.gantt-item .gantt-bar {
+  flex: 1;
+  position: relative;
+}
+
+.gantt-item .gantt-bar-fill {
+  height: 6px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.gantt-item:nth-child(1) .gantt-bar-fill { width: 15%; background: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.3); }
+.gantt-item:nth-child(2) .gantt-bar-fill { width: 30%; background: var(--cyan); box-shadow: 0 0 8px rgba(0,229,255,0.3); }
+.gantt-item:nth-child(3) .gantt-bar-fill { width: 50%; background: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.3); }
+.gantt-item:nth-child(4) .gantt-bar-fill { width: 70%; background: var(--orange); box-shadow: 0 0 8px rgba(255,107,0,0.3); }
+.gantt-item:nth-child(5) .gantt-bar-fill { width: 90%; background: var(--cyan); box-shadow: 0 0 8px rgba(0,229,255,0.3); }
+.gantt-item:nth-child(6) .gantt-bar-fill { width: 100%; background: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.3); }
+
+.gantt-item .gantt-date {
+  font-size: 10px;
+  color: rgba(57,255,20,0.6);
+  letter-spacing: 1px;
+}
+
+.gantt-item .gantt-label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.gantt-item .gantt-desc {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 2px;
+}
+
+/* ============ ASSESSMENT (Radar backgrounds) ============ */
+#assessment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.assess-viz {
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(10,14,26,0.7);
+  border: 1px solid rgba(57,255,20,0.15);
+  border-radius: 8px;
+  padding: 32px;
+  backdrop-filter: blur(8px);
+}
+
+.assess-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .assess-layout { grid-template-columns: 1fr; }
+}
+
+.assess-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.assess-bar-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.assess-bar-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--white);
+  text-align: right;
+}
+
+.assess-bar-desc {
+  font-size: 9px;
+  color: rgba(255,255,255,0.35);
+  text-align: right;
+  grid-column: 1;
+  margin-top: -10px;
+}
+
+.assess-bar-track {
+  height: 14px;
+  background: rgba(57,255,20,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.assess-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transform-origin: left;
+  animation: growBar 1.5s ease forwards;
+}
+
+.assess-bar-pct {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* ============ CTA ============ */
+#cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  position: relative;
+}
+
+#cta-pulse {
+  width: 200px; height: 200px;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+#cta-pulse .ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid var(--green);
+  animation: cta-pulse-ring 3s infinite;
+}
+
+#cta-pulse .ring:nth-child(1) { width: 40px; height: 40px; animation-delay: 0s; }
+#cta-pulse .ring:nth-child(2) { width: 80px; height: 80px; animation-delay: 0.5s; }
+#cta-pulse .ring:nth-child(3) { width: 120px; height: 120px; animation-delay: 1s; }
+#cta-pulse .ring:nth-child(4) { width: 160px; height: 160px; animation-delay: 1.5s; }
+#cta-pulse .ring:nth-child(5) { width: 200px; height: 200px; animation-delay: 2s; }
+
+#cta-pulse .core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 30px var(--green), 0 0 60px rgba(57,255,20,0.3);
+}
+
+@keyframes cta-pulse-ring {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+}
+
+#cta h2 {
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+#cta .cta-sub {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  background: rgba(57,255,20,0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute; inset: -3px;
+  background: var(--green);
+  filter: blur(18px);
+  opacity: 0.15;
+  z-index: -1;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.cta-btn:hover {
+  background: rgba(57,255,20,0.2);
+  box-shadow: 0 0 30px rgba(57,255,20,0.2);
+  color: var(--white);
+}
+
+.cta-btn .btn-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.cta-info {
+  margin-top: 40px;
+  text-align: left;
+  max-width: 600px;
+}
+
+.cta-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.cta-info-item .info-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 4px var(--green);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.cta-info-item strong {
+  color: var(--cyan);
+}
+
+/* ============ FOOTER AXIS ============ */
+#footer-axis {
+  padding: 30px 40px;
+  text-align: center;
+  border-top: 1px solid rgba(57,255,20,0.1);
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px;
+}
+
+/* ============ SCROLL REVEAL ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============ Y-AXIS MARKERS ============ */
+.y-axis-marker {
+  position: absolute;
+  left: 10px;
+  font-size: 9px;
+  color: rgba(57,255,20,0.15);
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+/* ============ BADGE SHOWCASE ============ */
+.badge-showcase { display: flex; justify-content: center; align-items: flex-end; gap: 36px; margin: 24px auto 30px; flex-wrap: wrap; }
+.badge-showcase .badge-item { text-align: center; transition: transform 0.3s ease, filter 0.3s ease; cursor: default; }
+.badge-showcase .badge-item:hover { transform: scale(1.05); }
+.badge-showcase .badge-item:hover svg { filter: brightness(1.4) drop-shadow(0 0 12px rgba(57,255,20,0.5)); }
+.badge-showcase .badge-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; color: rgba(57,255,20,0.5); }
+
+/* ============ EMBEDDED MINI-DASHBOARD ============ */
+.mini-dashboard {
+  background: rgba(10,14,26,0.7);
+  border: 1px solid rgba(57,255,20,0.15);
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 40px;
+  backdrop-filter: blur(8px);
+}
+
+.mini-dashboard .viz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.mini-dashboard .viz-dots { display: flex; gap: 6px; }
+.mini-dashboard .viz-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(57,255,20,0.2); }
+
+.mini-dashboard .viz-chip {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: rgba(57,255,20,0.08);
+  color: rgba(57,255,20,0.7);
+  border: 1px solid rgba(57,255,20,0.15);
+}
+
+.bar-rows { display: flex; flex-direction: column; gap: 10px; }
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 36px;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+.bar-track {
+  height: 10px;
+  background: rgba(57,255,20,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--cyan), #B388FF);
+  box-shadow: 0 0 12px rgba(0,229,255,0.2);
+  animation: growBar 1.5s ease forwards;
+  transform-origin: left;
+}
+
+.bar-row:nth-child(2) .bar-fill { background: linear-gradient(90deg, #B388FF, #FF3D5A); animation-delay: 0.1s; }
+.bar-row:nth-child(3) .bar-fill { background: linear-gradient(90deg, var(--orange), #FF3D5A); animation-delay: 0.2s; }
+.bar-row:nth-child(4) .bar-fill { background: linear-gradient(90deg, var(--cyan), var(--orange)); animation-delay: 0.3s; }
+.bar-row:nth-child(5) .bar-fill { background: linear-gradient(90deg, #B388FF, var(--orange)); animation-delay: 0.4s; }
+
+/* Animated line chart */
+.line-embed {
+  margin-top: 20px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(57,255,20,0.08);
+}
+.line-embed svg { width: 100%; height: 100%; }
+
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.dashboard-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-split { grid-template-columns: 1fr; }
+}
+
+.donut-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.donut-chart {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--cyan) 0 28%,
+    #B388FF 28% 60%,
+    var(--orange) 60% 78%,
+    #FF3D5A 78% 100%
+  );
+  position: relative;
+  box-shadow: 0 0 30px rgba(155,109,255,0.15);
+  flex-shrink: 0;
+}
+
+.donut-chart::after {
+  content: '';
+  position: absolute;
+  inset: 22px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid rgba(57,255,20,0.1);
+}
+
+.donut-legend { font-size: 10px; color: rgba(255,255,255,0.5); }
+.donut-legend div { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* ============ LO MAPPING LIST ============ */
+.lo-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.lo-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.lo-list li .lo-marker {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 4px var(--cyan);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .float-card { display: none; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(57,255,20,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(57,255,20,0.2); }
+</style>
+</head>
+<body>
+
+<!-- ============ CUSTOM CURSOR ============ -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ============ BACKGROUND TOPOLOGY MESH ============ -->
+<canvas id="topology-canvas"></canvas>
+
+<!-- ============ COORDINATE GRID OVERLAY ============ -->
+<svg id="grid-overlay">
+  <defs>
+    <pattern id="smallGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(57,255,20,0.03)" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="bigGrid" width="200" height="200" patternUnits="userSpaceOnUse">
+      <rect width="200" height="200" fill="url(#smallGrid)"/>
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="rgba(57,255,20,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bigGrid)"/>
+</svg>
+
+<!-- ============ NAVIGATION AXIS ============ -->
+<nav id="nav-axis">
+  <svg viewBox="0 0 1200 48" preserveAspectRatio="none">
+    <!-- Main axis line -->
+    <line x1="50" y1="36" x2="1150" y2="36" stroke="rgba(57,255,20,0.3)" stroke-width="1"/>
+    <!-- Playhead -->
+    <circle id="playhead" cx="50" cy="36" r="5" fill="#39FF14" filter="url(#glow)">
+      <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <!-- Nav ticks -->
+    <g class="nav-tick" data-target="hero" transform="translate(100, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">ORIGIN</text>
+    </g>
+    <g class="nav-tick" data-target="about" transform="translate(280, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">BRIEF</text>
+    </g>
+    <g class="nav-tick" data-target="deliverables" transform="translate(460, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">DELIVERABLES</text>
+    </g>
+    <g class="nav-tick" data-target="timeline" transform="translate(640, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">TIMELINE</text>
+    </g>
+    <g class="nav-tick" data-target="assessment" transform="translate(820, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">ASSESSMENT</text>
+    </g>
+    <g class="nav-tick" data-target="cta" transform="translate(1020, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">SUBMIT</text>
+    </g>
+    <!-- Minor ticks -->
+    <line x1="190" y1="32" x2="190" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <line x1="370" y1="32" x2="370" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <line x1="550" y1="32" x2="550" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <line x1="730" y1="32" x2="730" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <line x1="920" y1="32" x2="920" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <line x1="1100" y1="32" x2="1100" y2="36" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+  </svg>
+</nav>
+
+<main>
+
+<!-- ============ HERO SECTION ============ -->
+<section id="hero">
+  <span class="y-axis-marker" style="top: 20%;">Y: 1.000</span>
+  <span class="y-axis-marker" style="top: 50%;">Y: 0.500</span>
+  <span class="y-axis-marker" style="top: 80%;">Y: 0.000</span>
+
+  <!-- Radial lines from origin -->
+  <svg id="hero-radials" viewBox="0 0 800 800">
+    <circle class="origin" cx="400" cy="400" r="4"/>
+    <!-- Radial lines -->
+    <line x1="400" y1="400" x2="400" y2="20"/>
+    <line x1="400" y1="400" x2="780" y2="400"/>
+    <line x1="400" y1="400" x2="400" y2="780"/>
+    <line x1="400" y1="400" x2="20" y2="400"/>
+    <line x1="400" y1="400" x2="680" y2="120"/>
+    <line x1="400" y1="400" x2="680" y2="680"/>
+    <line x1="400" y1="400" x2="120" y2="680"/>
+    <line x1="400" y1="400" x2="120" y2="120"/>
+    <line x1="400" y1="400" x2="600" y2="60"/>
+    <line x1="400" y1="400" x2="740" y2="200"/>
+    <line x1="400" y1="400" x2="740" y2="600"/>
+    <line x1="400" y1="400" x2="600" y2="740"/>
+    <line x1="400" y1="400" x2="200" y2="740"/>
+    <line x1="400" y1="400" x2="60" y2="600"/>
+    <line x1="400" y1="400" x2="60" y2="200"/>
+    <line x1="400" y1="400" x2="200" y2="60"/>
+    <!-- Concentric rings -->
+    <circle cx="400" cy="400" r="80" fill="none" stroke="rgba(57,255,20,0.05)" stroke-width="0.5"/>
+    <circle cx="400" cy="400" r="160" fill="none" stroke="rgba(57,255,20,0.05)" stroke-width="0.5"/>
+    <circle cx="400" cy="400" r="240" fill="none" stroke="rgba(57,255,20,0.05)" stroke-width="0.5"/>
+    <circle cx="400" cy="400" r="320" fill="none" stroke="rgba(57,255,20,0.05)" stroke-width="0.5"/>
+    <!-- Scatter points -->
+    <circle cx="320" cy="280" r="3" fill="rgba(0,229,255,0.3)"/>
+    <circle cx="500" cy="310" r="2" fill="rgba(0,229,255,0.2)"/>
+    <circle cx="280" cy="450" r="2.5" fill="rgba(255,107,0,0.3)"/>
+    <circle cx="540" cy="520" r="2" fill="rgba(57,255,20,0.3)"/>
+    <circle cx="350" cy="550" r="3" fill="rgba(0,229,255,0.2)"/>
+    <circle cx="480" cy="250" r="2" fill="rgba(255,107,0,0.2)"/>
+    <circle cx="260" cy="340" r="1.5" fill="rgba(57,255,20,0.3)"/>
+    <circle cx="560" cy="430" r="2.5" fill="rgba(0,229,255,0.3)"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="chart-title-label">fig. 1.0 :: challenge briefing</div>
+    <h1>Data<br><span class="highlight">Visualisation</span><br>Innovation Challenge</h1>
+    <div class="subtitle-annotation">
+      <span class="leader-line"></span>
+      9DATAV :: Continuous Assessment :: 40% of Module Grade
+      <span class="leader-line"></span>
+    </div>
+
+    <!-- Mission statement -->
+    <div style="max-width: 640px; margin: 20px auto 0; padding: 16px 24px; border-left: 2px solid var(--green); background: rgba(57,255,20,0.03);">
+      <p style="font-size: 13px; color: var(--white); line-height: 1.8; margin: 0;">
+        Build a single visualisation worthy of the front page of the <span style="color: var(--cyan);">New York Times</span>, the <span style="color: var(--cyan);">Financial Times</span>, or the <span style="color: var(--cyan);">Irish Times</span>. Grounded in real-world data and hard facts. Carrying non-obvious insights. Designed to reach decision-makers and <span style="color: var(--green); font-weight: 600;">influence how they think, act, and allocate resources</span>.
+      </p>
+    </div>
+
+    <div class="coordinates">[ module: 9DATAV, weight: 0.400 ] :: scroll to explore brief</div>
+
+    <!-- Team deadline alert button -->
+    <div style="margin-top: 24px; display: inline-block; cursor: pointer; position: relative;">
+      <div style="
+        padding: 16px 36px;
+        background: linear-gradient(145deg, #FF8C00, #FF5500, #CC3300);
+        border-radius: 12px;
+        box-shadow:
+          0 6px 0 #8B2500,
+          0 8px 20px rgba(255,85,0,0.4),
+          0 0 40px rgba(255,85,0,0.15),
+          inset 0 1px 0 rgba(255,255,255,0.25),
+          inset 0 -2px 4px rgba(0,0,0,0.15);
+        text-align: center;
+        transform: translateY(0);
+        transition: transform 0.1s, box-shadow 0.1s;
+        position: relative;
+        z-index: 1;
+      " onmouseover="this.style.transform='translateY(2px)';this.style.boxShadow='0 4px 0 #8B2500, 0 6px 14px rgba(255,85,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 0 #8B2500, 0 8px 20px rgba(255,85,0,0.4), 0 0 40px rgba(255,85,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.15)';">
+        <div style="font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-bottom: 4px;">&#9888; Team Registration Deadline</div>
+        <div style="font-size: 22px; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Tue 10 Mar, 4:30 PM</div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px;">Submission via Moodle (link to be posted)</div>
+      </div>
+    </div>
+
+    <!-- Countdown Gauges -->
+    <div id="countdown-section">
+      <div class="gauge" data-unit="days">
+        <svg viewBox="0 0 100 100">
+          <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+          <circle class="gauge-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"/>
+        </svg>
+        <span class="gauge-value" id="countdown-days">--</span>
+        <span class="gauge-label">Days</span>
+      </div>
+      <div class="gauge" data-unit="hours">
+        <svg viewBox="0 0 100 100">
+          <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+          <circle class="gauge-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"/>
+        </svg>
+        <span class="gauge-value" id="countdown-hours">--</span>
+        <span class="gauge-label">Hours</span>
+      </div>
+      <div class="gauge" data-unit="mins">
+        <svg viewBox="0 0 100 100">
+          <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+          <circle class="gauge-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"/>
+        </svg>
+        <span class="gauge-value" id="countdown-mins">--</span>
+        <span class="gauge-label">Mins</span>
+      </div>
+      <div class="gauge" data-unit="secs">
+        <svg viewBox="0 0 100 100">
+          <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+          <circle class="gauge-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="264"/>
+        </svg>
+        <span class="gauge-value" id="countdown-secs">--</span>
+        <span class="gauge-label">Secs</span>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="hero-ctas">
+      <a class="hero-cta-btn primary" href="#deliverables"><span class="btn-dot"></span> Go to Brief</a>
+      <a class="hero-cta-btn ghost" href="#assessment">View Assessment Criteria</a>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,30 Q50,10 100,30 T200,30 T300,25 T400,35 T500,20 T600,40 T700,28 T800,32 T900,22 T1000,38 T1100,26 T1200,30"/>
+</svg>
+
+<!-- ============ ABOUT / BRIEF SECTION ============ -->
+<section id="about">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>The Brief</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::01</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1100px; margin: 0 auto;">
+    <div>
+      <div class="spark-card reveal">
+        <svg class="spark-border" viewBox="0 0 400 200" preserveAspectRatio="none">
+          <path d="M0,10 Q20,0 40,8 T80,5 T120,12 T160,3 T200,10 T240,6 T280,14 T320,4 T360,9 T400,7 L400,190 Q380,200 360,192 T320,198 T280,188 T240,196 T200,190 T160,197 T120,185 T80,195 T40,188 T0,194 Z"/>
+        </svg>
+        <div style="font-size: 10px; color: rgba(57,255,20,0.5); letter-spacing: 2px; margin-bottom: 16px;">YOUR CHALLENGE</div>
+        <div class="annotation" style="margin: 0 0 20px 0;">
+          Transform a dataset into an interactive dashboard or report that communicates insight to a non-technical audience. This is not just a technical exercise: it is a test of your ability to think visually, design with intention, and tell a story that data alone cannot tell.
+        </div>
+        <ul class="lollipop-list">
+          <li><span class="lollipop-line"></span><span class="lollipop-dot"></span><span>Select or propose a real-world dataset with decision-making relevance</span></li>
+          <li><span class="lollipop-line"></span><span class="lollipop-dot"></span><span>Build an interactive dashboard using industry-standard tools</span></li>
+          <li><span class="lollipop-line"></span><span class="lollipop-dot"></span><span>Communicate clearly to non-technical stakeholders</span></li>
+          <li><span class="lollipop-line"></span><span class="lollipop-dot"></span><span>Write a design report: critique, principles, improvements</span></li>
+          <li><span class="lollipop-line"></span><span class="lollipop-dot"></span><span>Present and defend your design choices</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="spark-card reveal">
+        <svg class="spark-border" viewBox="0 0 400 280" preserveAspectRatio="none">
+          <path d="M0,10 Q20,0 40,8 T80,5 T120,12 T160,3 T200,10 T240,6 T280,14 T320,4 T360,9 T400,7 L400,270 Q380,280 360,272 T320,278 T280,268 T240,276 T200,270 T160,277 T120,265 T80,275 T40,268 T0,274 Z"/>
+        </svg>
+        <div style="font-size: 10px; color: rgba(57,255,20,0.5); letter-spacing: 2px; margin-bottom: 16px;">WHAT WE'RE REALLY ASSESSING</div>
+        <div class="annotation" style="margin: 0 0 20px 0;">
+          This challenge maps directly to the module learning outcomes. Every element of your submission is designed to demonstrate mastery of data visualisation as both a technical skill and a communication discipline.
+        </div>
+        <ul class="lo-list">
+          <li><span class="lo-marker"></span><span>LO1 :: Analyse theory and concepts of visualisation and data representation</span></li>
+          <li><span class="lo-marker"></span><span>LO3 :: Design, develop, and implement data visualisation processes</span></li>
+          <li><span class="lo-marker"></span><span>LO4 :: Synthesise information using industry-standard tools for non-technical audiences</span></li>
+          <li><span class="lo-marker"></span><span>LO5 :: Critically evaluate design principles and interaction strategies</span></li>
+          <li><span class="lo-marker"></span><span>LO6 :: Propose suitable visualisation design for specific data and context</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded Mini-Dashboard -->
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="mini-dashboard reveal">
+      <div class="viz-header">
+        <div class="viz-dots"><span></span><span></span><span></span></div>
+        <div class="viz-chip">2025 Entries by Region</div>
+      </div>
+      <div class="bar-rows">
+        <div class="bar-row"><span>Europe</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><strong>648</strong></div>
+        <div class="bar-row"><span>Asia</span><div class="bar-track"><div class="bar-fill" style="width:73%"></div></div><strong>552</strong></div>
+        <div class="bar-row"><span>Americas</span><div class="bar-track"><div class="bar-fill" style="width:59%"></div></div><strong>447</strong></div>
+        <div class="bar-row"><span>Africa</span><div class="bar-track"><div class="bar-fill" style="width:39%"></div></div><strong>298</strong></div>
+        <div class="bar-row"><span>Oceania</span><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><strong>198</strong></div>
+      </div>
+      <div class="donut-container" style="margin-top: 20px;">
+        <div class="donut-chart"></div>
+        <div class="donut-legend">
+          <div><div class="legend-dot" style="background:var(--cyan)"></div> Exploratory 28%</div>
+          <div><div class="legend-dot" style="background:#B388FF"></div> Storytelling 32%</div>
+          <div><div class="legend-dot" style="background:var(--orange)"></div> AI-Assisted 18%</div>
+          <div><div class="legend-dot" style="background:#FF3D5A"></div> Real-World 22%</div>
+        </div>
+      </div>
+      <!-- Animated line chart -->
+      <div class="line-embed">
+        <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="lineG" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="var(--cyan)"/>
+              <stop offset="50%" stop-color="#B388FF"/>
+              <stop offset="100%" stop-color="#FF3D5A"/>
+            </linearGradient>
+            <linearGradient id="fillG" x1="0%" x2="0%" y1="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(0,229,255,0.12)"/>
+              <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
+            </linearGradient>
+          </defs>
+          <g opacity="0.08" stroke="white" stroke-width="0.5">
+            <line x1="0" y1="25" x2="400" y2="25"/><line x1="0" y1="50" x2="400" y2="50"/><line x1="0" y1="75" x2="400" y2="75"/>
+          </g>
+          <path d="M0,75 C30,65 60,45 90,50 C120,55 150,78 180,62 C210,46 240,20 270,30 C300,40 330,60 360,48 C380,40 395,30 400,22 L400,100 L0,100 Z" fill="url(#fillG)"/>
+          <path d="M0,75 C30,65 60,45 90,50 C120,55 150,78 180,62 C210,46 240,20 270,30 C300,40 330,60 360,48 C380,40 395,30 400,22" fill="none" stroke="url(#lineG)" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="90" cy="50" r="3.5" fill="var(--cyan)"/>
+          <circle cx="180" cy="62" r="3.5" fill="#B388FF"/>
+          <circle cx="270" cy="30" r="3.5" fill="var(--orange)"/>
+          <circle cx="400" cy="22" r="4" fill="#FF3D5A" stroke="var(--bg)" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,40 Q60,15 120,35 T240,25 T360,45 T480,20 T600,38 T720,22 T840,42 T960,18 T1080,36 T1200,28"/>
+</svg>
+
+<!-- ============ DELIVERABLES SECTION ============ -->
+<section id="deliverables">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>Deliverables</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::03</div>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 40px;">
+    <span style="font-size: 11px; color: var(--text); max-width: 700px; display: inline-block; line-height: 1.8;">Every team submits exactly four components. Quality over quantity. Each component must demonstrate specific competencies.</span>
+  </div>
+
+  <div class="deliverables-grid">
+    <div class="deliverable-card spark-card reveal">
+      <svg class="spark-border" viewBox="0 0 400 250" preserveAspectRatio="none">
+        <path d="M0,10 Q20,0 40,8 T80,5 T120,12 T160,3 T200,10 T240,6 T280,14 T320,4 T360,9 T400,7 L400,240 Q380,250 360,242 T320,248 T280,238 T240,246 T200,240 T160,247 T120,235 T80,245 T40,238 T0,244 Z"/>
+      </svg>
+      <div class="d-weight">40%</div>
+      <h3>Interactive Dashboard</h3>
+      <p>Built with Power BI, Tableau, Python (Plotly/Dash/Streamlit), D3.js, or equivalent industry tool. Must be genuinely interactive: filters, drill-downs, hover details. Static screenshots will not be accepted.</p>
+    </div>
+    <div class="deliverable-card spark-card reveal">
+      <svg class="spark-border" viewBox="0 0 400 250" preserveAspectRatio="none">
+        <path d="M0,8 Q25,2 50,10 T100,4 T150,14 T200,6 T250,12 T300,3 T350,11 T400,5 L400,240 Q375,248 350,240 T300,246 T250,236 T200,244 T150,238 T100,248 T50,236 T0,242 Z"/>
+      </svg>
+      <div class="d-weight">30%</div>
+      <h3>Design Critique Report</h3>
+      <p>2,000 to 3,000 words. Critically evaluate your design choices. What worked, what didn't, and why. Reference specific visualisation principles by name (Tufte, Gestalt, Ware, Few). Include at least three alternative designs you considered and rejected.</p>
+    </div>
+    <div class="deliverable-card spark-card reveal">
+      <svg class="spark-border" viewBox="0 0 400 250" preserveAspectRatio="none">
+        <path d="M0,12 Q30,2 60,10 T120,6 T180,14 T240,4 T300,12 T360,7 T400,9 L400,240 Q370,248 340,238 T280,246 T220,236 T160,244 T100,238 T40,246 T0,240 Z"/>
+      </svg>
+      <div class="d-weight">15%</div>
+      <h3>Principles Documentation</h3>
+      <p>One-page summary mapping every design decision to a named principle. Colour choices, chart types, layout, typography: justify each with theory.</p>
+    </div>
+    <div class="deliverable-card spark-card reveal">
+      <svg class="spark-border" viewBox="0 0 400 250" preserveAspectRatio="none">
+        <path d="M0,6 Q20,14 40,4 T80,10 T120,3 T160,12 T200,5 T240,11 T280,6 T320,14 T360,4 T400,8 L400,240 Q380,250 360,240 T320,248 T280,236 T240,244 T200,238 T160,246 T120,234 T80,244 T40,236 T0,242 Z"/>
+      </svg>
+      <div class="d-weight">15%</div>
+      <h3>Innovation Statement</h3>
+      <p>500 words maximum. What is genuinely novel about your approach? What would you improve with more time? How does your visualisation make the viewer more capable, not more dependent?</p>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,32 Q60,8 120,30 T240,26 T360,38 T480,16 T600,34 T720,22 T840,36 T960,20 T1080,34 T1200,28"/>
+</svg>
+
+<!-- ============ WHAT EXCELLENCE LOOKS LIKE ============ -->
+<section id="excellence" class="reveal">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>What Excellence Looks Like</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::03.5</div>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <span style="font-size: 10px; color: rgba(57,255,20,0.4); letter-spacing: 3px;">PATTERNS FROM TOP-SCORING SUBMISSIONS IN THIS MODULE</span>
+  </div>
+
+  <p style="max-width: 700px; margin: 0 auto 30px; text-align: center; font-size: 13px; color: var(--text);">
+    These anonymised examples are drawn from the highest-scoring work submitted in this module. Study the patterns. The rubric rewards specificity, not volume.
+  </p>
+
+  <!-- Excellence Pattern Cards -->
+  <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Pattern 1: Name Principles Precisely -->
+    <div style="border: 1px solid rgba(57,255,20,0.12); background: rgba(57,255,20,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; text-transform: uppercase;">01 :: Name Principles Precisely</div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(255,107,0,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10007; WEAK</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.7;">"I used colour theory and good design principles to make my chart look professional."</p>
+        </div>
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(57,255,20,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10003; EXCELLENT</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.7;">"Applying Cairo's (2016) principle of representational faithfulness, I replaced the categorical three-band colour encoding with a continuous gradient. A score of 49 appearing bright red while 51 appears grey creates a false visual discontinuity on what is a continuous scale."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern 2: Reject Alternatives With Reasoning -->
+    <div style="border: 1px solid rgba(0,229,255,0.12); background: rgba(0,229,255,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase;">02 :: Reject Alternatives With Reasoning</div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(255,107,0,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10007; WEAK</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.7;">"I chose a bar chart because it seemed the best option."</p>
+        </div>
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(57,255,20,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10003; EXCELLENT</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.7;">"I rejected the pie chart using Cleveland and McGill's perceptual task ranking: angle comparison is among the weakest channels for quantitative data. A stacked area chart was also rejected because cumulative stacking would blur individual trend lines. The horizontal bar chart was selected because position along a common scale is the most accurate perceptual channel."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern 3: Self-Critique Your Own Work -->
+    <div style="border: 1px solid rgba(255,107,0,0.12); background: rgba(255,107,0,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--orange); margin-bottom: 8px; text-transform: uppercase;">03 :: Self-Critique Your Own Work</div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(255,107,0,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10007; WEAK</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.7;">"My redesign is better than the original in all ways."</p>
+        </div>
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(57,255,20,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10003; EXCELLENT</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.7;">"By truncating the x-axis to start at 50%, the redesign amplifies the visual gap between 57% and 100%. A viewer could perceive the European Region as dramatically worse than it actually is. Safeguard: a prominent axis label and footnote making the truncation decision explicit."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern 4: Team Disagreements Resolved by Theory -->
+    <div style="border: 1px solid rgba(57,255,20,0.12); background: rgba(57,255,20,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; text-transform: uppercase;">04 :: Resolve Disagreements With Theory</div>
+      <p style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.7; margin-bottom: 10px;">
+        "One team member argued for a logarithmic scale to linearise the exponential growth curves. Two others countered that a log scale poses a comprehension risk for a government regulator audience and would visually compress the fossil-renewable gap, making the transition look closer to complete than it is. We returned to Cairo's principle of matching charts to the audience's mental model and chose linear. We noted the log scale would be valid for a scientific audience."
+      </p>
+      <p style="font-size: 11px; color: rgba(0,229,255,0.5); line-height: 1.5;">
+        This is what the rubric rewards: design decisions grounded in theory and audience, not personal preference.
+      </p>
+    </div>
+
+    <!-- Pattern 5: Genuine Reflection -->
+    <div style="border: 1px solid rgba(0,229,255,0.12); background: rgba(0,229,255,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase;">05 :: Reflect With Specificity</div>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(255,107,0,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10007; WEAK</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.7;">"I learned a lot about data visualisation from this module."</p>
+        </div>
+        <div style="flex: 1; min-width: 280px;">
+          <div style="font-size: 10px; color: rgba(57,255,20,0.7); letter-spacing: 1px; margin-bottom: 6px;">&#10003; EXCELLENT</div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.7;">"Before this assessment, I had not understood that the choice between categorical and continuous colour encoding is an ethical decision, not just an aesthetic one. Collapsing a continuous variable into three colours is a form of data reduction that can be just as misleading as truncating an axis."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern 6: Visualisation as Strategic Choice -->
+    <div style="border: 1px solid rgba(255,107,0,0.12); background: rgba(255,107,0,0.03); padding: 20px 24px; border-radius: 4px;">
+      <div style="font-size: 10px; letter-spacing: 3px; color: var(--orange); margin-bottom: 8px; text-transform: uppercase;">06 :: The Insight That Separates Good From Great</div>
+      <p style="font-size: 13px; color: var(--white); line-height: 1.8; text-align: center; padding: 10px 0;">
+        "The same dataset can represent stability, risk, or transformation, depending on the scale, colour, and commentary. Design is not decoration applied after analysis. It is the tool that makes analysis possible."
+      </p>
+      <p style="font-size: 11px; color: rgba(57,255,20,0.5); text-align: center;">
+        From a first-class group submission in this module.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Key Theorists Quick Reference -->
+  <div style="max-width: 800px; margin: 40px auto 0; border-top: 1px solid rgba(57,255,20,0.1); padding-top: 24px;">
+    <div style="font-size: 10px; letter-spacing: 3px; color: rgba(57,255,20,0.4); margin-bottom: 16px; text-align: center; text-transform: uppercase;">THEORISTS YOU SHOULD BE CITING</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(57,255,20,0.15); border-radius: 2px; color: var(--text);">Tufte (data-ink ratio, lie factor, chartjunk)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(0,229,255,0.15); border-radius: 2px; color: var(--text);">Cairo (truthful encoding, representational faithfulness)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(255,107,0,0.15); border-radius: 2px; color: var(--text);">Ware (preattentive attributes, Gestalt principles)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(57,255,20,0.15); border-radius: 2px; color: var(--text);">Few (show me the numbers, dashboard design)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(0,229,255,0.15); border-radius: 2px; color: var(--text);">Knaflic (storytelling with data)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(255,107,0,0.15); border-radius: 2px; color: var(--text);">Cleveland &amp; McGill (perceptual task ranking)</span>
+      <span style="font-size: 11px; padding: 4px 12px; border: 1px solid rgba(57,255,20,0.15); border-radius: 2px; color: var(--text);">Segel &amp; Heer (narrative visualisation)</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,35 Q80,10 160,32 T320,28 T480,40 T640,18 T800,36 T960,24 T1120,38 T1200,30"/>
+</svg>
+
+<!-- ============ PRIZES / RECOGNITION SECTION ============ -->
+<section id="prizes">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>Recognition</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::04</div>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <span style="font-size: 10px; color: rgba(57,255,20,0.4); letter-spacing: 3px;">BADGE TIERS :: AREA PROPORTIONAL TO PRESTIGE</span>
+  </div>
+
+  <div class="badge-showcase">
+    <!-- Silver Badge -->
+    <div class="badge-item">
+      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(192,192,192,0.2));">
+        <defs>
+          <linearGradient id="silverStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E8E8E8"/>
+            <stop offset="50%" stop-color="#C0C0C0"/>
+            <stop offset="100%" stop-color="#808080"/>
+          </linearGradient>
+          <pattern id="silverScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
+            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(192,192,192,0.06)" stroke-width="1"/>
+          </pattern>
+          <filter id="silverGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Hexagonal shield shape -->
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(192,192,192,0.1)" stroke="url(#silverStroke)" stroke-width="1.5"/>
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#silverScanlines)"/>
+        <!-- Inner frame lines -->
+        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <!-- Grid overlay -->
+        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
+        <!-- Star symbol -->
+        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#C0C0C0" stroke-width="1.2" filter="url(#silverGlow)"/>
+        <!-- SILVER text -->
+        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="3" fill="#C0C0C0">SILVER</text>
+        <!-- Data readout decorations -->
+        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(192,192,192,0.3)" letter-spacing="1">TIER::02</text>
+      </svg>
+      <div class="badge-label">Outstanding Work</div>
+    </div>
+
+    <!-- Gold Badge -->
+    <div class="badge-item">
+      <svg width="150" height="170" viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 10px rgba(255,215,0,0.25));">
+        <defs>
+          <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFE066"/>
+            <stop offset="50%" stop-color="#FFD700"/>
+            <stop offset="100%" stop-color="#B8860B"/>
+          </linearGradient>
+          <pattern id="goldScanlines" patternUnits="userSpaceOnUse" width="150" height="4">
+            <line x1="0" y1="0" x2="150" y2="0" stroke="rgba(255,215,0,0.06)" stroke-width="1"/>
+          </pattern>
+          <filter id="goldGlow">
+            <feGaussianBlur stdDeviation="3.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Hexagonal shield shape -->
+        <path d="M75,8 L138,40 L138,108 L75,162 L12,108 L12,40 Z" fill="rgba(255,215,0,0.15)" stroke="url(#goldStroke)" stroke-width="1.8"/>
+        <path d="M75,8 L138,40 L138,108 L75,162 L12,108 L12,40 Z" fill="url(#goldScanlines)"/>
+        <!-- Inner frame lines -->
+        <path d="M75,24 L124,50 L124,100 L75,146 L26,100 L26,50 Z" fill="none" stroke="rgba(255,215,0,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <!-- Grid overlay -->
+        <line x1="32" y1="60" x2="118" y2="60" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
+        <line x1="32" y1="75" x2="118" y2="75" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
+        <line x1="32" y1="90" x2="118" y2="90" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
+        <line x1="32" y1="105" x2="118" y2="105" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
+        <!-- Star symbol -->
+        <path d="M75,44 L81,62 L100,62 L85,74 L91,92 L75,81 L59,92 L65,74 L50,62 L69,62 Z" fill="none" stroke="#FFD700" stroke-width="1.4" filter="url(#goldGlow)"/>
+        <!-- GOLD text -->
+        <text x="75" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" letter-spacing="4" fill="#FFD700">GOLD</text>
+        <!-- Data readout decorations -->
+        <text x="75" y="136" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" fill="rgba(255,215,0,0.3)" letter-spacing="1">TIER::01</text>
+        <!-- Corner tick marks -->
+        <line x1="20" y1="38" x2="28" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
+        <line x1="122" y1="38" x2="130" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
+      </svg>
+      <div class="badge-label">Top Submission</div>
+    </div>
+
+    <!-- Bronze Badge -->
+    <div class="badge-item">
+      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(205,127,50,0.2));">
+        <defs>
+          <linearGradient id="bronzeStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E8A050"/>
+            <stop offset="50%" stop-color="#CD7F32"/>
+            <stop offset="100%" stop-color="#8B5A2B"/>
+          </linearGradient>
+          <pattern id="bronzeScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
+            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(205,127,50,0.06)" stroke-width="1"/>
+          </pattern>
+          <filter id="bronzeGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Hexagonal shield shape -->
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(205,127,50,0.1)" stroke="url(#bronzeStroke)" stroke-width="1.5"/>
+        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#bronzeScanlines)"/>
+        <!-- Inner frame lines -->
+        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(205,127,50,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <!-- Grid overlay -->
+        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
+        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
+        <!-- Star symbol -->
+        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#CD7F32" stroke-width="1.2" filter="url(#bronzeGlow)"/>
+        <!-- BRONZE text -->
+        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="3" fill="#CD7F32">BRONZE</text>
+        <!-- Data readout decorations -->
+        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(205,127,50,0.3)" letter-spacing="1">TIER::03</text>
+      </svg>
+      <div class="badge-label">Strong Submission</div>
+    </div>
+  </div>
+
+  <div id="prizes-container">
+    <div class="prize-bubble">
+      <div class="bubble">
+        <span class="amount" data-value="0" data-text="GOLD">GOLD</span>
+        <span class="prize-label">Top submission. Showcased to future cohorts.</span>
+      </div>
+      <span class="place-label">Tier 1</span>
+    </div>
+    <div class="prize-bubble">
+      <div class="bubble">
+        <span class="amount" data-value="0" data-text="SILVER">SILVER</span>
+        <span class="prize-label">Outstanding work. Published in class showcase.</span>
+      </div>
+      <span class="place-label">Tier 2</span>
+    </div>
+    <div class="prize-bubble">
+      <div class="bubble">
+        <span class="amount" data-value="0" data-text="BRONZE">BRONZE</span>
+        <span class="prize-label">Strong submission demonstrating solid design thinking.</span>
+      </div>
+      <span class="place-label">Tier 3</span>
+    </div>
+    <div class="prize-bubble">
+      <div class="bubble">
+        <span class="amount" data-value="0" data-text="STAR">&#9733;</span>
+        <span class="prize-label">Most improved or most creative newcomer approach.</span>
+      </div>
+      <span class="place-label">Rising Star</span>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;" class="reveal">
+    <span style="font-size: 12px; color: var(--text);">Recognition programme:</span>
+    <span style="font-size: 18px; font-weight: 700; color: var(--green);">4 Badge Tiers</span>
+    <br>
+    <span style="font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 8px; display: inline-block;">Plus peer recognition and portfolio-worthy work.</span>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,35 Q80,10 160,32 T320,28 T480,40 T640,18 T800,36 T960,24 T1120,38 T1200,30"/>
+</svg>
+
+<!-- ============ TIMELINE SECTION ============ -->
+<section id="timeline">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>Key Dates</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::05</div>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 40px;">
+    <span style="font-size: 10px; color: rgba(57,255,20,0.4); letter-spacing: 3px;">GANTT CHART :: PROJECT SCHEDULE VISUALISATION</span>
+  </div>
+
+  <div id="gantt-timeline">
+    <div class="gantt-axis"></div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">10 Mar 2026</div>
+        <div class="gantt-label">Challenge Launch</div>
+        <div class="gantt-desc">Briefing in class, 2:00 PM. Teams formed. <strong style="color:var(--orange);">Team registration deadline: 4:30 PM.</strong></div>
+      </div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">17 Mar 2026</div>
+        <div class="gantt-label">Dataset Approved</div>
+        <div class="gantt-desc">Submit dataset choice and one-paragraph rationale via Moodle.</div>
+      </div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">24 Mar 2026</div>
+        <div class="gantt-label">Progress Check</div>
+        <div class="gantt-desc">In-class review. Show work-in-progress dashboard. Peer feedback.</div>
+      </div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">31 Mar 2026</div>
+        <div class="gantt-label">Draft Review</div>
+        <div class="gantt-desc">Submit draft for formative feedback (no marks).</div>
+      </div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">3 Apr 2026</div>
+        <div class="gantt-label">Final Submission</div>
+        <div class="gantt-desc">All deliverables via Moodle by 23:59. No extensions.</div>
+      </div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-dot"></div>
+      <div class="gantt-bar">
+        <div class="gantt-bar-fill"></div>
+        <div class="gantt-date">7 Apr 2026</div>
+        <div class="gantt-label">Showcase</div>
+        <div class="gantt-desc">In-class presentations. Peer voting for People's Choice.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,28 Q100,45 200,25 T400,35 T600,20 T800,40 T1000,22 T1200,32"/>
+</svg>
+
+<!-- ============ ASSESSMENT SECTION ============ -->
+<section id="assessment">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>Assessment Criteria</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::06</div>
+  </div>
+
+  <div class="assess-viz reveal">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <div style="display: flex; gap: 6px;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(57,255,20,0.2);"></span>
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(57,255,20,0.2);"></span>
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(57,255,20,0.2);"></span>
+      </div>
+      <span style="font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; background: rgba(57,255,20,0.08); color: rgba(57,255,20,0.7); border: 1px solid rgba(57,255,20,0.15);">Assessment Weight Distribution</span>
+    </div>
+
+    <div class="assess-layout">
+      <!-- Radar Chart -->
+      <div style="text-align: center;">
+        <svg viewBox="0 0 300 300" width="280" height="280">
+          <defs>
+            <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(57,255,20,0.15)"/>
+              <stop offset="100%" stop-color="rgba(0,229,255,0.08)"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid rings -->
+          <polygon points="150,50 245,113 209,225 91,225 55,113" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <polygon points="150,80 220,123 195,205 105,205 80,123" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <polygon points="150,110 195,133 181,185 119,185 105,133" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <polygon points="150,140 170,148 164,168 136,168 130,148" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <!-- Axes -->
+          <line x1="150" y1="150" x2="150" y2="50" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+          <line x1="150" y1="150" x2="245" y2="113" stroke="rgba(0,229,255,0.15)" stroke-width="0.5"/>
+          <line x1="150" y1="150" x2="209" y2="225" stroke="rgba(255,107,0,0.15)" stroke-width="0.5"/>
+          <line x1="150" y1="150" x2="91" y2="225" stroke="rgba(179,136,255,0.15)" stroke-width="0.5"/>
+          <line x1="150" y1="150" x2="55" y2="113" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+          <!-- Filled data shape (weights: 30, 25, 20, 15, 10 scaled to radar) -->
+          <polygon points="150,56 233,118 185,210 103,203 86,122" fill="url(#radarFill)" stroke="var(--green)" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- Data dots -->
+          <circle cx="150" cy="56" r="4" fill="var(--green)" filter="url(#glow)"/>
+          <circle cx="233" cy="118" r="4" fill="var(--cyan)"/>
+          <circle cx="185" cy="210" r="4" fill="var(--orange)"/>
+          <circle cx="103" cy="203" r="4" fill="#B388FF"/>
+          <circle cx="86" cy="122" r="4" fill="var(--green)"/>
+          <!-- Labels -->
+          <text x="150" y="38" text-anchor="middle" fill="var(--green)" font-size="9" font-family="JetBrains Mono">Technical 30%</text>
+          <text x="260" y="115" text-anchor="start" fill="var(--cyan)" font-size="9" font-family="JetBrains Mono">Design 25%</text>
+          <text x="218" y="240" text-anchor="start" fill="var(--orange)" font-size="9" font-family="JetBrains Mono">Comms 20%</text>
+          <text x="82" y="240" text-anchor="end" fill="#B388FF" font-size="9" font-family="JetBrains Mono">Critical 15%</text>
+          <text x="40" y="115" text-anchor="end" fill="var(--green)" font-size="9" font-family="JetBrains Mono">Innovation 10%</text>
+        </svg>
+      </div>
+
+      <!-- Bar breakdown -->
+      <div class="assess-bars">
+        <div class="assess-bar-item">
+          <div class="assess-bar-label">Technical Execution</div>
+          <div class="assess-bar-track"><div class="assess-bar-fill" style="width:100%; background: linear-gradient(90deg, var(--green), var(--cyan)); box-shadow: 0 0 12px rgba(57,255,20,0.2);"></div></div>
+          <div class="assess-bar-pct" style="color: var(--green);">30%</div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.3); padding-left: 152px; margin-top: -10px;">Dashboard functionality, interactivity, data accuracy, tool proficiency</div>
+
+        <div class="assess-bar-item" style="margin-top: 6px;">
+          <div class="assess-bar-label">Design Quality</div>
+          <div class="assess-bar-track"><div class="assess-bar-fill" style="width:83%; background: linear-gradient(90deg, var(--cyan), #B388FF); box-shadow: 0 0 12px rgba(0,229,255,0.2);"></div></div>
+          <div class="assess-bar-pct" style="color: var(--cyan);">25%</div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.3); padding-left: 152px; margin-top: -10px;">Visual hierarchy, colour theory, typography, layout, Gestalt, data-ink ratio</div>
+
+        <div class="assess-bar-item" style="margin-top: 6px;">
+          <div class="assess-bar-label">Communication</div>
+          <div class="assess-bar-track"><div class="assess-bar-fill" style="width:67%; background: linear-gradient(90deg, var(--orange), #FF3D5A); box-shadow: 0 0 12px rgba(255,107,0,0.2);"></div></div>
+          <div class="assess-bar-pct" style="color: var(--orange);">20%</div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.3); padding-left: 152px; margin-top: -10px;">Clarity for non-technical audiences. Story. Accessible insight.</div>
+
+        <div class="assess-bar-item" style="margin-top: 6px;">
+          <div class="assess-bar-label">Critical Thinking</div>
+          <div class="assess-bar-track"><div class="assess-bar-fill" style="width:50%; background: linear-gradient(90deg, #B388FF, var(--cyan)); box-shadow: 0 0 12px rgba(179,136,255,0.2);"></div></div>
+          <div class="assess-bar-pct" style="color: #B388FF;">15%</div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.3); padding-left: 152px; margin-top: -10px;">Report depth. Principles named. Alternatives considered. Self-awareness.</div>
+
+        <div class="assess-bar-item" style="margin-top: 6px;">
+          <div class="assess-bar-label">Innovation</div>
+          <div class="assess-bar-track"><div class="assess-bar-fill" style="width:33%; background: linear-gradient(90deg, var(--green), var(--orange)); box-shadow: 0 0 12px rgba(57,255,20,0.2);"></div></div>
+          <div class="assess-bar-pct" style="color: var(--green);">10%</div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.3); padding-left: 152px; margin-top: -10px;">Originality. Creative interaction. Novel visual metaphors. Risk-taking.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,30 Q150,10 300,35 T600,25 T900,38 T1200,28"/>
+</svg>
+
+<!-- ============ CTA SECTION ============ -->
+<section id="cta">
+  <div style="font-size: 10px; color: rgba(57,255,20,0.4); letter-spacing: 3px; margin-bottom: 40px;">DATA POINT :: MAXIMUM SIGNAL INTENSITY</div>
+
+  <div id="cta-pulse">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="core"></div>
+  </div>
+
+  <h2>Ready to Begin?</h2>
+  <p class="cta-sub">Form your team (2, 3, or 4 members). Find your data. Build something remarkable.</p>
+
+  <a href="#" class="cta-btn">
+    <span class="btn-dot"></span>
+    Submit via Moodle (link to be posted)
+  </a>
+
+  <div class="cta-info">
+    <div class="cta-info-item">
+      <span class="info-dot"></span>
+      <span><strong>Teams:</strong> 2, 3, or 4 members (no exceptions)</span>
+    </div>
+    <div class="cta-info-item">
+      <span class="info-dot"></span>
+      <span><strong>Tools:</strong> Power BI, Tableau, Python, D3.js, or equivalent</span>
+    </div>
+    <div class="cta-info-item">
+      <span class="info-dot"></span>
+      <span><strong>AI Policy:</strong> AI tools permitted for exploration and initial builds. Design DECISIONS must be yours. All AI use must be cited.</span>
+    </div>
+    <div class="cta-info-item">
+      <span class="info-dot"></span>
+      <span><strong>Academic Integrity:</strong> All work screened via Turnitin. NCI Academic Policy applies.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER AXIS ============ -->
+<footer id="footer-axis">
+  <svg width="100%" height="20" style="margin-bottom: 10px;">
+    <line x1="5%" y1="10" x2="95%" y2="10" stroke="rgba(57,255,20,0.15)" stroke-width="0.5"/>
+    <circle cx="50%" cy="10" r="3" fill="rgba(57,255,20,0.3)"/>
+  </svg>
+  9DATAV Data Visualisation :: NCI Masters Programme :: Spring 2026 :: [ end of dataset ]
+</footer>
+
+</main>
+
+<script>
+// ============ CUSTOM CURSOR ============
+(function() {
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let cx = 0, cy = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+  });
+
+  function animateRing() {
+    rx += (cx - rx) * 0.12;
+    ry += (cy - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effect on interactive elements
+  document.querySelectorAll('a, button, .quadrant, .assess-viz,.prize-bubble, .deliverable-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursor.style.background = 'var(--cyan)';
+      ring.style.width = '50px';
+      ring.style.height = '50px';
+      ring.style.borderColor = 'rgba(0,229,255,0.4)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '8px';
+      cursor.style.height = '8px';
+      cursor.style.background = 'var(--orange)';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(255,107,0,0.5)';
+    });
+  });
+})();
+
+// ============ TOPOLOGY BACKGROUND MESH ============
+(function() {
+  const canvas = document.getElementById('topology-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, time = 0;
+  let scrollY = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  window.addEventListener('scroll', () => { scrollY = window.pageYOffset; });
+
+  function noise(x, y, t) {
+    return Math.sin(x * 0.008 + t) * Math.cos(y * 0.006 + t * 0.7) * 0.5 +
+           Math.sin(x * 0.015 - t * 0.5) * Math.cos(y * 0.012 + t * 0.3) * 0.3 +
+           Math.sin((x + y) * 0.005 + t * 0.4) * 0.2;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    time += 0.003;
+    const scrollOffset = scrollY * 0.001;
+
+    // Draw contour lines
+    const step = 50;
+    const levels = 8;
+
+    for (let level = 0; level < levels; level++) {
+      const threshold = (level / levels) * 2 - 1;
+      ctx.strokeStyle = `rgba(57, 255, 20, ${0.03 + level * 0.008})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+
+      for (let x = 0; x < w; x += step) {
+        for (let y = 0; y < h; y += step) {
+          const v = noise(x, y + scrollOffset * 200, time);
+          if (Math.abs(v - threshold) < 0.08) {
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + step * 0.3, y + step * 0.3);
+          }
+        }
+      }
+      ctx.stroke();
+    }
+
+    // Additional flowing lines
+    for (let i = 0; i < 5; i++) {
+      ctx.strokeStyle = `rgba(0, 229, 255, ${0.015})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      const baseY = h * (i + 1) / 6;
+      for (let x = 0; x < w; x += 3) {
+        const y = baseY + noise(x, baseY, time + i) * 80 + Math.sin(scrollOffset + x * 0.003) * 30;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ============ PLAYHEAD NAVIGATION ============
+(function() {
+  const sections = ['hero','about','categories','deliverables','timeline','assessment','cta'];
+  const tickXPositions = [100, 220, 370, 520, 670, 850, 1020];
+  const playhead = document.getElementById('playhead');
+
+  // Click navigation
+  document.querySelectorAll('.nav-tick').forEach(tick => {
+    tick.addEventListener('click', () => {
+      const target = tick.getAttribute('data-target');
+      const el = document.getElementById(target);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Update playhead on scroll
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = Math.min(scrollTop / docHeight, 1);
+
+    // Find current section
+    let currentIdx = 0;
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+        currentIdx = i;
+      }
+    });
+
+    const x = tickXPositions[currentIdx] || 100;
+    playhead.setAttribute('cx', x);
+  });
+})();
+
+// ============ COUNTDOWN GAUGES ============
+(function() {
+  const deadline = new Date('2026-04-03T23:59:59').getTime();
+  const circumference = 2 * Math.PI * 42; // ~264
+
+  function update() {
+    const now = Date.now();
+    const diff = Math.max(0, deadline - now);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('countdown-days').textContent = days;
+    document.getElementById('countdown-hours').textContent = hours;
+    document.getElementById('countdown-mins').textContent = mins;
+    document.getElementById('countdown-secs').textContent = secs;
+
+    // Update gauge fills
+    const gauges = document.querySelectorAll('.gauge');
+    const values = [
+      { val: days, max: 365 },
+      { val: hours, max: 24 },
+      { val: mins, max: 60 },
+      { val: secs, max: 60 }
+    ];
+
+    gauges.forEach((g, i) => {
+      const fill = g.querySelector('.gauge-fill');
+      const ratio = values[i].val / values[i].max;
+      const offset = circumference * (1 - ratio);
+      fill.style.strokeDashoffset = offset;
+    });
+  }
+
+  update();
+  setInterval(update, 1000);
+})();
+
+// ============ SCROLL REVEAL ANIMATIONS ============
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  // Observe all revealable elements
+  document.querySelectorAll('.reveal, .axis-heading, .spark-card, .deliverable-card, .prize-bubble, .gantt-item, .assess-viz,.section-divider, .lollipop-list li').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+// ============ ANIMATED NUMBER COUNTERS ============
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        const text = entry.target.dataset.text;
+        if (text) {
+          entry.target.textContent = text;
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-value]').forEach(el => observer.observe(el));
+})();
+
+// ============ EDGE AXIS NUMBERS ============
+(function() {
+  const container = document.body;
+
+  // X-axis numbers along top
+  for (let i = 0; i <= 10; i++) {
+    const num = document.createElement('div');
+    num.className = 'grid-number';
+    num.style.left = (i * 10) + '%';
+    num.style.top = '52px';
+    num.textContent = (i * 100).toString();
+    container.appendChild(num);
+  }
+
+  // Y-axis numbers along left
+  for (let i = 0; i <= 10; i++) {
+    const num = document.createElement('div');
+    num.className = 'grid-number';
+    num.style.left = '4px';
+    num.style.top = (i * 10) + '%';
+    num.textContent = (1000 - i * 100).toString();
+    container.appendChild(num);
+  }
+})();
+
+// ============ SPARKLINE BORDER GENERATION ============
+(function() {
+  document.querySelectorAll('.spark-card').forEach(card => {
+    const svg = card.querySelector('.spark-border');
+    if (!svg) return;
+  });
+})();
+
+// ============ SMOOTH SCROLL FOR DATA BUTTONS ============
+document.querySelectorAll('.data-btn, .hero-cta-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const href = btn.getAttribute('href');
+    if (href && href.startsWith('#') && href.length > 1) {
+      e.preventDefault();
+      const target = document.getElementById(href.slice(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// ============ GRID LINE HEARTBEAT PULSE ============
+(function() {
+  const grid = document.getElementById('grid-overlay');
+  let pulse = 0;
+
+  function heartbeat() {
+    pulse += 0.02;
+    const opacity = 0.03 + Math.sin(pulse) * 0.01;
+    grid.style.opacity = Math.max(0.5, 0.7 + Math.sin(pulse) * 0.3);
+    requestAnimationFrame(heartbeat);
+  }
+  heartbeat();
+})();
+</script>
+
+</body>
+</html>
