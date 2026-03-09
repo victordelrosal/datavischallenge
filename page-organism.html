@@ -1670,56 +1670,6 @@ section {
     </div>
   </div>
 
-  <!-- Embedded Mini-Dashboard -->
-  <div style="max-width: 1100px; margin: 0 auto;">
-    <div class="mini-dashboard reveal">
-      <div class="viz-header">
-        <div class="viz-dots"><span></span><span></span><span></span></div>
-        <div class="viz-chip">2025 Entries by Region</div>
-      </div>
-      <div class="bar-rows">
-        <div class="bar-row"><span>Europe</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><strong>648</strong></div>
-        <div class="bar-row"><span>Asia</span><div class="bar-track"><div class="bar-fill" style="width:73%"></div></div><strong>552</strong></div>
-        <div class="bar-row"><span>Americas</span><div class="bar-track"><div class="bar-fill" style="width:59%"></div></div><strong>447</strong></div>
-        <div class="bar-row"><span>Africa</span><div class="bar-track"><div class="bar-fill" style="width:39%"></div></div><strong>298</strong></div>
-        <div class="bar-row"><span>Oceania</span><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><strong>198</strong></div>
-      </div>
-      <div class="donut-container" style="margin-top: 20px;">
-        <div class="donut-chart"></div>
-        <div class="donut-legend">
-          <div><div class="legend-dot" style="background:var(--cyan)"></div> Exploratory 28%</div>
-          <div><div class="legend-dot" style="background:#B388FF"></div> Storytelling 32%</div>
-          <div><div class="legend-dot" style="background:var(--orange)"></div> AI-Assisted 18%</div>
-          <div><div class="legend-dot" style="background:#FF3D5A"></div> Real-World 22%</div>
-        </div>
-      </div>
-      <!-- Animated line chart -->
-      <div class="line-embed">
-        <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="lineG" x1="0%" x2="100%">
-              <stop offset="0%" stop-color="var(--cyan)"/>
-              <stop offset="50%" stop-color="#B388FF"/>
-              <stop offset="100%" stop-color="#FF3D5A"/>
-            </linearGradient>
-            <linearGradient id="fillG" x1="0%" x2="0%" y1="0%" y2="100%">
-              <stop offset="0%" stop-color="rgba(0,229,255,0.12)"/>
-              <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
-            </linearGradient>
-          </defs>
-          <g opacity="0.08" stroke="white" stroke-width="0.5">
-            <line x1="0" y1="25" x2="400" y2="25"/><line x1="0" y1="50" x2="400" y2="50"/><line x1="0" y1="75" x2="400" y2="75"/>
-          </g>
-          <path d="M0,75 C30,65 60,45 90,50 C120,55 150,78 180,62 C210,46 240,20 270,30 C300,40 330,60 360,48 C380,40 395,30 400,22 L400,100 L0,100 Z" fill="url(#fillG)"/>
-          <path d="M0,75 C30,65 60,45 90,50 C120,55 150,78 180,62 C210,46 240,20 270,30 C300,40 330,60 360,48 C380,40 395,30 400,22" fill="none" stroke="url(#lineG)" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="90" cy="50" r="3.5" fill="var(--cyan)"/>
-          <circle cx="180" cy="62" r="3.5" fill="#B388FF"/>
-          <circle cx="270" cy="30" r="3.5" fill="var(--orange)"/>
-          <circle cx="400" cy="22" r="4" fill="#FF3D5A" stroke="var(--bg)" stroke-width="2"/>
-        </svg>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- Section Divider -->
