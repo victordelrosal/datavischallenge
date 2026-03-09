@@ -1199,7 +1199,7 @@ section {
 .badge-showcase .badge-item:nth-child(1):hover { border-color: rgba(255,215,0,0.3); }
 .badge-showcase .badge-item:nth-child(2):hover { border-color: rgba(192,192,192,0.3); }
 .badge-showcase .badge-item:nth-child(3):hover { border-color: rgba(205,127,50,0.3); }
-.badge-showcase .badge-item svg { flex-shrink: 0; }
+.badge-showcase .badge-item svg, .badge-showcase .badge-item img { flex-shrink: 0; width: 160px; height: auto; border-radius: 8px; }
 .badge-showcase .badge-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
 .badge-showcase .badge-desc { font-size: 13px; color: var(--text); line-height: 1.7; margin-top: 6px; }
 
@@ -1868,41 +1868,7 @@ section {
   <div class="badge-showcase">
     <!-- Gold Badge -->
     <div class="badge-item">
-      <svg width="150" height="170" viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 10px rgba(255,215,0,0.25));">
-        <defs>
-          <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFE066"/>
-            <stop offset="50%" stop-color="#FFD700"/>
-            <stop offset="100%" stop-color="#B8860B"/>
-          </linearGradient>
-          <pattern id="goldScanlines" patternUnits="userSpaceOnUse" width="150" height="4">
-            <line x1="0" y1="0" x2="150" y2="0" stroke="rgba(255,215,0,0.06)" stroke-width="1"/>
-          </pattern>
-          <filter id="goldGlow">
-            <feGaussianBlur stdDeviation="3.5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <!-- Hexagonal shield shape -->
-        <path d="M75,8 L138,40 L138,108 L75,162 L12,108 L12,40 Z" fill="rgba(255,215,0,0.15)" stroke="url(#goldStroke)" stroke-width="1.8"/>
-        <path d="M75,8 L138,40 L138,108 L75,162 L12,108 L12,40 Z" fill="url(#goldScanlines)"/>
-        <!-- Inner frame lines -->
-        <path d="M75,24 L124,50 L124,100 L75,146 L26,100 L26,50 Z" fill="none" stroke="rgba(255,215,0,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-        <!-- Grid overlay -->
-        <line x1="32" y1="60" x2="118" y2="60" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
-        <line x1="32" y1="75" x2="118" y2="75" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
-        <line x1="32" y1="90" x2="118" y2="90" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
-        <line x1="32" y1="105" x2="118" y2="105" stroke="rgba(255,215,0,0.06)" stroke-width="0.5"/>
-        <!-- Star symbol -->
-        <path d="M75,44 L81,62 L100,62 L85,74 L91,92 L75,81 L59,92 L65,74 L50,62 L69,62 Z" fill="none" stroke="#FFD700" stroke-width="1.4" filter="url(#goldGlow)"/>
-        <!-- GOLD text -->
-        <text x="75" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" letter-spacing="4" fill="#FFD700">GOLD</text>
-        <!-- Data readout decorations -->
-        <text x="75" y="136" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" fill="rgba(255,215,0,0.3)" letter-spacing="1">TIER::01</text>
-        <!-- Corner tick marks -->
-        <line x1="20" y1="38" x2="28" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
-        <line x1="122" y1="38" x2="130" y2="38" stroke="rgba(57,255,20,0.2)" stroke-width="0.5"/>
-      </svg>
+      <img src="badges/gold.png" alt="Gold Badge" style="filter: drop-shadow(0 0 12px rgba(255,215,0,0.3));">
       <div>
         <div class="badge-label" style="color: #FFD700;">Gold :: Top Submission</div>
         <div class="badge-desc">The highest tier of recognition. Work that would genuinely belong on the front page. Showcased to future cohorts as the benchmark of what's possible in this module.</div>
@@ -1911,31 +1877,7 @@ section {
 
     <!-- Silver Badge -->
     <div class="badge-item">
-      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(192,192,192,0.2));">
-        <defs>
-          <linearGradient id="silverStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#E8E8E8"/>
-            <stop offset="50%" stop-color="#C0C0C0"/>
-            <stop offset="100%" stop-color="#808080"/>
-          </linearGradient>
-          <pattern id="silverScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
-            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(192,192,192,0.06)" stroke-width="1"/>
-          </pattern>
-          <filter id="silverGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(192,192,192,0.1)" stroke="url(#silverStroke)" stroke-width="1.5"/>
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#silverScanlines)"/>
-        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(192,192,192,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(192,192,192,0.06)" stroke-width="0.5"/>
-        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#C0C0C0" stroke-width="1.2" filter="url(#silverGlow)"/>
-        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="3" fill="#C0C0C0">SILVER</text>
-        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(192,192,192,0.3)" letter-spacing="1">TIER::02</text>
-      </svg>
+      <img src="badges/silver.png" alt="Silver Badge" style="filter: drop-shadow(0 0 10px rgba(192,192,192,0.25));">
       <div>
         <div class="badge-label" style="color: #C0C0C0;">Silver :: Outstanding Work</div>
         <div class="badge-desc">Outstanding work that demonstrates strong analytical thinking and polished visual execution. Published in the class showcase as exemplary work for peer learning.</div>
@@ -1944,37 +1886,7 @@ section {
 
     <!-- Bronze Badge -->
     <div class="badge-item">
-      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(205,127,50,0.2));">
-        <defs>
-          <linearGradient id="bronzeStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#E8A050"/>
-            <stop offset="50%" stop-color="#CD7F32"/>
-            <stop offset="100%" stop-color="#8B5A2B"/>
-          </linearGradient>
-          <pattern id="bronzeScanlines" patternUnits="userSpaceOnUse" width="130" height="4">
-            <line x1="0" y1="0" x2="130" y2="0" stroke="rgba(205,127,50,0.06)" stroke-width="1"/>
-          </pattern>
-          <filter id="bronzeGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <!-- Hexagonal shield shape -->
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="rgba(205,127,50,0.1)" stroke="url(#bronzeStroke)" stroke-width="1.5"/>
-        <path d="M65,8 L118,35 L118,95 L65,142 L12,95 L12,35 Z" fill="url(#bronzeScanlines)"/>
-        <!-- Inner frame lines -->
-        <path d="M65,22 L106,43 L106,89 L65,128 L24,89 L24,43 Z" fill="none" stroke="rgba(205,127,50,0.12)" stroke-width="0.5" stroke-dasharray="3,3"/>
-        <!-- Grid overlay -->
-        <line x1="30" y1="55" x2="100" y2="55" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="70" x2="100" y2="70" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
-        <line x1="30" y1="85" x2="100" y2="85" stroke="rgba(205,127,50,0.06)" stroke-width="0.5"/>
-        <!-- Star symbol -->
-        <path d="M65,45 L70,60 L86,60 L73,70 L78,85 L65,76 L52,85 L57,70 L44,60 L60,60 Z" fill="none" stroke="#CD7F32" stroke-width="1.2" filter="url(#bronzeGlow)"/>
-        <!-- BRONZE text -->
-        <text x="65" y="110" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="3" fill="#CD7F32">BRONZE</text>
-        <!-- Data readout decorations -->
-        <text x="65" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="6" fill="rgba(205,127,50,0.3)" letter-spacing="1">TIER::03</text>
-      </svg>
+      <img src="badges/bronze.png" alt="Bronze Badge" style="filter: drop-shadow(0 0 8px rgba(205,127,50,0.25));">
       <div>
         <div class="badge-label" style="color: #CD7F32;">Bronze :: Strong Submission</div>
         <div class="badge-desc">A strong submission demonstrating solid design thinking, evidence-based choices, and clear communication of insights. Portfolio-worthy work you can be proud of.</div>
