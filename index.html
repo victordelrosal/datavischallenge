@@ -1832,17 +1832,26 @@ section {
 
   <!-- Influence Pattern Cards - Stacked -->
   <style>
-    .card-stack { position: relative; max-width: 700px; margin: 0 auto; min-height: 320px; }
+    .card-stack { position: relative; max-width: 700px; margin: 0 auto; min-height: 320px; padding-bottom: 20px; }
     .card-stack-item {
       position: absolute; top: 0; left: 0; right: 0;
       padding: 28px 32px; border-radius: 6px;
-      opacity: 0; transform: translateY(20px) scale(0.97);
+      opacity: 0; pointer-events: none; cursor: pointer;
       transition: opacity 0.4s ease, transform 0.4s ease;
-      pointer-events: none; cursor: pointer;
     }
     .card-stack-item.active {
       opacity: 1; transform: translateY(0) scale(1);
-      pointer-events: auto;
+      pointer-events: auto; z-index: 3;
+    }
+    .card-stack-item.peek-1 {
+      opacity: 1; pointer-events: none; z-index: 2;
+      transform: translateY(8px) scale(0.97);
+      filter: brightness(0.6);
+    }
+    .card-stack-item.peek-2 {
+      opacity: 1; pointer-events: none; z-index: 1;
+      transform: translateY(16px) scale(0.94);
+      filter: brightness(0.35);
     }
     .card-stack-title { font-size: 13px; letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase; }
     .card-stack-body { font-size: 15.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 14px; }
@@ -1950,9 +1959,13 @@ section {
     let current = 0;
 
     function showCard(idx) {
-      cards.forEach(c => c.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('active', 'peek-1', 'peek-2'));
       dots.forEach(d => d.classList.remove('active'));
       cards[idx].classList.add('active');
+      const next1 = (idx + 1) % cards.length;
+      const next2 = (idx + 2) % cards.length;
+      cards[next1].classList.add('peek-1');
+      cards[next2].classList.add('peek-2');
       dots[idx].classList.add('active');
       counter.textContent = String(idx + 1).padStart(2, '0') + ' / 06';
       current = idx;
@@ -1965,6 +1978,8 @@ section {
     dots.forEach(dot => {
       dot.addEventListener('click', () => showCard(parseInt(dot.dataset.index)));
     });
+
+    showCard(0);
   })();
   </script>
 
