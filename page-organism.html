@@ -1194,14 +1194,31 @@ section {
 
 /* ============ BADGE SHOWCASE ============ */
 .badge-showcase { display: flex; flex-direction: column; gap: 20px; max-width: 700px; margin: 24px auto 30px; }
-.badge-showcase .badge-item { display: flex; align-items: center; gap: 24px; padding: 20px 24px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); border-radius: 8px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: default; }
+.badge-showcase .badge-item { display: flex; align-items: center; gap: 24px; padding: 20px 24px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); border-radius: 8px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer; }
 .badge-showcase .badge-item:hover { transform: translateX(4px); }
 .badge-showcase .badge-item:nth-child(1):hover { border-color: rgba(255,215,0,0.3); }
 .badge-showcase .badge-item:nth-child(2):hover { border-color: rgba(192,192,192,0.3); }
 .badge-showcase .badge-item:nth-child(3):hover { border-color: rgba(205,127,50,0.3); }
-.badge-showcase .badge-item svg, .badge-showcase .badge-item img { flex-shrink: 0; width: 160px; height: auto; border-radius: 8px; }
+.badge-showcase .badge-item svg, .badge-showcase .badge-item img { flex-shrink: 0; width: 160px; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: pointer; }
+.badge-showcase .badge-item img:hover { transform: scale(2.5); z-index: 100; position: relative; }
 .badge-showcase .badge-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
 .badge-showcase .badge-desc { font-size: 13px; color: var(--text); line-height: 1.7; margin-top: 6px; }
+
+/* Badge lightbox */
+.badge-lightbox {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9); z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+.badge-lightbox.active { opacity: 1; pointer-events: all; }
+.badge-lightbox img {
+  max-width: 800px; width: 90vw; height: auto;
+  transform: scale(0.8); transition: transform 0.3s ease;
+  border-radius: 12px;
+}
+.badge-lightbox.active img { transform: scale(1); }
 
 /* ============ EMBEDDED MINI-DASHBOARD ============ */
 .mini-dashboard {
@@ -1370,6 +1387,7 @@ section {
 
 <!-- ============ CUSTOM CURSOR ============ -->
 <div id="cursor"></div>
+<div class="badge-lightbox" id="badge-lightbox" onclick="this.classList.remove('active')"><img id="badge-lightbox-img" src="" alt="Badge"></div>
 <div id="cursor-ring"></div>
 
 <!-- ============ BACKGROUND TOPOLOGY MESH ============ -->
@@ -2425,6 +2443,16 @@ document.querySelectorAll('.data-btn, .hero-cta-btn').forEach(btn => {
   }
   heartbeat();
 })();
+
+// Badge lightbox
+document.querySelectorAll('.badge-item img').forEach(img => {
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const lb = document.getElementById('badge-lightbox');
+    document.getElementById('badge-lightbox-img').src = img.src;
+    lb.classList.add('active');
+  });
+});
 </script>
 
 </body>
