@@ -1846,12 +1846,12 @@ section {
     .card-stack-item.peek-1 {
       opacity: 1; pointer-events: none; z-index: 2;
       transform: translateY(8px) scale(0.97);
-      filter: brightness(0.6);
+      clip-path: inset(calc(100% - 10px) 0 0 0);
     }
     .card-stack-item.peek-2 {
       opacity: 1; pointer-events: none; z-index: 1;
       transform: translateY(16px) scale(0.94);
-      filter: brightness(0.35);
+      clip-path: inset(calc(100% - 10px) 0 0 0);
     }
     .card-stack-title { font-size: 13px; letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase; }
     .card-stack-body { font-size: 15.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 14px; }
