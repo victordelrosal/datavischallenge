@@ -385,6 +385,7 @@ section {
   text-align: center;
   min-height: 100vh;
   position: relative;
+  overflow: visible !important;
 }
 
 #hero-radials {
@@ -426,12 +427,14 @@ section {
   color: var(--white);
   letter-spacing: -0.03em;
   line-height: 1.4;
-  margin-bottom: 8px;
+  margin-bottom: -0.4em;
   padding: 0 20px;
   overflow: visible;
   max-width: 100vw;
   box-sizing: border-box;
   display: inline-block;
+  transform: translateZ(0);
+  will-change: transform;
 }
 .hero-content h1::after {
   content: '';
@@ -446,7 +449,7 @@ section {
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  padding-bottom: 0.2em;
+  padding-bottom: 0.5em !important;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   background-origin: border-box;
