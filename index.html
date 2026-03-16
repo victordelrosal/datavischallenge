@@ -1486,11 +1486,15 @@ section {
       <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
       <text x="0" y="22" text-anchor="middle" font-size="9">TIMELINE</text>
     </g>
-    <g class="nav-tick" data-target="assessment" transform="translate(820, 0)">
+    <g class="nav-tick" data-target="assessment" transform="translate(760, 0)">
       <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
       <text x="0" y="22" text-anchor="middle" font-size="9">ASSESSMENT</text>
     </g>
-    <g class="nav-tick" data-target="cta" transform="translate(1020, 0)">
+    <g class="nav-tick" data-target="teams" transform="translate(920, 0)">
+      <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
+      <text x="0" y="22" text-anchor="middle" font-size="9">TEAMS</text>
+    </g>
+    <g class="nav-tick" data-target="cta" transform="translate(1060, 0)">
       <line x1="0" y1="28" x2="0" y2="36" stroke-width="1"/>
       <text x="0" y="22" text-anchor="middle" font-size="9">SUBMIT</text>
     </g>
@@ -2242,6 +2246,337 @@ section {
   <path d="M0,30 Q150,10 300,35 T600,25 T900,38 T1200,28"/>
 </svg>
 
+<!-- ============ TEAM ALLOCATIONS SECTION ============ -->
+<section id="teams" style="min-height: auto; padding-bottom: 80px;">
+  <div class="axis-heading">
+    <div class="tick-cluster">
+      <div class="tick-minor"></div>
+      <div class="tick-mark"></div>
+      <div class="tick-minor"></div>
+    </div>
+    <h2>Team Allocations</h2>
+    <div class="axis-line"></div>
+    <div class="axis-value">sec::07</div>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 40px;">
+    <span style="font-size: 11px; color: var(--text); max-width: 700px; display: inline-block; line-height: 1.8;">
+      <strong style="color: var(--white);">12 teams</strong> &middot; <strong style="color: var(--white);">45 data scientists</strong> &middot; Each team will uncover one insight that changes how a decision-maker thinks.
+    </span>
+  </div>
+
+  <style>
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .team-card {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: all 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+    .team-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .team-card:hover {
+      border-color: rgba(57,255,20,0.25);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 30px rgba(57,255,20,0.04);
+    }
+    .team-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .team-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .team-size {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+    .team-members {
+      padding: 14px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .team-member {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .member-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px currentColor;
+    }
+    .member-id {
+      font-size: 9px;
+      color: rgba(255,255,255,0.2);
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .team-card-accent {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      opacity: 0.6;
+    }
+    /* 5 team accent colors cycling */
+    .team-accent-1 { background: linear-gradient(90deg, #FACC15, #FDE68A); }
+    .team-accent-2 { background: linear-gradient(90deg, #F87171, #FCA5A5); }
+    .team-accent-3 { background: linear-gradient(90deg, #60A5FA, #93C5FD); }
+    .team-accent-4 { background: linear-gradient(90deg, #4ADE80, #86EFAC); }
+    .team-accent-5 { background: linear-gradient(90deg, #A78BFA, #C4B5FD); }
+    /* Dot colors matching accents */
+    .dot-1 { color: #FACC15; }
+    .dot-2 { color: #F87171; }
+    .dot-3 { color: #60A5FA; }
+    .dot-4 { color: #4ADE80; }
+    .dot-5 { color: #A78BFA; }
+    /* Header text colors */
+    .team-color-1 { color: #FACC15; }
+    .team-color-2 { color: #F87171; }
+    .team-color-3 { color: #60A5FA; }
+    .team-color-4 { color: #4ADE80; }
+    .team-color-5 { color: #A78BFA; }
+
+    @media (max-width: 768px) {
+      .teams-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <div class="teams-grid">
+
+    <!-- Team 01 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-1"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-1">Team 01</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-1"></span>Ajita Srivastava<span class="member-id">x24309770</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Neha Joseph<span class="member-id">x24325937</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Prachi Vinayak Sakpal<span class="member-id">x24264636</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Hazel Martina Francis<span class="member-id">x24292541</span></div>
+      </div>
+    </div>
+
+    <!-- Team 02 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-2"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-2">Team 02</span>
+        <span class="team-size">3 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-2"></span>Anirban Santra<span class="member-id">x24288152</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Dayita Guha<span class="member-id">x24286303</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Shehab Ahmed Santo<span class="member-id">x24325589</span></div>
+      </div>
+    </div>
+
+    <!-- Team 03 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-3"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-3">Team 03</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-3"></span>Aarti Sharma<span class="member-id">x24253090</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Apeksha Chavan<span class="member-id">x24272256</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Apurva Jadhav<span class="member-id">x24314374</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Gayatri Hirlekar<span class="member-id">x24293083</span></div>
+      </div>
+    </div>
+
+    <!-- Team 04 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-4"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-4">Team 04</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-4"></span>Shree Nidhi Venkatesa Prabhu<span class="member-id">x24329801</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Hitha Shetty<span class="member-id">x24268615</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Positha Gaur<span class="member-id">x24329797</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Utham Venkatesh Ravichandran<span class="member-id">x24298158</span></div>
+      </div>
+    </div>
+
+    <!-- Team 05 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-5"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-5">Team 05</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-5"></span>Habib Goloba<span class="member-id">x24244350</span></div>
+        <div class="team-member"><span class="member-dot dot-5"></span>Ifeanyi Kingsley Owonta<span class="member-id">x25132016</span></div>
+        <div class="team-member"><span class="member-dot dot-5"></span>Van Trinh Vo<span class="member-id">x24297470</span></div>
+        <div class="team-member"><span class="member-dot dot-5"></span>Adythio Niramoyo<span class="member-id">x24327875</span></div>
+      </div>
+    </div>
+
+    <!-- Team 06 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-1"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-1">Team 06</span>
+        <span class="team-size">3 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-1"></span>Maheshwar Singh Thakur<span class="member-id">x24246522</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Prabhakar Battula<span class="member-id">x24283258</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Raghuveer Bakkolla<span class="member-id">x24316466</span></div>
+      </div>
+    </div>
+
+    <!-- Team 07 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-2"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-2">Team 07</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-2"></span>Mary Divya Prajesh<span class="member-id">x24327409</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Ben Savio Yesudas<span class="member-id">x24328162</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Anithu Yohannan<span class="member-id">x24314099</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Shanu Ponnattu Shaji<span class="member-id">x24296911</span></div>
+      </div>
+    </div>
+
+    <!-- Team 08 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-3"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-3">Team 08</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-3"></span>Nishant Sanjay Ghawalkar<span class="member-id">x24299421</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Shreyan Sanjeev Kulkarni<span class="member-id">x24320773</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Rishabh Dixit<span class="member-id">x24337366</span></div>
+        <div class="team-member"><span class="member-dot dot-3"></span>Jestin Vaniyapurayil Thomas<span class="member-id">x24312550</span></div>
+      </div>
+    </div>
+
+    <!-- Team 09 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-4"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-4">Team 09</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-4"></span>Parag Harichandra Patel<span class="member-id">x24296821</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Kanchan Prasad<span class="member-id">x25105205</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Rincy Rajan Mathew<span class="member-id">x24335304</span></div>
+        <div class="team-member"><span class="member-dot dot-4"></span>Aryan Kamboj<span class="member-id">x24315273</span></div>
+      </div>
+    </div>
+
+    <!-- Team 10 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-5"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-5">Team 10</span>
+        <span class="team-size">3 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-5"></span>Harshitha Devireddy<span class="member-id">x24262421</span></div>
+        <div class="team-member"><span class="member-dot dot-5"></span>Achyuth Manjunatha<span class="member-id">x24280909</span></div>
+        <div class="team-member"><span class="member-dot dot-5"></span>Harini Sakali<span class="member-id">x24279731</span></div>
+      </div>
+    </div>
+
+    <!-- Team 11 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-1"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-1">Team 11</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-1"></span>Salma Mohamed<span class="member-id">x25128841</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Damaris Faith Opadiran<span class="member-id">x24262650</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Oluwakemi Julian Alao<span class="member-id">x24309389</span></div>
+        <div class="team-member"><span class="member-dot dot-1"></span>Whitney Owen Oshodin<span class="member-id">x25149598</span></div>
+      </div>
+    </div>
+
+    <!-- Team 12 -->
+    <div class="team-card reveal">
+      <div class="team-card-accent team-accent-2"></div>
+      <div class="team-card-header">
+        <span class="team-number team-color-2">Team 12</span>
+        <span class="team-size">4 members</span>
+      </div>
+      <div class="team-members">
+        <div class="team-member"><span class="member-dot dot-2"></span>Sameeruddin Syed<span class="member-id">x24257435</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Ismail Mohammed<span class="member-id">x24225321</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Nishant Singh<span class="member-id">x24296473</span></div>
+        <div class="team-member"><span class="member-dot dot-2"></span>Siddhesh Ajay Chavan<span class="member-id">x24312908</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Summary stats -->
+  <div style="display: flex; justify-content: center; gap: 40px; margin-top: 48px; flex-wrap: wrap;">
+    <div style="text-align: center;">
+      <div style="font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--green); text-shadow: 0 0 20px rgba(57,255,20,0.3);">45</div>
+      <div style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 4px;">Students</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--cyan); text-shadow: 0 0 20px rgba(0,229,255,0.3);">12</div>
+      <div style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 4px;">Teams</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--orange); text-shadow: 0 0 20px rgba(255,107,0,0.3);">12</div>
+      <div style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 4px;">Insights</div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<svg class="section-divider" viewBox="0 0 1200 60" preserveAspectRatio="none">
+  <path d="M0,28 Q200,45 400,22 T800,35 T1200,30"/>
+</svg>
+
 <!-- ============ CTA SECTION ============ -->
 <section id="cta">
   <div style="font-size: 10px; color: rgba(57,255,20,0.4); letter-spacing: 3px; margin-bottom: 40px;">DATA POINT :: MAXIMUM SIGNAL INTENSITY</div>
@@ -2317,7 +2652,7 @@ section {
   animateRing();
 
   // Hover effect on interactive elements
-  document.querySelectorAll('a, button, .quadrant, .assess-viz,.prize-bubble, .deliverable-card').forEach(el => {
+  document.querySelectorAll('a, button, .quadrant, .assess-viz,.prize-bubble, .deliverable-card, .team-card').forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursor.style.width = '20px';
       cursor.style.height = '20px';
@@ -2407,8 +2742,8 @@ section {
 
 // ============ PLAYHEAD NAVIGATION ============
 (function() {
-  const sections = ['hero','about','deliverables','excellence','timeline','assessment','cta'];
-  const tickXPositions = [100, 220, 370, 520, 670, 850, 1020];
+  const sections = ['hero','about','deliverables','excellence','timeline','assessment','teams','cta'];
+  const tickXPositions = [100, 220, 370, 520, 670, 760, 920, 1060];
   const playhead = document.getElementById('playhead');
 
   // Click navigation
