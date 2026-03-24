@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Report | 9DATAV Challenge 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0A0E1A;
+  --bg2: #0F1425;
+  --green: #39FF14;
+  --cyan: #00E5FF;
+  --orange: #FF6B00;
+  --coral: #FF3D5A;
+  --text: #c8ccd4;
+  --dim: #6b7488;
+  --white: #FFFFFF;
+}
+html, body { min-height: 100vh; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-screen {
+  text-align: center;
+  padding: 48px;
+  max-width: 480px;
+  width: 100%;
+}
+.logo {
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--green);
+  opacity: 0.7;
+  margin-bottom: 32px;
+}
+.login-screen h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.sub {
+  font-size: 14px;
+  color: var(--dim);
+  margin-bottom: 36px;
+}
+.pass-input-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.pass-word-input {
+  width: 160px;
+  height: 56px;
+  background: linear-gradient(180deg, #1e2540 0%, #161d30 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  text-align: center;
+  caret-color: var(--green);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.pass-word-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 3px rgba(57,255,20,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.pass-word-input.error {
+  border-color: var(--coral);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,61,90,0.15);
+  animation: shake 0.4s ease;
+}
+.dot-sep {
+  font-size: 28px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+.pass-hint {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 12px;
+  height: 18px;
+}
+.pass-hint.error-text { color: var(--coral); }
+.pass-submit {
+  margin-top: 24px;
+  padding: 14px 48px;
+  background: rgba(57,255,20,0.1);
+  border: 1px solid rgba(57,255,20,0.3);
+  border-radius: 10px;
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pass-submit:hover {
+  background: rgba(57,255,20,0.18);
+  border-color: var(--green);
+}
+
+/* Download screen */
+.download-screen {
+  display: none;
+  text-align: center;
+  padding: 48px;
+  max-width: 520px;
+  width: 100%;
+}
+.download-screen .team-badge {
+  display: inline-block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.download-screen h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.download-screen .dl-sub {
+  font-size: 14px;
+  color: var(--dim);
+  margin-bottom: 32px;
+}
+.dl-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 40px;
+  background: rgba(57,255,20,0.1);
+  border: 1px solid rgba(57,255,20,0.3);
+  border-radius: 12px;
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.dl-button:hover {
+  background: rgba(57,255,20,0.18);
+  border-color: var(--green);
+}
+.dl-button svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--green);
+  stroke-width: 2;
+  fill: none;
+}
+.dl-footer {
+  margin-top: 36px;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .login-screen, .download-screen { padding: 24px; }
+  .pass-word-input { width: 120px; height: 48px; font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="logo">9DATAV Challenge 2026</div>
+  <h1>Team Report</h1>
+  <div class="sub">Enter your two-word passphrase to download your evaluation</div>
+  <div class="pass-input-row">
+    <input class="pass-word-input" id="word1" type="text" placeholder="word" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <div class="dot-sep">.</div>
+    <input class="pass-word-input" id="word2" type="text" placeholder="word" autocomplete="off" autocapitalize="none" spellcheck="false">
+  </div>
+  <div class="pass-hint" id="passHint">Your passphrase was shared by your lecturer</div>
+  <button class="pass-submit" onclick="tryLogin()">Access Report</button>
+</div>
+
+<!-- Download -->
+<div class="download-screen" id="downloadScreen">
+  <div class="logo">9DATAV Challenge 2026</div>
+  <div class="team-badge" id="dlTeamBadge"></div>
+  <h2 id="dlTitle"></h2>
+  <div class="dl-sub">Dataset Approval Evaluation</div>
+  <a class="dl-button" id="dlLink" href="#" download>
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download PDF
+  </a>
+  <div class="dl-footer">This report is confidential to your team.</div>
+</div>
+
+<script>
+// Passphrase hash -> team number and title
+const LOOKUP = {
+  "13c5a8720f50085d25a15eaa9dd47f27b2fd81ac5f5b9d653c19a20e95d7cde9": {n:1, file:"team01-6eb2de.pdf", title:"Oil Shock: How Iran\u2019s Rivalries Move Global Energy Markets"},
+  "bc471d97d75ad8cd3efd22f78af7455eddf293172b5fa17945188e5f09f1d7f4": {n:2, file:"team02-08cbb7.pdf", title:"Is Dublin the Most Stressed City in Ireland?"},
+  "a299646d286633779a4bf252f252c60ccd554816c4414009de3f331aa7c277ba": {n:3, file:"team03-e971d9.pdf", title:"Hidden Bottlenecks in Ireland\u2019s Hospital Waiting Lists"},
+  "a01ca14ad46700964ef04e5eaea24032ecd0a41613f1cacb1375eb6db15aa39b": {n:4, file:"team04-04a3b6.pdf", title:"The Global Rise of Internet Shutdowns"},
+  "47365a6617a5a6790ac70ea24df461bc6e509a7db3d78e93bcaf684102f38243": {n:5, file:"team05-7308af.pdf", title:"The Invisible Pandemic: Antibiotic Resistance Funding"},
+  "1fb5c9c31d1a3df39b682e2ce03a065b2e11f3289356ba28a997ad482572cdd3": {n:6, file:"team06-d24067.pdf", title:"Flooded and Forgotten"},
+  "94a88bd2896f5cc76573e678d26458742e924d3fac9cae8820f7e4d1b6a8aac6": {n:7, file:"team07-133018.pdf", title:"Ireland\u2019s Waiting List Crisis: Where EUR 420M Is Not Going"},
+  "60027e03489c9bca91454ec798c0a4150e2ab45ead88a27812fe45b85782e6b6": {n:8, file:"team08-0a1199.pdf", title:"Geopolitical Conflict and Europe\u2019s Energy Transition"},
+  "a40779a71f28d2a48a4ebebf7c45aea6cb054a40c56f537f1e3d1785bea93eb8": {n:9, file:"team09-33f659.pdf", title:"Irish Road Safety: A Nation Moving in the Wrong Direction"},
+  "a0ed3c8ede67977ebcbb944f6a7da70a22b0cf2854c1d8a1e84a100d8fc85dff": {n:10, file:"team10-4c0dc0.pdf", title:"The Global Wheat Shock"},
+  "6ad4c192e1aabe9622eea14cd3757741a62c937c8125ae38b26c0e5ab5ff10e7": {n:11, file:"team11-edd2a4.pdf", title:"The Loneliness Epidemic"},
+  "364cb3e48a28b95f5ae6183b3abd5397e583fe7569c68e3fe29a21aec7ff6603": {n:12, file:"team12-01f3dc.pdf", title:"Conflict, Oil, and Economic Shockwaves"}
+};
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryLogin() {
+  const w1 = document.getElementById('word1').value.trim().toLowerCase();
+  const w2 = document.getElementById('word2').value.trim().toLowerCase();
+  if (!w1 || !w2) return;
+
+  const hash = await sha256(w1 + '.' + w2);
+  const team = LOOKUP[hash];
+
+  if (team) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('downloadScreen').style.display = 'block';
+    document.getElementById('dlTeamBadge').textContent = 'Team ' + String(team.n).padStart(2,'0');
+    document.getElementById('dlTitle').textContent = team.title;
+    document.getElementById('dlLink').href = 'evaluation/output/' + team.file;
+    document.getElementById('dlLink').download = team.file;
+  } else {
+    const hint = document.getElementById('passHint');
+    hint.textContent = 'Incorrect passphrase. Try again.';
+    hint.classList.add('error-text');
+    document.getElementById('word1').classList.add('error');
+    document.getElementById('word2').classList.add('error');
+    setTimeout(() => {
+      document.getElementById('word1').classList.remove('error');
+      document.getElementById('word2').classList.remove('error');
+      hint.textContent = 'Your passphrase was shared by your lecturer';
+      hint.classList.remove('error-text');
+    }, 1500);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+    tryLogin();
+  }
+});
+
+document.getElementById('word1').addEventListener('input', function() {
+  if (this.value.includes('.')) {
+    const parts = this.value.split('.');
+    this.value = parts[0];
+    document.getElementById('word2').value = parts.slice(1).join('.');
+    document.getElementById('word2').focus();
+  }
+});
+</script>
+</body>
+</html>

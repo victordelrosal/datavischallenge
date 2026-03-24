@@ -407,6 +407,107 @@ p {
 }
 .bullet-list li strong { color: var(--white); }
 
+/* SVG icon cards */
+.icon-cards {
+  display: grid;
+  gap: 20px;
+  margin: 20px 0;
+}
+.icon-cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.icon-cards.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.icon-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.icon-card .ic-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.icon-card .ic-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 1.8;
+  fill: none;
+}
+.icon-card h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.icon-card p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  margin: 0;
+}
+.icon-card .exemplar {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-top: 8px;
+  display: block;
+}
+/* Pitfall cards (smaller for 5-col) */
+.icon-cards.cols-5 .icon-card { padding: 20px 18px; }
+.icon-cards.cols-5 .icon-card h4 { font-size: 14px; }
+.icon-cards.cols-5 .icon-card p { font-size: 13px; }
+.icon-cards.cols-5 .ic-icon { width: 40px; height: 40px; margin-bottom: 12px; }
+.icon-cards.cols-5 .ic-icon svg { width: 22px; height: 22px; }
+
+/* Checklist icon items */
+.check-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 8px 0;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+}
+.check-item .ci-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.check-item .ci-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8;
+  fill: none;
+}
+.check-item span {
+  font-size: 16px;
+  color: var(--text);
+}
+.check-item strong { color: var(--white); }
+
+@media (max-width: 1024px) {
+  .icon-cards.cols-3, .icon-cards.cols-5 { grid-template-columns: 1fr; }
+}
+
 /* Do/Don't */
 .do-dont {
   display: grid;
@@ -429,6 +530,9 @@ p {
 .do-card h4 { color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; font-family: 'Space Grotesk', sans-serif; }
 .dont-card h4 { color: var(--coral); font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; font-family: 'Space Grotesk', sans-serif; }
 .do-card p, .dont-card p { font-size: 17px; line-height: 1.6; }
+.dont-card.dont-revealed .dont-hidden-state { display: none !important; }
+.dont-card.dont-revealed .dont-content { display: block !important; }
+.dont-card.dont-revealed { cursor: default; }
 
 /* Lecturer-only reveal overlay */
 .reveal-overlay {
@@ -474,6 +578,92 @@ p {
 .reveal-overlay.revealed {
   opacity: 0;
   pointer-events: none;
+}
+
+/* PIN modal */
+.pin-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.pin-modal-backdrop.visible { display: flex; }
+.pin-modal {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 40px 48px;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+}
+.pin-modal h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.pin-modal .pin-sub {
+  font-size: 13px;
+  color: var(--dim);
+  margin-bottom: 28px;
+}
+.pin-boxes {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.pin-box {
+  width: 60px;
+  height: 72px;
+  background: linear-gradient(180deg, #1e2540 0%, #161d30 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  caret-color: var(--green);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.pin-box:focus {
+  border-color: var(--green);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 3px rgba(57,255,20,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.pin-box.pin-error {
+  border-color: var(--coral);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,61,90,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: pin-shake 0.4s ease;
+}
+@keyframes pin-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.pin-error-msg {
+  font-size: 13px;
+  color: var(--coral);
+  height: 18px;
+  margin-top: -16px;
+  margin-bottom: 12px;
+}
+
+/* Private columns: hidden by default, revealed after PIN */
+.private-col {
+  display: none;
+}
+#heatmapSlide.cols-revealed .private-col {
+  display: table-cell;
+}
+#heatmapUnlock.unlocked {
+  display: none !important;
 }
 
 /* Slide footer */
@@ -554,37 +744,33 @@ p {
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
-<!-- ==================== 4. HEATMAP (lecturer-only) ==================== -->
-<div class="slide slide-top">
-  <div class="reveal-overlay" id="heatmapReveal" onclick="revealWithPin(this)">
-    <div class="reveal-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-    </div>
-    <div class="reveal-label">Lecturer only: click to unlock</div>
-    <div class="reveal-hint" style="font-size: 11px; color: var(--dim); margin-top: 8px; opacity: 0.4;">PIN required</div>
-  </div>
+<!-- ==================== 4. HEATMAP (public + private reveal) ==================== -->
+<div class="slide slide-top" id="heatmapSlide">
   <div class="eyebrow">Dimension Heatmap</div>
   <h2 style="font-size: 1.6rem; margin-bottom: 16px;">Where We're Strong. Where We Need Work.</h2>
   <table class="mini-heatmap">
     <thead>
-      <tr><th>#</th><th>Tm</th><th>Title</th><th>Align</th><th>Data</th><th>Depth</th><th>DM</th><th>Feas</th><th>Diff</th><th>Pres</th><th>Score</th><th>Grade</th></tr>
+      <tr><th>#</th><th class="private-col">Tm</th><th class="private-col">Title</th><th>Align</th><th>Data</th><th>Depth</th><th>DM</th><th>Feas</th><th>Diff</th><th>Pres</th><th>Score</th><th>Grade</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>09</td><td>Irish Road Safety</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.90</td><td><span class="gr gA">A</span></td></tr>
-      <tr><td>2</td><td>10</td><td>Global Wheat Shock</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.75</td><td><span class="gr gA">A</span></td></tr>
-      <tr><td>3</td><td>02</td><td>Dublin Stress</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.60</td><td><span class="gr gA">A</span></td></tr>
-      <tr><td>4</td><td>06</td><td>Flooded &amp; Forgotten</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td class="sc">4.55</td><td><span class="gr gA">A</span></td></tr>
-      <tr><td>5</td><td>03</td><td>Hospital Bottlenecks</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c5">5</span></td><td class="sc">4.30</td><td><span class="gr gAm">A-</span></td></tr>
-      <tr><td>6</td><td>07</td><td>Waiting Lists: 420M</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td class="sc">4.20</td><td><span class="gr gAm">A-</span></td></tr>
-      <tr><td>7</td><td>01</td><td>Oil Shock: Iran</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td class="sc">3.90</td><td><span class="gr gBp">B+</span></td></tr>
-      <tr><td>8</td><td>04</td><td>Internet Shutdowns</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td class="sc">3.75</td><td><span class="gr gBp">B+</span></td></tr>
-      <tr><td>9</td><td>08</td><td>Conflict &amp; Renewables</td><td><span class="cell c2">2</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td class="sc">3.50</td><td><span class="gr gBp">B+</span></td></tr>
-      <tr><td>10</td><td>05</td><td>AMR Funding</td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td class="sc">3.35</td><td><span class="gr gB">B</span></td></tr>
-      <tr><td>11</td><td>11</td><td>Loneliness Epidemic</td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td class="sc">2.75</td><td><span class="gr gBm">B-</span></td></tr>
-      <tr><td>12</td><td>12</td><td>Oil, Conflict, Econ.</td><td><span class="cell c1">1</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c1">1</span></td><td><span class="cell c3">3</span></td><td><span class="cell c1">1</span></td><td><span class="cell c1">1</span></td><td class="sc">1.70</td><td><span class="gr gD">D</span></td></tr>
+      <tr><td>1</td><td class="private-col">09</td><td class="private-col">Irish Road Safety</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.90</td><td><span class="gr gA">A</span></td></tr>
+      <tr><td>2</td><td class="private-col">10</td><td class="private-col">Global Wheat Shock</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.75</td><td><span class="gr gA">A</span></td></tr>
+      <tr><td>3</td><td class="private-col">02</td><td class="private-col">Dublin Stress</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="sc">4.60</td><td><span class="gr gA">A</span></td></tr>
+      <tr><td>4</td><td class="private-col">06</td><td class="private-col">Flooded &amp; Forgotten</td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td class="sc">4.55</td><td><span class="gr gA">A</span></td></tr>
+      <tr><td>5</td><td class="private-col">01</td><td class="private-col">Oil Shock: Iran</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td class="sc">3.90</td><td><span class="gr gBp">B+</span></td></tr>
+      <tr><td>6</td><td class="private-col">04</td><td class="private-col">Internet Shutdowns</td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td class="sc">3.75</td><td><span class="gr gBp">B+</span></td></tr>
+      <tr><td>7</td><td class="private-col">08</td><td class="private-col">Conflict &amp; Renewables</td><td><span class="cell c2">2</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td class="sc">3.50</td><td><span class="gr gBp">B+</span></td></tr>
+      <tr><td>8</td><td class="private-col">05</td><td class="private-col">AMR Funding</td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td class="sc">3.35</td><td><span class="gr gB">B</span></td></tr>
+      <tr><td>9</td><td class="private-col">11</td><td class="private-col">Loneliness Epidemic</td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td class="sc">2.75</td><td><span class="gr gBm">B-</span></td></tr>
+      <tr><td>10</td><td class="private-col">12</td><td class="private-col">Oil, Conflict, Econ.</td><td><span class="cell c1">1</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c1">1</span></td><td><span class="cell c3">3</span></td><td><span class="cell c1">1</span></td><td><span class="cell c1">1</span></td><td class="sc">1.70</td><td><span class="gr gD">D</span></td></tr>
     </tbody>
   </table>
   <p style="font-size: 15px; color: var(--dim); margin-top: 6px;">Green = strong (4-5) &bull; Amber = adequate (3) &bull; Red = needs work (1-2). Read the columns, not the rows.</p>
+  <!-- Lecturer-only unlock button (bottom-right, subtle but findable) -->
+  <div id="heatmapUnlock" onclick="revealWithPin(this)" style="position: absolute; bottom: 24px; right: 36px; padding: 6px 14px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(57,255,20,0.3)'" onmouseleave="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.06)'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span style="font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.2);">reveal</span>
+  </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
@@ -592,23 +778,32 @@ p {
 <div class="slide">
   <div class="eyebrow">What the Best Submissions Did</div>
   <h2>Three Patterns from the Top</h2>
-  <ol class="insight-list">
-    <li>
-      <strong>They named a specific person.</strong>
-      Not "policymakers." The RSA Director of Road Safety Strategy. When you name a person, every design decision has a filter.
-      <span class="exemplar">Team 09: RSA Director &bull; Team 10: WFP Regional Director</span>
-    </li>
-    <li>
-      <strong>They showed the data, not just the topic.</strong>
-      "$229 to $458.7 per tonne in 60 days." "r = -0.76." This proves you opened the files and found something.
-      <span class="exemplar">Team 10: FAO wheat prices &bull; Team 06: Pearson correlation</span>
-    </li>
-    <li>
-      <strong>They found the counter-intuitive insight.</strong>
-      "Ireland's road deaths are rising while Europe's are falling." The front page prints what surprises, not what confirms.
-      <span class="exemplar">Team 09: Ireland +28% vs EU -12.3% &bull; Team 06: 7 unprotected EDs</span>
-    </li>
-  </ol>
+  <div class="icon-cards cols-3">
+    <div class="icon-card">
+      <div class="ic-icon" style="background: rgba(0,229,255,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--cyan)"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
+      </div>
+      <h4>They named a specific person</h4>
+      <p>Not "policymakers." The RSA Director of Road Safety Strategy. When you name a person, every design decision has a filter.</p>
+      <span class="exemplar">Irish Road Safety: RSA Director &bull; Global Wheat Shock: WFP Regional Director</span>
+    </div>
+    <div class="icon-card">
+      <div class="ic-icon" style="background: rgba(57,255,20,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--green)"><path d="M3 3v18h18"/><polyline points="18 9 12 15 9 12 3 18"/></svg>
+      </div>
+      <h4>They showed the data, not just the topic</h4>
+      <p>"$229 to $458.7 per tonne in 60 days." "r = -0.76." This proves you opened the files and found something.</p>
+      <span class="exemplar">Global Wheat Shock: FAO wheat prices &bull; Flooded &amp; Forgotten: Pearson correlation</span>
+    </div>
+    <div class="icon-card">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      </div>
+      <h4>They found the counter-intuitive insight</h4>
+      <p>"Ireland's road deaths are rising while Europe's are falling." The front page prints what surprises, not what confirms.</p>
+      <span class="exemplar">Irish Road Safety: Ireland +28% vs EU -12.3% &bull; Flooded &amp; Forgotten: 7 unprotected EDs</span>
+    </div>
+  </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
@@ -652,20 +847,29 @@ p {
 <div class="slide">
   <div class="eyebrow">What to Fix</div>
   <h2>Three Gaps That Cost Marks</h2>
-  <ol class="insight-list">
-    <li>
-      <strong>No evidence of data exploration.</strong>
-      Naming datasets is not enough. Show a statistic. Show a chart. Show you opened the file. The difference between "we plan to" and "we found X" is the difference between B- and A.
-    </li>
-    <li>
-      <strong>No decision-maker.</strong>
-      This is a Decision-Maker Influence Challenge. "Policymakers" is not a person. Name the role. Name the office. Name who would change their behaviour because of your work.
-    </li>
-    <li>
-      <strong>Effort visible in word count.</strong>
-      Top submissions: 1,200-1,500 words with figures. Weakest: 253 words. For a team of four working over a week, that gap is unmistakable.
-    </li>
-  </ol>
+  <div class="icon-cards cols-3">
+    <div class="icon-card" style="border-color: rgba(255,61,90,0.15);">
+      <div class="ic-icon" style="background: rgba(255,61,90,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--coral)"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+      </div>
+      <h4>No evidence of data exploration</h4>
+      <p>Naming datasets is not enough. Show a statistic. Show a chart. Show you opened the file. The difference between "we plan to" and "we found X" is the difference between B- and A.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,61,90,0.15);">
+      <div class="ic-icon" style="background: rgba(255,61,90,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--coral)"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+      </div>
+      <h4>No decision-maker</h4>
+      <p>This is a Decision-Maker Influence Challenge. "Policymakers" is not a person. Name the role. Name the office. Name who would change their behaviour because of your work.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,61,90,0.15);">
+      <div class="ic-icon" style="background: rgba(255,61,90,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--coral)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="12" y2="11"/></svg>
+      </div>
+      <h4>Effort visible in word count</h4>
+      <p>Top submissions: 1,200-1,500 words with figures. Weakest: 253 words. For a team of four working over a week, that gap is unmistakable.</p>
+    </div>
+  </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
@@ -702,7 +906,7 @@ p {
   <p>Two teams chose hospital waiting lists. Same NTPF data. Completely different angles.</p>
   <div class="compare-row">
     <div class="compare-col col-blue">
-      <span class="tag" style="background: rgba(0,229,255,0.15); color: var(--cyan);">Team 03: Bottleneck Mechanics</span>
+      <span class="tag" style="background: rgba(0,229,255,0.15); color: var(--cyan);">Approach A: Bottleneck Mechanics</span>
       <h3>"Which specialties create the most backlog?"</h3>
       <ul>
         <li>9 KPIs in three narrative Acts</li>
@@ -711,7 +915,7 @@ p {
       </ul>
     </div>
     <div class="compare-col col-orange">
-      <span class="tag" style="background: rgba(255,107,0,0.15); color: var(--orange);">Team 07: Budget Accountability</span>
+      <span class="tag" style="background: rgba(255,107,0,0.15); color: var(--orange);">Approach B: Budget Accountability</span>
       <h3>"Where is the EUR 420M not going?"</h3>
       <ul>
         <li>Pareto: 5 specialties = 57% of extreme waits</li>
@@ -728,7 +932,7 @@ p {
 <div class="slide">
   <div class="eyebrow">Exemplar</div>
   <h2>Evolution Done Right</h2>
-  <p>Team 10 transformed a generic brainstorm into one of the strongest submissions.</p>
+  <p>One submission transformed a generic brainstorm into one of the strongest in the cohort.</p>
   <div class="before-after">
     <div class="ba-card">
       <h4>Before (Brainstorm)</h4>
@@ -739,7 +943,7 @@ p {
     <div class="ba-card" style="border-color: rgba(57,255,20,0.2);">
       <h4 style="color: var(--green);">After (Submission)</h4>
       <p style="color: var(--white); font-size: 19px;">"The Global Wheat Shock"</p>
-      <p style="font-size: 15px; margin-top: 8px;">One commodity. One shock. Six countries &gt;50% dependency. 156-percentage-point inflation gap. Target: WFP.</p>
+      <p style="font-size: 15px; margin-top: 8px;">One commodity. One shock. Six countries &gt;50% dependency. 156-percentage-point inflation gap. Target: World Food Programme.</p>
     </div>
   </div>
   <div class="quote" style="font-size: 1.3rem;">Narrowing your scope does not make your story smaller. It makes it sharper.</div>
@@ -774,7 +978,7 @@ p {
     </div>
   </div>
   <div class="example-card" style="max-width: 100%;">
-    <div class="ex-source">Your Team 09 (Applied)</div>
+    <div class="ex-source">Irish Road Safety (Applied)</div>
     <p style="font-size: 16px;"><strong style="color: var(--green);">Hook:</strong> Ireland +28% road fatalities while EU -12.3%. <strong style="color: var(--cyan);">Context:</strong> Missed 2024 target by 45%. <strong style="color: var(--orange);">Drill-down:</strong> July, October, December deadliest; rural roads 72%. <strong style="color: var(--violet);">So What:</strong> Three policy interventions for RSA Director.</p>
   </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
@@ -787,21 +991,51 @@ p {
   <div class="do-dont">
     <div class="do-card">
       <h4>Do</h4>
-      <ul class="bullet-list" style="margin: 0;">
-        <li><strong>One chart, one message.</strong> If you cannot say what a chart proves in one sentence, simplify it.</li>
-        <li><strong>Annotate the insight.</strong> Put a label on the thing that matters. "This is where it changed."</li>
-        <li><strong>Use colour with purpose.</strong> Grey for context. Colour for the thing you want them to see.</li>
-        <li><strong>Benchmark everything.</strong> A number alone is meaningless. Compare to a target, a peer, a year.</li>
-      </ul>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(57,255,20,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <p style="margin: 0; font-size: 16px;"><strong>One chart, one message.</strong> If you cannot say what a chart proves in one sentence, simplify it.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(57,255,20,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><path d="M7 7h10"/><path d="M7 12h4"/><path d="M14 16l2 2 4-4"/></svg></div>
+          <p style="margin: 0; font-size: 16px;"><strong>Annotate the insight.</strong> Put a label on the thing that matters. "This is where it changed."</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(57,255,20,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><circle cx="8.5" cy="15.5" r="2.5" stroke-opacity="0.3"/></svg></div>
+          <p style="margin: 0; font-size: 16px;"><strong>Use colour with purpose.</strong> Grey for context. Colour for the thing you want them to see.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(57,255,20,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="8" x2="21" y2="8" stroke-dasharray="2 3" stroke-opacity="0.4"/></svg></div>
+          <p style="margin: 0; font-size: 16px;"><strong>Benchmark everything.</strong> A number alone is meaningless. Compare to a target, a peer, a year.</p>
+        </div>
+      </div>
     </div>
-    <div class="dont-card">
-      <h4>Don't</h4>
-      <ul class="bullet-list" style="margin: 0;">
-        <li style="color: var(--dim);"><strong style="color: var(--coral);">Pack 8 charts on one page.</strong> Density is not depth. It is clutter.</li>
-        <li style="color: var(--dim);"><strong style="color: var(--coral);">Use 3D, pie charts, or rainbow palettes.</strong> These obscure data, they do not reveal it.</li>
-        <li style="color: var(--dim);"><strong style="color: var(--coral);">Let the tool choose the defaults.</strong> Tableau defaults are for exploration, not for communication.</li>
-        <li style="color: var(--dim);"><strong style="color: var(--coral);">Show everything you found.</strong> Cut 80%. Show the 20% that tells the story.</li>
-      </ul>
+    <div class="dont-card" id="dontCard" onclick="this.classList.add('dont-revealed')" style="cursor: pointer;">
+      <div class="dont-hidden-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;">
+        <div style="font-size: 36px; color: var(--coral); opacity: 0.3; margin-bottom: 12px;">?</div>
+        <div style="font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim);">Click to reveal</div>
+      </div>
+      <div class="dont-content" style="display: none;">
+        <h4>Don't</h4>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(255,61,90,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="9" y="10" width="6" height="6" rx="1"/><rect x="16" y="10" width="6" height="6" rx="1"/></svg></div>
+            <p style="margin: 0; font-size: 16px; color: var(--dim);"><strong style="color: var(--coral);">Pack 8 charts on one page.</strong> Density is not depth. It is clutter.</p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(255,61,90,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+            <p style="margin: 0; font-size: 16px; color: var(--dim);"><strong style="color: var(--coral);">Use 3D, pie charts, or rainbow palettes.</strong> These obscure data, they do not reveal it.</p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(255,61,90,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <p style="margin: 0; font-size: 16px; color: var(--dim);"><strong style="color: var(--coral);">Let the tool choose the defaults.</strong> Tableau defaults are for exploration, not for communication.</p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 8px; background: rgba(255,61,90,0.1); display: flex; align-items: center; justify-content: center; margin-top: 2px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></div>
+            <p style="margin: 0; font-size: 16px; color: var(--dim);"><strong style="color: var(--coral);">Show everything you found.</strong> Cut 80%. Show the 20% that tells the story.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
@@ -824,11 +1058,11 @@ p {
         <p style="font-size: 15px;"><span style="color: var(--dim);">Without annotation:</span> "Outpatient waiting list Jan 2025 to Feb 2026."</p>
         <p style="font-size: 15px;"><span style="color: var(--green);">With annotation:</span> An arrow at month 8 labelled "EUR 420M released here. No impact." That arrow IS the insight. Without it, the chart is just a line going up.</p>
       </div>
-      <div class="tip-box" style="margin-top: 12px;">
-        <div class="tip-label">Rule of thumb</div>
-        <p style="font-size: 15px;">Every chart should have at least one text annotation that a reader could screenshot and share.</p>
-      </div>
     </div>
+  </div>
+  <div class="tip-box" style="margin-top: 20px; max-width: 100%;">
+    <div class="tip-label" style="font-size: 14px;">Rule of thumb</div>
+    <p style="font-size: 20px; line-height: 1.5;">Every chart should have at least one text annotation that a reader could screenshot and share.</p>
   </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
@@ -848,9 +1082,9 @@ p {
     <div class="example-card">
       <div class="ex-source">Applied to Your Projects</div>
       <h3 style="font-size: 17px;">Examples from this cohort</h3>
-      <p style="font-size: 15px;"><strong>Team 09:</strong> EU countries in grey, Ireland in red = "we are the outlier."</p>
-      <p style="font-size: 15px;"><strong>Team 06:</strong> All EDs in grey, 7 unprotected ones in red = "these are the gaps."</p>
-      <p style="font-size: 15px;"><strong>Team 10:</strong> All commodities in grey, wheat in orange = "this is the shock."</p>
+      <p style="font-size: 15px;"><strong>Road Safety:</strong> EU countries in grey, Ireland in red = "we are the outlier."</p>
+      <p style="font-size: 15px;"><strong>Flood Risk:</strong> All EDs in grey, 7 unprotected ones in red = "these are the gaps."</p>
+      <p style="font-size: 15px;"><strong>Wheat Shock:</strong> All commodities in grey, wheat in orange = "this is the shock."</p>
     </div>
   </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
@@ -888,13 +1122,43 @@ p {
 <div class="slide">
   <div class="eyebrow">Pitfalls to Avoid</div>
   <h2>Five Things That Sink Final Submissions</h2>
-  <ul class="bullet-list">
-    <li><strong>The data dump.</strong> Showing everything you found instead of the 3-4 things that matter. Cut ruthlessly.</li>
-    <li><strong>The missing "so what."</strong> Charts that describe a pattern but never say why it matters or what to do about it.</li>
-    <li><strong>The screenshot dashboard.</strong> Embedding raw Tableau exports without any narrative, labels, or design thought.</li>
-    <li><strong>The orphan chart.</strong> A visualisation that is technically correct but has no title, no source, no units, no benchmark.</li>
-    <li><strong>The credibility gap.</strong> Citing statistics without naming where they came from. If I cannot verify your number, I cannot trust it.</li>
-  </ul>
+  <div class="icon-cards cols-5">
+    <div class="icon-card" style="border-color: rgba(255,107,0,0.12);">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <h4>The data dump</h4>
+      <p>Showing everything you found instead of the 3-4 things that matter. Cut ruthlessly.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,107,0,0.12);">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h4>The missing "so what"</h4>
+      <p>Charts that describe a pattern but never say why it matters or what to do.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,107,0,0.12);">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h4>The screenshot dashboard</h4>
+      <p>Embedding raw Tableau exports without any narrative, labels, or design.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,107,0,0.12);">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-opacity="0.3"/><circle cx="12" cy="15" r="1" fill="var(--orange)" stroke="none"/></svg>
+      </div>
+      <h4>The orphan chart</h4>
+      <p>Technically correct but no title, no source, no units, no benchmark.</p>
+    </div>
+    <div class="icon-card" style="border-color: rgba(255,107,0,0.12);">
+      <div class="ic-icon" style="background: rgba(255,107,0,0.1);">
+        <svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="8" y1="11" x2="16" y2="11" stroke-opacity="0.5"/></svg>
+      </div>
+      <h4>The credibility gap</h4>
+      <p>Citing statistics without naming where they came from. Unverifiable = untrustable.</p>
+    </div>
+  </div>
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
@@ -905,23 +1169,23 @@ p {
   <div class="two-col">
     <div>
       <h3 style="color: var(--green);">Content</h3>
-      <ul class="bullet-list">
-        <li>Headline visible in first 5 seconds</li>
-        <li>Decision-maker named</li>
-        <li>At least one counter-intuitive finding</li>
-        <li>Every number has a source cited</li>
-        <li>Clear "so what" / call to action</li>
-      </ul>
+      <div class="check-items">
+        <div class="check-item"><div class="ci-icon" style="background: rgba(57,255,20,0.1);"><svg viewBox="0 0 24 24" stroke="var(--green)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span>Headline visible in first 5 seconds</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(57,255,20,0.1);"><svg viewBox="0 0 24 24" stroke="var(--green)"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></div><span>Decision-maker named</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(57,255,20,0.1);"><svg viewBox="0 0 24 24" stroke="var(--green)"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><span>At least one counter-intuitive finding</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(57,255,20,0.1);"><svg viewBox="0 0 24 24" stroke="var(--green)"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><span>Every number has a source cited</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(57,255,20,0.1);"><svg viewBox="0 0 24 24" stroke="var(--green)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span>Clear "so what" / call to action</span></div>
+      </div>
     </div>
     <div>
       <h3 style="color: var(--orange);">Design</h3>
-      <ul class="bullet-list">
-        <li>One chart = one message</li>
-        <li>Annotations on key data points</li>
-        <li>Colour used with purpose (grey + accent)</li>
-        <li>Titles are assertions, not descriptions</li>
-        <li>Passed the 5-second test</li>
-      </ul>
+      <div class="check-items">
+        <div class="check-item"><div class="ci-icon" style="background: rgba(255,107,0,0.1);"><svg viewBox="0 0 24 24" stroke="var(--orange)"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span>One chart = one message</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(255,107,0,0.1);"><svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M7 7h10"/><path d="M7 12h4"/><path d="M14 16l2 2 4-4"/></svg></div><span>Annotations on key data points</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(255,107,0,0.1);"><svg viewBox="0 0 24 24" stroke="var(--orange)"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><circle cx="8.5" cy="15.5" r="2.5" stroke-opacity="0.3"/></svg></div><span>Colour used with purpose (grey + accent)</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(255,107,0,0.1);"><svg viewBox="0 0 24 24" stroke="var(--orange)"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div><span>Titles are assertions, not descriptions</span></div>
+        <div class="check-item"><div class="ci-icon" style="background: rgba(255,107,0,0.1);"><svg viewBox="0 0 24 24" stroke="var(--orange)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span>Passed the 5-second test</span></div>
+      </div>
     </div>
   </div>
   <div class="tip-box" style="margin-top: 16px;">
@@ -976,6 +1240,21 @@ p {
   <div class="slide-footer">9DATAV CHALLENGE 2026</div>
 </div>
 
+<!-- PIN Modal -->
+<div class="pin-modal-backdrop" id="pinModal">
+  <div class="pin-modal">
+    <h3>Enter PIN</h3>
+    <div class="pin-sub">Lecturer access only</div>
+    <div class="pin-boxes">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" data-pin="0" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" data-pin="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" data-pin="2" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" data-pin="3" autocomplete="off">
+    </div>
+    <div class="pin-error-msg" id="pinError"></div>
+  </div>
+</div>
+
 <script>
 const slides = document.querySelectorAll('.slide');
 const counter = document.getElementById('counter');
@@ -1009,22 +1288,81 @@ show(0);
 
 // PIN-gated reveal for lecturer-only slides
 const PIN_HASH = '8bcefa497af26e688b555d1c4c8cc97365522b5a1416ceb099a98b4c2ed80585';
+let pinTarget = null;
+
 async function sha256(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
-async function revealWithPin(overlay) {
-  const pin = prompt('Enter PIN:');
-  if (!pin) return;
-  const hash = await sha256(pin.trim());
-  if (hash === PIN_HASH) {
-    overlay.classList.add('revealed');
-  } else {
-    overlay.querySelector('.reveal-hint').textContent = 'Incorrect PIN';
-    overlay.querySelector('.reveal-hint').style.color = 'var(--coral)';
-    overlay.querySelector('.reveal-hint').style.opacity = '1';
-  }
+
+function revealWithPin(el) {
+  pinTarget = el;
+  const modal = document.getElementById('pinModal');
+  const boxes = modal.querySelectorAll('.pin-box');
+  const errorEl = document.getElementById('pinError');
+  boxes.forEach(b => { b.value = ''; b.classList.remove('pin-error'); });
+  errorEl.textContent = '';
+  modal.classList.add('visible');
+  setTimeout(() => boxes[0].focus(), 50);
 }
+
+(function initPinModal() {
+  const modal = document.getElementById('pinModal');
+  const boxes = modal.querySelectorAll('.pin-box');
+  const errorEl = document.getElementById('pinError');
+
+  boxes.forEach((box, i) => {
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/\D/g, '').slice(-1);
+      if (box.value && i < 3) boxes[i + 1].focus();
+      if (i === 3 && box.value) checkPin();
+    });
+    box.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !box.value && i > 0) {
+        boxes[i - 1].focus();
+        boxes[i - 1].value = '';
+      }
+      if (e.key === 'Escape') closePin();
+    });
+    box.addEventListener('paste', e => {
+      e.preventDefault();
+      const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 4);
+      pasted.split('').forEach((ch, j) => { if (boxes[j]) boxes[j].value = ch; });
+      if (pasted.length === 4) checkPin();
+      else if (pasted.length > 0) boxes[Math.min(pasted.length, 3)].focus();
+    });
+  });
+
+  modal.addEventListener('click', e => { if (e.target === modal) closePin(); });
+
+  async function checkPin() {
+    const pin = Array.from(boxes).map(b => b.value).join('');
+    const hash = await sha256(pin);
+    if (hash === PIN_HASH) {
+      modal.classList.remove('visible');
+      if (pinTarget) {
+        if (pinTarget.id === 'heatmapUnlock') {
+          document.getElementById('heatmapSlide').classList.add('cols-revealed');
+          pinTarget.classList.add('unlocked');
+        } else {
+          pinTarget.classList.add('revealed');
+        }
+      }
+    } else {
+      errorEl.textContent = 'Incorrect PIN';
+      boxes.forEach(b => b.classList.add('pin-error'));
+      setTimeout(() => {
+        boxes.forEach(b => { b.value = ''; b.classList.remove('pin-error'); });
+        errorEl.textContent = '';
+        boxes[0].focus();
+      }, 800);
+    }
+  }
+
+  function closePin() {
+    modal.classList.remove('visible');
+  }
+})();
 </script>
 </body>
 </html>
