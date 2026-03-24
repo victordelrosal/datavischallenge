@@ -1,0 +1,569 @@
+{
+  "meta": {
+    "challenge": "9DATAV Data Visualisation Challenge 2026",
+    "milestone": "Dataset Approval",
+    "milestone_date": "2026-03-16",
+    "evaluator": "Victor del Rosal",
+    "generated": "2026-03-23"
+  },
+  "dimensions": [
+    {"id": "alignment",      "name": "Recommendation Alignment", "weight": 0.10},
+    {"id": "dataset_quality", "name": "Dataset Quality",          "weight": 0.20},
+    {"id": "analytical_depth","name": "Analytical Depth",         "weight": 0.20},
+    {"id": "decision_maker",  "name": "Decision-Maker Focus",     "weight": 0.15},
+    {"id": "feasibility",     "name": "Feasibility",              "weight": 0.15},
+    {"id": "differentiation", "name": "Differentiation",          "weight": 0.10},
+    {"id": "presentation",    "name": "Presentation Quality",     "weight": 0.10}
+  ],
+  "grade_scale": {
+    "A":  [4.5, 5.0],
+    "A-": [4.0, 4.49],
+    "B+": [3.5, 3.99],
+    "B":  [3.0, 3.49],
+    "B-": [2.5, 2.99],
+    "C":  [2.0, 2.49],
+    "D":  [0.0, 1.99]
+  },
+  "teams": [
+    {
+      "number": 1,
+      "title": "Oil Shock: How Iran's Rivalries Move Global Energy Markets",
+      "members": [
+        {"name": "Ajita Srivastava",       "id": "x24309770"},
+        {"name": "Neha Joseph",             "id": "x24325937"},
+        {"name": "Prachi Vinayak Sakpal",   "id": "x24264636"},
+        {"name": "Hazel Martina Francis",   "id": "x24292541"}
+      ],
+      "recommended_idea": "Oil Shock: How Iran's Rivalries Move Global Energy Markets",
+      "submitted_idea": "Oil Shock: How Iran's Rivalries Move Global Energy Markets",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended idea directly. Focused on Strait of Hormuz dynamics and historical price spikes.",
+      "datasets_cited": [
+        "World Bank Global Fuel Prices Database (1990-2024, 170+ countries)",
+        "US EIA International Energy Data (crude oil, production, trade flows, Hormuz throughput)",
+        "Manual geopolitical event annotations from EIA and news archives"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 4,
+        "analytical_depth": 4,
+        "decision_maker": 4,
+        "feasibility": 4,
+        "differentiation": 3,
+        "presentation": 3
+      },
+      "strengths": [
+        "Two authoritative, open datasets (EIA and World Bank) with clear links",
+        "Four quantified 'aha' insights including supply shock disparities across income levels",
+        "SQL query logic demonstrates genuine data engagement",
+        "Timely topic: Feb 2026 Brent crude above $100/barrel"
+      ],
+      "concerns": [
+        "Submission is relatively short (716 words) for a 4-person team",
+        "Oil/geopolitics is well-trodden territory; needs sharper differentiation",
+        "SQL code snippet feels somewhat templated"
+      ],
+      "action_items": [
+        "Add household energy cost impact layer to differentiate from generic oil analysis",
+        "Lock a data snapshot date to manage live-data risk",
+        "Expand narrative beyond price spikes to show who suffers most (Sub-Saharan Africa angle is strong)",
+        "Create a clear data freeze strategy for the remaining 2.5 weeks"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Is Dublin the Most Stressed City in Ireland?",
+      "members": [
+        {"name": "Anirban Santra",   "id": "x24288152"},
+        {"name": "Dayita Guha",      "id": "x24286303"},
+        {"name": "Shehab Ahmed Santo","id": "x24325589"}
+      ],
+      "recommended_idea": "Is Dublin the Most Stressed City in Ireland?",
+      "submitted_idea": "Is Dublin the Most Stressed City in Ireland?",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended idea with a robust multi-indicator composite stress index approach.",
+      "datasets_cited": [
+        "CSO Well-being Survey (SILC): life satisfaction, depression, loneliness, financial stress",
+        "Census Commuting Data: average journey times, long commutes by county",
+        "Census Housing and Rent Data: average weekly rent by county",
+        "RTB Rent Index: standardised monthly rents for new/existing tenancies",
+        "Census Population Statistics: population density and demographics"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 5,
+        "analytical_depth": 5,
+        "decision_maker": 4,
+        "feasibility": 4,
+        "differentiation": 4,
+        "presentation": 5
+      },
+      "strengths": [
+        "Five complementary CSO datasets, all open and well-documented",
+        "Six numbered 'aha' insights with specific statistics (e.g. Dublin rent 65-90% higher than Cork)",
+        "Data quality assessment section included (completeness, missing values, consistency)",
+        "Transparent composite index methodology"
+      ],
+      "concerns": [
+        "Proxy indicators for stress need careful methodological justification",
+        "Decision-maker audience (city planners, health officials) is clear but broad",
+        "Risk of cherry-picking indicators to confirm the premise"
+      ],
+      "action_items": [
+        "Document and justify each proxy indicator's inclusion in the stress index",
+        "Compare Dublin against at least 3 other Irish cities using the same composite",
+        "Frame as genuine inquiry, not foregone conclusion",
+        "Build reproducible Python pipeline for composite scoring"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Hidden Bottlenecks in Ireland's Hospital Waiting Lists",
+      "members": [
+        {"name": "Aarti Sharma",                 "id": "x24253090"},
+        {"name": "Apeksha Chavan",               "id": "x24272256"},
+        {"name": "Apurva Jadhav",                "id": "x24314374"},
+        {"name": "Gayatri Hirlekar",             "id": "x24293083"}
+      ],
+      "recommended_idea": "Healthcare Waiting Lists in Ireland",
+      "submitted_idea": "Hidden Bottlenecks in Ireland's Hospital Waiting Lists",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Switched from Housing Affordability to Healthcare Waiting Lists as advised. Focused on specialty-level bottleneck analysis with a strong KPI framework.",
+      "datasets_cited": [
+        "National Treatment Purchase Fund (NTPF) Waiting List Data: specialty, volumes, time bands (0-6, 6-12, 12-18, 18+ months)"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 4,
+        "analytical_depth": 5,
+        "decision_maker": 4,
+        "feasibility": 4,
+        "differentiation": 3,
+        "presentation": 5
+      },
+      "strengths": [
+        "Most comprehensive submission (1,548 words) with 9 KPIs organised in three narrative Acts",
+        "Switched from Housing to Healthcare as advised, showing responsiveness to feedback",
+        "Novel 'Wait Pressure' ratio metric (patients >12mo / total patients)",
+        "Python/Google Colab analysis with four figures"
+      ],
+      "concerns": [
+        "Overlaps with Team 07 on hospital waiting lists; must differentiate angle",
+        "Single data source (NTPF) limits triangulation opportunities",
+        "Risk of analysis becoming too technical for non-specialist audience"
+      ],
+      "action_items": [
+        "Differentiate clearly from Team 07: focus on bottleneck mechanics, not budget allocation",
+        "Add Slaintecare time targets as benchmark lines on visualisations",
+        "Simplify KPI language for policy audience (avoid jargon like 'Wait Pressure')",
+        "Consider adding one complementary dataset (e.g. HSE funding by specialty)"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "The Global Rise of Internet Shutdowns",
+      "members": [
+        {"name": "Shree Nidhi Venkatesa Prabhu", "id": "x24329801"},
+        {"name": "Hitha Shetty",                  "id": "x24268615"},
+        {"name": "Poshita Gaur",                   "id": "x24329797"},
+        {"name": "Utham Venkatesh Ravichandran",   "id": "x24298158"}
+      ],
+      "recommended_idea": "The Global Rise of Internet Shutdowns",
+      "submitted_idea": "The Global Rise of Internet Shutdowns",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended idea. Identified Access Now STOP dataset as primary source with economic cost dimension.",
+      "datasets_cited": [
+        "Access Now #KeepItOn Shutdown Tracker (STOP): event-level, dates, countries, scope, type, reasons",
+        "Freedom House Freedom on the Net reports",
+        "NetBlocks Cost of Shutdown Tool (COST)",
+        "World Bank economic impact indicators",
+        "Top10VPN Global Cost of Internet Shutdowns 2024 report"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 4,
+        "analytical_depth": 3,
+        "decision_maker": 3,
+        "feasibility": 4,
+        "differentiation": 5,
+        "presentation": 3
+      },
+      "strengths": [
+        "Highly distinctive topic: digital rights and internet governance rarely visualised",
+        "Multiple complementary data sources including economic cost dimension",
+        "Clear preliminary insights: 2024 as record year, power concentrated in few states",
+        "Well-scoped next steps for data cleaning and narrative testing"
+      ],
+      "concerns": [
+        "Analytical depth is moderate: needs more specific statistics from the data",
+        "Decision-maker audience mentioned but not clearly specified",
+        "Submission length (846 words) could be more detailed for a 4-person team"
+      ],
+      "action_items": [
+        "Download and explore the STOP dataset: cite specific counts, trends, top countries",
+        "Define a specific decision-maker (e.g. UN Special Rapporteur on Freedom of Expression)",
+        "Lead with the trend line: 'Shutdowns increased X% over Y years'",
+        "Include 'cost of silence' metric per shutdown event"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "The Invisible Pandemic: Antibiotic Resistance Funding",
+      "members": [
+        {"name": "Habib Goloba",           "id": "x24244350"},
+        {"name": "Ifeanyi Kingsley Owonta","id": "x25132016"},
+        {"name": "Van Trinh Vo",           "id": "x24297470"},
+        {"name": "Adythio Niramoyo",       "id": "x24327875"}
+      ],
+      "recommended_idea": "The Invisible Pandemic: Antibiotic Resistance",
+      "submitted_idea": "The Invisible Pandemic: Antibiotic Resistance Funding",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Followed the recommended topic but shifted from mortality/clinical angle to research funding analysis. Valid pivot but the original recommendation emphasised the mortality comparison hook.",
+      "datasets_cited": [
+        "Global research funding dataset for bacterial infectious diseases (13,000+ projects)",
+        "Dataset fields: Project ID, Organisation, PI, Country, Dates, Investment (USD), Research area, Infectious agent"
+      ],
+      "scores": {
+        "alignment": 4,
+        "dataset_quality": 3,
+        "analytical_depth": 3,
+        "decision_maker": 3,
+        "feasibility": 4,
+        "differentiation": 4,
+        "presentation": 3
+      },
+      "strengths": [
+        "Funding angle provides a distinctive take on AMR that avoids clinical complexity",
+        "13,000+ project dataset enables meaningful aggregation and comparison",
+        "Geographic concentration finding (USA, UK dominate) is policy-relevant",
+        "Vaccines-vs-therapeutics funding gap is a clear, communicable insight"
+      ],
+      "concerns": [
+        "Lost the powerful mortality comparison hook (AMR kills more than HIV/malaria)",
+        "Dataset source and accessibility not clearly documented (no URLs)",
+        "Insights are somewhat generic: funding concentrated in rich countries is expected"
+      ],
+      "action_items": [
+        "Re-integrate the mortality comparison as the opening hook, then pivot to funding",
+        "Provide dataset URL and verify open access",
+        "Quantify specific funding gaps: how much per death for AMR vs HIV vs malaria?",
+        "Identify a specific decision-maker (e.g. WHO Director of AMR Coordination)",
+        "Add temporal trends: is AMR funding growing or stagnating?"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Flooded and Forgotten: Flood Risk and Deprivation in Ireland",
+      "members": [
+        {"name": "Maheshwar Singh Thakur", "id": "x24246522"},
+        {"name": "Prabhakar Battula",      "id": "x24283258"}
+      ],
+      "recommended_idea": "Flooded and Forgotten",
+      "submitted_idea": "Flooded and Forgotten: Flood Risk and Socioeconomic Deprivation in Ireland",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended idea with impressive analytical rigour. Strongest correlation analysis in the cohort (r = -0.76).",
+      "datasets_cited": [
+        "OPW Flood Zone Classifications (data.gov.ie): Zone A (>1% AEP), Zone B (0.1-1% AEP)",
+        "Pobal HP Deprivation Index: 209 Electoral Divisions, 33 counties, 8 NUTS3 regions",
+        "18 variables including deprivation scores, unemployment, education, lone-parent rates, flood zones"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 5,
+        "analytical_depth": 5,
+        "decision_maker": 4,
+        "feasibility": 3,
+        "differentiation": 5,
+        "presentation": 5
+      },
+      "strengths": [
+        "Most analytically rigorous submission: Pearson r = -0.76 (more deprivation = more vulnerability)",
+        "Five figures with clear methodology (scatter plots, bar charts, box plots, regional maps)",
+        "Policy gap identified: 7 of 31 Critically Vulnerable EDs lack flood relief schemes",
+        "Highly original topic: flood risk as social justice issue, not hydrology"
+      ],
+      "concerns": [
+        "Only 2 team members: capacity risk for remaining 2.5 weeks",
+        "Spatial data joining is technically demanding (Electoral Division level)",
+        "Decision-maker could be more specifically named (e.g. OPW Chief Engineer)"
+      ],
+      "action_items": [
+        "Prioritise ruthlessly given 2-person capacity: focus on 3-4 key visualisations",
+        "Name the 7 unprotected EDs explicitly as the actionable finding",
+        "Build narrative flow: start with one real flooded community, then zoom out",
+        "Simplify spatial approach: Electoral Division level, not property level"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Ireland's Waiting List Crisis: Where EUR 420M Is Not Going",
+      "members": [
+        {"name": "Mary Divya Prajesh",    "id": "x24327409"},
+        {"name": "Ben Savio Yesudas",     "id": "x24328162"},
+        {"name": "Anithu Yohannan",       "id": "x24314099"},
+        {"name": "Shanu Ponnattu Shaji",  "id": "x24296911"}
+      ],
+      "recommended_idea": "Who Really Waits Longest in Ireland's Hospital Queues?",
+      "submitted_idea": "Ireland's Waiting List Crisis: Where EUR 420M Is Not Going",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended waiting list topic with a distinctive budget accountability angle. EUR 420M framing and Pareto analysis add clear differentiation.",
+      "datasets_cited": [
+        "NTPF Open Data: Outpatient waiting list (2,247 rows x 10 columns, Jan 2025-Feb 2026)",
+        "Government Waiting Time Action Plan 2025 (EUR 420M budget)",
+        "RTE and NTPF press releases"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 4,
+        "analytical_depth": 5,
+        "decision_maker": 4,
+        "feasibility": 4,
+        "differentiation": 3,
+        "presentation": 4
+      },
+      "strengths": [
+        "Powerful framing: EUR 420M spent yet extreme waits grew 10%",
+        "Pareto analysis: 5 specialties account for 57% of extreme wait backlog",
+        "Insight that chronic conditions (Dermatology, Endocrinology) queue longer because of lower political priority",
+        "Four figures with clear policy implications"
+      ],
+      "concerns": [
+        "Overlaps with Team 03 on hospital waiting lists; differentiation needed",
+        "Budget accountability angle could be strengthened with actual spend-per-specialty data",
+        "Single primary data source (NTPF)"
+      ],
+      "action_items": [
+        "Differentiate from Team 03: lead with budget allocation mismatch, not bottleneck mechanics",
+        "Source HSE or Department of Health spend-per-specialty data to complete the argument",
+        "Add Slaintecare targets as benchmark lines",
+        "Quantify the cost-per-patient-cleared for each specialty",
+        "Create a 'money follows the problem' scenario showing reallocation impact"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Geopolitical Conflict and Europe's Energy Transition",
+      "members": [
+        {"name": "Nishant Sanjay Ghawalkar",         "id": "x24299421"},
+        {"name": "Shreyan Sanjeev Kulkarni",          "id": "x24320773"},
+        {"name": "Rishabh Dixit",                     "id": "x24337366"},
+        {"name": "Jestin Vaniyapurayil Thomas",       "id": "x24312550"}
+      ],
+      "recommended_idea": "Europe Energy Risk from Strait of Hormuz Conflict",
+      "submitted_idea": "Geopolitical Conflict and Europe's Energy Transition",
+      "alignment": "PIVOTED",
+      "alignment_note": "Departed from the recommended Hormuz energy vulnerability angle. Now exploring whether Ukraine-related conflict accelerated Europe's renewable energy adoption using ACLED and Eurostat.",
+      "datasets_cited": [
+        "ACLED Europe and Central Asia Conflict Dataset (~117,359 conflict events)",
+        "Eurostat Renewable Energy Statistics (2016-2024, share of renewables by country)"
+      ],
+      "scores": {
+        "alignment": 2,
+        "dataset_quality": 4,
+        "analytical_depth": 4,
+        "decision_maker": 3,
+        "feasibility": 3,
+        "differentiation": 4,
+        "presentation": 4
+      },
+      "strengths": [
+        "Two authoritative datasets (ACLED, Eurostat) with clear methodology",
+        "Pre/post war comparison: renewables share rose from ~19.9% to ~24.3%",
+        "Distinctive angle: conflict as accelerant of energy transition",
+        "Well-structured, methodical analysis"
+      ],
+      "concerns": [
+        "Departed from recommended Hormuz angle without explaining rationale",
+        "Correlation between conflict and renewable adoption does not establish causation",
+        "ACLED dataset is very large (117K events); needs aggressive filtering"
+      ],
+      "action_items": [
+        "Acknowledge the pivot from Hormuz and explain why the new angle is stronger",
+        "Focus on 5-6 specific European countries for tractable analysis",
+        "Be explicit about correlation vs causation limitations",
+        "Identify a specific decision-maker (e.g. EU Commissioner for Energy)",
+        "Add a counterfactual: what was the renewable trajectory before the war?"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Irish Road Safety: A Nation Moving in the Wrong Direction",
+      "members": [
+        {"name": "Parag Harichandra Patel", "id": "x24296821"},
+        {"name": "Kanchan Prasad",           "id": "x25105205"},
+        {"name": "Rincy Rajan Mathew",       "id": "x24335304"}
+      ],
+      "recommended_idea": "Road Accident Analysis: Identifying High-Risk Conditions and Locations",
+      "submitted_idea": "Irish Road Safety: A Nation Moving in the Wrong Direction",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended topic and improved it by switching from UK to Irish data (as advised). Best decision-maker persona in the cohort: RSA Director of Road Safety Strategy.",
+      "datasets_cited": [
+        "ROA17 (Traffic Collisions & Casualties Monthly): RSA/CSO, 2005-2023",
+        "ROA20 (Traffic Collisions & Casualties by County): RSA/CSO, 2005-2012",
+        "RSA Provisional Fatality Statistics 2021-2026 (published March 2026)",
+        "EU Country Profile for Ireland (European Commission DG MOVE, Feb 2024)",
+        "ETSC 19th Road Safety Performance Index (PIN) Report (June 2025)"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 5,
+        "analytical_depth": 5,
+        "decision_maker": 5,
+        "feasibility": 5,
+        "differentiation": 4,
+        "presentation": 5
+      },
+      "strengths": [
+        "Five authoritative data sources across Irish and EU levels",
+        "Strongest decision-maker alignment: RSA Director of Road Safety Strategy",
+        "Counter-trend finding: Ireland +28% fatalities while EU -12.3%",
+        "Three specific, evidence-based policy recommendations with implementation pathways"
+      ],
+      "concerns": [
+        "Road safety dashboards are a well-established genre; needs visual distinctiveness",
+        "ROA20 dataset only runs to 2012; county-level data has a gap to present"
+      ],
+      "action_items": [
+        "Design a visually distinctive front page that passes the '5-second test'",
+        "Address the ROA20 data gap (2012-present) for county-level analysis",
+        "Lead with the counter-trend: Ireland going wrong while EU improves",
+        "Prototype the dashboard layout from the submission sketch"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "The Global Wheat Shock: How the Ukraine War Disrupted Food Security",
+      "members": [
+        {"name": "Raghuveer Bakkolla",     "id": "x24316466"},
+        {"name": "Harshitha Devireddy",     "id": "x24262421"},
+        {"name": "Harini Sakali",           "id": "x24279731"}
+      ],
+      "recommended_idea": "Global Food Prices and Cost of Living Crisis",
+      "submitted_idea": "The Global Wheat Shock: How the Ukraine War Disrupted Food Security",
+      "alignment": "EVOLVED",
+      "alignment_note": "Major improvement. Narrowed from generic food prices to Ukraine wheat supply disruption. Specific commodity, specific shock, specific victims. Exactly the kind of focusing the feedback recommended.",
+      "datasets_cited": [
+        "FAO Food Price Monitoring & Analysis (FPMA): monthly wheat prices, Jan 2018-June 2024 (78 observations)",
+        "UN FAO Cereal Import Dependency Ratio (CIDR): 25 major nations (Item Code 21035)",
+        "FAO Trade Statistics: food CPI inflation for 17 countries (2021-2023)"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 5,
+        "analytical_depth": 5,
+        "decision_maker": 5,
+        "feasibility": 4,
+        "differentiation": 4,
+        "presentation": 5
+      },
+      "strengths": [
+        "Exceptional data exploration: pre/post invasion prices ($229 to $458.7/tonne = 58% spike)",
+        "Import dependency analysis identifies 6 countries with >50% dependency (Lebanon 81.4%)",
+        "Food inflation gap: high-dependency countries 167.4% vs low-dependency 11.3%",
+        "Clear decision-maker: World Food Programme, national food security regulators"
+      ],
+      "concerns": [
+        "Three FAO datasets need careful joining; some gaps likely in CPI data",
+        "Ukraine wheat narrative is well-covered in media; needs visual distinctiveness"
+      ],
+      "action_items": [
+        "Lead with the 156-percentage-point inflation gap as the headline finding",
+        "Build Lebanon as a sentinel case study (81.4% import dependency, 49.8% Ukrainian wheat)",
+        "Add a 'strategic reserve' or 'early warning' policy dimension",
+        "Ensure all three FAO datasets join cleanly on country identifiers"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "The Loneliness Epidemic",
+      "members": [
+        {"name": "Salma Mohamed",           "id": "x25128841"},
+        {"name": "Damaris Faith Opadiran",  "id": "x24262650"},
+        {"name": "Oluwakemi Julian Alao",   "id": "x24309389"},
+        {"name": "Whitney Owen Oshodin",    "id": "x25149598"}
+      ],
+      "recommended_idea": "The Loneliness Epidemic",
+      "submitted_idea": "The Loneliness Epidemic",
+      "alignment": "FOLLOWED",
+      "alignment_note": "Adopted the recommended topic. Three datasets identified but no exploratory analysis performed. Submission is substantially below expectations for a 4-person team.",
+      "datasets_cited": [
+        "OECD How's Life? Social Connections (47 countries): loneliness, social support, interactions",
+        "Meta-Gallup Global State of Social Connections (7 countries): nationally representative survey",
+        "Our World in Data: social support, one-person households, mortality linkage (100+ countries)"
+      ],
+      "scores": {
+        "alignment": 5,
+        "dataset_quality": 3,
+        "analytical_depth": 2,
+        "decision_maker": 2,
+        "feasibility": 3,
+        "differentiation": 3,
+        "presentation": 2
+      },
+      "strengths": [
+        "Three complementary datasets spanning different geographic scopes",
+        "Framing loneliness as physical health crisis (not just mental health) is powerful",
+        "Topic has genuine policy relevance and emotional resonance"
+      ],
+      "concerns": [
+        "No exploratory analysis performed: no figures, no insights, no statistics from data",
+        "Copy-paste error: 'We will draw on three complementary datasets' repeated verbatim",
+        "No target decision-maker identified",
+        "Very short submission (410 words) for a 4-person team"
+      ],
+      "action_items": [
+        "Immediately download and explore all three datasets",
+        "Verify Gallup data access (may require paid licence)",
+        "Define a specific decision-maker (e.g. Minister for Mental Health and Older People)",
+        "Lead with the mortality comparison: 'loneliness kills more than 15 cigarettes a day'",
+        "Produce at least 3 preliminary visualisations before the next milestone"
+      ]
+    },
+    {
+      "number": 12,
+      "title": "Conflict, Oil, and Economic Shockwaves",
+      "members": [
+        {"name": "Sameeruddin Syed",       "id": "x24257435"},
+        {"name": "Ismail Mohammed",         "id": "x24225321"},
+        {"name": "Nishant Singh",           "id": "x24296473"},
+        {"name": "Siddhesh Ajay Chavan",    "id": "x24312908"}
+      ],
+      "recommended_idea": "From Glitches to Global Risk: Mapping the Escalation of AI Incidents",
+      "submitted_idea": "Oil, Conflict, and Economic Shockwaves",
+      "alignment": "DIVERGED",
+      "alignment_note": "Ignored the recommended AI Incidents topic entirely. Reverted to Idea 1 (Oil/Conflict) which the feedback explicitly advised against as widely explored. No rationale provided for the departure.",
+      "datasets_cited": [
+        "War Economic Impact Dataset (100,000 rows, 28 columns; source unspecified)",
+        "Oil Production by Country Dataset (17,992 rows, 4 columns; source unspecified)",
+        "GDP Growth Dataset (World Bank)"
+      ],
+      "scores": {
+        "alignment": 1,
+        "dataset_quality": 2,
+        "analytical_depth": 2,
+        "decision_maker": 1,
+        "feasibility": 3,
+        "differentiation": 1,
+        "presentation": 1
+      },
+      "strengths": [
+        "Basic descriptive statistics provided (avg GDP change -31.61% during conflicts)",
+        "Large dataset (100K rows) could enable meaningful analysis if properly explored",
+        "Topic has inherent public interest"
+      ],
+      "concerns": [
+        "Ignored lecturer recommendation without explanation",
+        "Shortest submission in cohort (253 words): reads as an outline, not a completed deliverable",
+        "No dataset URLs, no source provenance, no data quality assessment",
+        "No target decision-maker identified"
+      ],
+      "action_items": [
+        "Urgent: provide dataset URLs and verify data provenance",
+        "Define a specific decision-maker and key message",
+        "Perform genuine exploratory analysis with at least 3 visualisations",
+        "Consider returning to AI Incidents as recommended, or provide clear justification for this pivot",
+        "Expand submission to demonstrate team has engaged with the data"
+      ]
+    }
+  ]
+}

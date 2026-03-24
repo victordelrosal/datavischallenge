@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23050510'/%3E%3Crect x='5' y='18' width='5' height='9' rx='1' fill='%2300e5ff'/%3E%3Crect x='13' y='10' width='5' height='17' rx='1' fill='%23f59e42'/%3E%3Crect x='21' y='5' width='5' height='22' rx='1' fill='%23ff6b6b'/%3E%3C/svg%3E">
+<title>Dataset Submissions | 9DATAV Challenge 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0A0E1A;
+  --bg2: #0F1425;
+  --bg3: #151B2E;
+  --green: #39FF14;
+  --cyan: #00E5FF;
+  --orange: #FF6B00;
+  --violet: #9B6DFF;
+  --coral: #FF3D5A;
+  --grid: rgba(255,255,255,0.04);
+  --text: #D0D0D0;
+  --text-dim: #808898;
+  --white: #FFFFFF;
+  --dim: rgba(57,255,20,0.15);
+  --border: rgba(57,255,20,0.12);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Film grain */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9997;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+a { color: var(--cyan); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============ NAV ============ */
+.top-bar {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+  height: 48px;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  font-size: 11px;
+}
+.top-bar .brand { color: var(--green); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+.top-bar .nav-links { display: flex; gap: 24px; }
+.top-bar .nav-links a { color: var(--text-dim); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.top-bar .nav-links a:hover { color: var(--green); text-decoration: none; }
+
+/* ============ HERO ============ */
+.hero {
+  padding: 120px 40px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero .eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.hero .subtitle {
+  font-size: 14px;
+  color: var(--text-dim);
+  max-width: 680px;
+  line-height: 1.8;
+}
+
+/* ============ EXECUTIVE DASHBOARD ============ */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 40px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-card .num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+}
+.stat-card .label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Heatmap */
+.heatmap-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  overflow-x: auto;
+  margin-bottom: 32px;
+}
+.heatmap-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.heatmap {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.heatmap th {
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-dim);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.heatmap th:first-child, .heatmap th:nth-child(2), .heatmap th:nth-child(3) { text-align: left; }
+.heatmap td {
+  padding: 7px 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  vertical-align: middle;
+}
+.heatmap td:first-child { text-align: center; font-weight: 600; color: var(--cyan); width: 40px; }
+.heatmap td:nth-child(2) { text-align: left; font-weight: 500; color: var(--white); width: 50px; }
+.heatmap td:nth-child(3) { text-align: left; color: var(--text); max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.heatmap tr:hover td { background: rgba(57,255,20,0.04); }
+
+.cell { display: inline-block; width: 28px; height: 22px; line-height: 22px; border-radius: 3px; font-weight: 600; font-size: 10px; }
+.c5 { background: #1b5e20; color: #fff; }
+.c4 { background: #388e3c; color: #fff; }
+.c3 { background: #f9a825; color: #111; }
+.c2 { background: #e65100; color: #fff; }
+.c1 { background: #b71c1c; color: #fff; }
+
+.score-col { font-weight: 700; color: var(--white); }
+
+/* Grade badges */
+.grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+.gA  { background: #28a745; color: #fff; }
+.gAm { background: #5cb85c; color: #fff; }
+.gBp { background: #8bc34a; color: #fff; }
+.gB  { background: #f9a825; color: #111; }
+.gBm { background: #ff9800; color: #fff; }
+.gC  { background: #ff5722; color: #fff; }
+.gD  { background: #dc3545; color: #fff; }
+
+/* Alignment badges */
+.align { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 8px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.aF { background: rgba(40,167,69,0.2); color: #5cb85c; }
+.aE { background: rgba(0,229,255,0.15); color: var(--cyan); }
+.aP { background: rgba(255,193,7,0.2); color: #ffc107; }
+.aD { background: rgba(220,53,69,0.2); color: var(--coral); }
+
+/* ============ SECTION HEADINGS ============ */
+.section-heading {
+  max-width: 1200px;
+  margin: 48px auto 24px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-heading .tick {
+  width: 2px; height: 24px;
+  background: var(--green);
+}
+.section-heading h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.section-heading .line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--green), transparent);
+}
+
+/* ============ TEAM TOGGLES ============ */
+.teams-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+
+.team-toggle {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.team-toggle:hover { border-color: rgba(57,255,20,0.25); }
+.team-toggle.open { border-color: rgba(57,255,20,0.35); }
+
+.team-header {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.team-header:hover { background: rgba(57,255,20,0.03); }
+.team-header .team-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-align: center;
+}
+.team-header .team-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white);
+}
+.team-header .team-title .team-subtitle {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.team-header .team-score {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  min-width: 40px;
+  text-align: right;
+}
+.team-header .chevron {
+  width: 20px; height: 20px;
+  transition: transform 0.3s;
+  color: var(--text-dim);
+}
+.team-toggle.open .chevron { transform: rotate(180deg); }
+
+/* Team body */
+.team-body {
+  display: none;
+  padding: 0 20px 24px;
+}
+.team-toggle.open .team-body { display: block; }
+
+.team-body .divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 20px;
+}
+
+/* Two columns: writeup + scorecard */
+.team-content {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+}
+@media (max-width: 900px) {
+  .team-content { grid-template-columns: 1fr; }
+}
+
+/* Writeup */
+.writeup { font-size: 12px; line-height: 1.75; color: var(--text); }
+.writeup h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 20px 0 8px;
+}
+.writeup h3:first-child { margin-top: 0; }
+.writeup p { margin-bottom: 10px; }
+.writeup .meta-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 4px 12px;
+  font-size: 11px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.writeup .meta-grid .label { color: var(--text-dim); font-weight: 500; }
+.writeup .meta-grid .value { color: var(--text); }
+.writeup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+.writeup ul li {
+  padding: 3px 0 3px 16px;
+  position: relative;
+  font-size: 11px;
+}
+.writeup ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 10px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0.6;
+}
+.writeup .ds-list li::before { background: var(--orange); }
+.writeup .strength-list li::before { background: var(--green); }
+.writeup .concern-list li::before { background: var(--coral); }
+
+/* Scorecard panel */
+.scorecard-panel {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 20px;
+}
+.sc-title {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+.sc-row {
+  display: grid;
+  grid-template-columns: 1fr 36px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.sc-dim { font-size: 10px; color: var(--text-dim); }
+.sc-score { font-size: 11px; font-weight: 600; color: var(--white); text-align: center; }
+.sc-bar-bg {
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sc-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.sc-bar.g { background: linear-gradient(90deg, #28a745, #39FF14); }
+.sc-bar.a { background: linear-gradient(90deg, #e6a700, #ffc107); }
+.sc-bar.r { background: linear-gradient(90deg, #c62828, #ff5252); }
+
+.sc-overall {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.sc-overall .big-score {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--white);
+}
+.sc-overall .big-grade {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+/* Action items */
+.action-items {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.action-items .act-title {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.action-items ul { list-style: none; padding: 0; }
+.action-items li {
+  font-size: 10px;
+  color: var(--text);
+  padding: 3px 0 3px 14px;
+  position: relative;
+}
+.action-items li::before {
+  content: '\25B6';
+  position: absolute; left: 0; top: 3px;
+  font-size: 7px;
+  color: var(--orange);
+}
+
+/* Footer */
+.page-footer {
+  text-align: center;
+  padding: 40px;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .hero, .dashboard, .teams-container, .section-heading { padding-left: 20px; padding-right: 20px; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+  .team-header { grid-template-columns: 40px 1fr auto auto; gap: 10px; padding: 12px 14px; }
+  .team-header .team-score { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <span class="brand">9DATAV Challenge 2026</span>
+  <div class="nav-links">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#submissions">Submissions</a>
+    <a href="index.html">Main Site</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="eyebrow">Milestone 2 of 4 &bull; Dataset Approval</div>
+  <h1>Dataset Submissions Portal</h1>
+  <div class="subtitle">
+    All 12 teams have submitted their dataset choice with rationale. This portal provides a comprehensive overview of each submission, including topic, angle, datasets, preliminary analysis, and our evaluation scorecard.
+    Reviewed 23 March 2026.
+  </div>
+</section>
+
+<!-- Executive Dashboard -->
+<div class="dashboard" id="dashboard">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">3.85</div><div class="label">Mean Score</div></div>
+    <div class="stat-card"><div class="num">4.05</div><div class="label">Median Score</div></div>
+    <div class="stat-card"><div class="num">4.90</div><div class="label">Highest</div></div>
+    <div class="stat-card"><div class="num">1.70</div><div class="label">Lowest</div></div>
+    <div class="stat-card"><div class="num">10/12</div><div class="label">Followed Rec.</div></div>
+  </div>
+
+  <div class="heatmap-wrap">
+    <div class="heatmap-title">Ranked Overview &amp; Dimension Heatmap</div>
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th>#</th><th>Team</th><th>Title</th><th>Align</th>
+          <th>Align.</th><th>Data</th><th>Depth</th><th>DM</th><th>Feas.</th><th>Diff.</th><th>Pres.</th>
+          <th>Score</th><th>Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>09</td><td>Irish Road Safety</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="score-col">4.90</td><td><span class="grade gA">A</span></td></tr>
+        <tr><td>2</td><td>10</td><td>Global Wheat Shock</td><td><span class="align aE">Evolved</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="score-col">4.75</td><td><span class="grade gA">A</span></td></tr>
+        <tr><td>3</td><td>02</td><td>Dublin Stress Index</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td class="score-col">4.60</td><td><span class="grade gA">A</span></td></tr>
+        <tr><td>4</td><td>06</td><td>Flooded and Forgotten</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c5">5</span></td><td><span class="cell c5">5</span></td><td class="score-col">4.55</td><td><span class="grade gA">A</span></td></tr>
+        <tr><td>5</td><td>03</td><td>Hospital Bottlenecks</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c5">5</span></td><td class="score-col">4.30</td><td><span class="grade gAm">A-</span></td></tr>
+        <tr><td>6</td><td>07</td><td>Waiting Lists: EUR 420M</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td class="score-col">4.20</td><td><span class="grade gAm">A-</span></td></tr>
+        <tr><td>7</td><td>01</td><td>Oil Shock: Iran</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td class="score-col">3.90</td><td><span class="grade gBp">B+</span></td></tr>
+        <tr><td>8</td><td>04</td><td>Internet Shutdowns</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td class="score-col">3.75</td><td><span class="grade gBp">B+</span></td></tr>
+        <tr><td>9</td><td>08</td><td>Conflict &amp; Renewables</td><td><span class="align aP">Pivoted</span></td><td><span class="cell c2">2</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td class="score-col">3.50</td><td><span class="grade gBp">B+</span></td></tr>
+        <tr><td>10</td><td>05</td><td>AMR Funding</td><td><span class="align aF">Followed</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c4">4</span></td><td><span class="cell c4">4</span></td><td><span class="cell c3">3</span></td><td class="score-col">3.35</td><td><span class="grade gB">B</span></td></tr>
+        <tr><td>11</td><td>11</td><td>Loneliness Epidemic</td><td><span class="align aF">Followed</span></td><td><span class="cell c5">5</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c3">3</span></td><td><span class="cell c3">3</span></td><td><span class="cell c2">2</span></td><td class="score-col">2.75</td><td><span class="grade gBm">B-</span></td></tr>
+        <tr><td>12</td><td>12</td><td>Oil, Conflict, Economics</td><td><span class="align aD">Diverged</span></td><td><span class="cell c1">1</span></td><td><span class="cell c2">2</span></td><td><span class="cell c2">2</span></td><td><span class="cell c1">1</span></td><td><span class="cell c3">3</span></td><td><span class="cell c1">1</span></td><td><span class="cell c1">1</span></td><td class="score-col">1.70</td><td><span class="grade gD">D</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Submissions Section -->
+<div class="section-heading" id="submissions">
+  <div class="tick"></div>
+  <h2>Team Submissions</h2>
+  <div class="line"></div>
+</div>
+
+<div class="teams-container">
+
+<!-- ==================== TEAM 01 ==================== -->
+<div class="team-toggle" id="team01">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">01</div>
+    <div class="team-title">Oil Shock: How Iran's Rivalries Move Global Energy Markets<div class="team-subtitle">Ajita Srivastava, Neha Joseph, Prachi Sakpal, Hazel Francis &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">3.90</div>
+    <span class="grade gBp">B+</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Ajita Srivastava (x24309770), Neha Joseph (x24325937), Prachi Sakpal (x24264636), Hazel Francis (x24292541)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">Oil Shock: How Iran's Rivalries Move Global Energy Markets</span>
+          <span class="label">Submitted</span><span class="value">Oil Shock: How Iran's Rivalries Move Global Energy Markets</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~716</span>
+        </div>
+        <p>Team 01 adopted the recommended idea directly, focusing on how geopolitical tensions around Iran produce immediate and measurable spikes in global oil prices, with the Strait of Hormuz as the central chokepoint. The February 2026 Iran conflict, which pushed Brent crude above $100 per barrel, provides exceptional timeliness. The team frames the visualisation for G7 heads of state, energy ministers, and central bank governors.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>World Bank Global Fuel Prices Database (1990-2024, 170+ countries)</li>
+          <li>US EIA International Energy Data: crude oil prices, production volumes, trade flows, Strait of Hormuz throughput</li>
+          <li>Manual geopolitical event annotations from EIA archives and news sources</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The submission identifies four distinct historical spike patterns: the 1979 Iranian Revolution, the Iran-Iraq War, the 2012 sanctions crisis, and the 2019 tanker attacks, comparing each to the 2026 trajectory. They note that the current pattern is tracking the 2012 sanctions playbook, with Brent potentially reaching $115-120 within 60 days. The team includes SQL query logic for identifying price spikes exceeding 10% month-on-month, demonstrating genuine engagement with the data. A notable insight highlights that supply shock pain is unequally distributed: Sub-Saharan African nations face disproportionate fuel cost burdens compared to developed economies, revealing a dimension beyond the headline price movement.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Target audience is G7 leaders and energy ministers. The key message centres on the Strait of Hormuz carrying approximately 20% of daily global petroleum supply and 17% of LNG, making any disruption a systemic economic threat. When Iran escalates, energy markets respond within days, not weeks.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Two authoritative, open datasets (EIA and World Bank) with clear links</li>
+          <li>Four quantified insights including supply shock disparities across income levels</li>
+          <li>SQL query logic demonstrates genuine data engagement</li>
+          <li>Timely: Feb 2026 Brent crude above $100/barrel</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Relatively short submission (716 words) for a 4-person team</li>
+          <li>Oil/geopolitics is well-trodden territory; needs sharper differentiation</li>
+          <li>SQL snippet feels somewhat templated</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">3.90</div>
+          <span class="big-grade gBp">B+</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Add household energy cost impact layer for differentiation</li>
+            <li>Lock a data snapshot date to manage live-data risk</li>
+            <li>Expand narrative to show who suffers most (Sub-Saharan Africa angle)</li>
+            <li>Create a clear data-freeze strategy for remaining 2.5 weeks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 02 ==================== -->
+<div class="team-toggle" id="team02">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">02</div>
+    <div class="team-title">Is Dublin the Most Stressed City in Ireland?<div class="team-subtitle">Anirban Santra, Dayita Guha, Shehab Ahmed Santo &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">4.60</div>
+    <span class="grade gA">A</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Anirban Santra (x24288152), Dayita Guha (x24286303), Shehab Ahmed Santo (x24325589)</span>
+          <span class="label">Team Size</span><span class="value">3</span>
+          <span class="label">Recommended</span><span class="value">Is Dublin the Most Stressed City in Ireland?</span>
+          <span class="label">Submitted</span><span class="value">Is Dublin the Most Stressed City in Ireland?</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~1,475</span>
+        </div>
+        <p>Team 02 adopted the recommended idea with a robust multi-indicator composite stress index approach. Dublin was recently ranked the second most stressed city in the world following New York. The team tests this claim through five quantifiable proxy indicators drawn entirely from the Central Statistics Office (CSO) of Ireland, providing a transparent, reproducible methodology.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>CSO Well-being Survey (SILC): life satisfaction, depression, loneliness, financial stress by region</li>
+          <li>Census Commuting Data: average journey times, long commutes by county</li>
+          <li>Census Housing and Rent Data: average weekly rent by county</li>
+          <li>RTB Rent Index: standardised monthly rents for new/existing tenancies</li>
+          <li>Census Population Statistics: population density and demographics</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The submission identifies six preliminary insights with specific statistics. Dublin rent ranges from EUR 2,143-2,483/month, which is 65-90% higher than Cork City (EUR 1,297) or Galway (EUR 1,292). With median household income of EUR 50,000-55,000, rent consumes 40-50% of gross income (well above the 30% affordability threshold). The commute time gradient radiates outward from Dublin: bordering counties Meath (35 min), Kildare/Wicklow/Fingal (34 min) exceed Dublin City proper (28 min), with 21,000+ individuals enduring commutes over one hour. Nationally, 38.6% of renters report low financial satisfaction versus lower rates for homeowners, and life satisfaction fell from 7.7 (2023) to 7.6 (2024). The team includes a data quality assessment section covering completeness, missing values, and consistency checks. They plan to merge all five datasets, calculate composite stress indices, perform correlation analysis between objective stressors and subjective wellbeing, and create interactive Tableau dashboards.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>City planners, health officials, policymakers, and housing regulators. The key message: Dublin's stress is not anecdotal; it is quantifiable across multiple independent indicators, and the pressure is radiating outward into surrounding counties.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Five complementary CSO datasets, all open and well-documented</li>
+          <li>Six numbered insights with specific statistics</li>
+          <li>Data quality assessment section included</li>
+          <li>Transparent composite index methodology</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Proxy indicators for stress need careful methodological justification</li>
+          <li>Risk of cherry-picking indicators to confirm the premise</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.60</div>
+          <span class="big-grade gA">A</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Document and justify each proxy indicator's inclusion</li>
+            <li>Compare Dublin against at least 3 other Irish cities</li>
+            <li>Frame as genuine inquiry, not foregone conclusion</li>
+            <li>Build reproducible Python pipeline for composite scoring</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 03 ==================== -->
+<div class="team-toggle" id="team03">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">03</div>
+    <div class="team-title">Hidden Bottlenecks in Ireland's Hospital Waiting Lists<div class="team-subtitle">Aarti Sharma, Apeksha Chavan, Apurva Jadhav, Gayatri Hirlekar &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">4.30</div>
+    <span class="grade gAm">A-</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Aarti Sharma (x24253090), Apeksha Chavan (x24272256), Apurva Jadhav (x24314374), Gayatri Hirlekar (x24293083)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">Healthcare Waiting Lists in Ireland</span>
+          <span class="label">Submitted</span><span class="value">Hidden Bottlenecks in Ireland's Hospital Waiting Lists</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED (switched from Housing as advised)</span>
+          <span class="label">Word Count</span><span class="value">~1,548</span>
+        </div>
+        <p>Team 03 delivered the most comprehensive submission in the cohort at 1,548 words. They switched from their initial Housing Affordability idea to Healthcare Waiting Lists as advised in the brainstorm feedback, demonstrating responsiveness. The strategic question: which specialties generate the most system-wide backlog relative to their volume?</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>NTPF Waiting List Data: medical specialty, patient volumes, waiting time bands (0-6, 6-12, 12-18, 18+ months), monthly archive dates</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The team built a comprehensive KPI framework with nine metrics organised in three narrative "Acts": Hidden Scale (total national list, waiting list share by specialty, top-3 backlog contributors), Human Cost (patients >12 months, long-wait ratio, average waiting time by specialty), and Policy Failure (trend over time, growth rate, backlog trajectory in key specialties). They developed a novel "Wait Pressure" ratio: patients waiting >12 months divided by total patients, which isolates specialties where long waits are disproportionate. Python/Google Colab analysis produced four figures. Nine preliminary insights identify Orthopaedics as the largest system bottleneck, with Dermatology combining high demand with notable waiting delays. The team identifies a resource allocation mismatch: funding distribution does not match where the backlog concentrates.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Healthcare planners and policymakers responsible for resource allocation and hospital capacity management. The key message: the waiting list problem is structural, not temporary, and a small number of specialties drive a disproportionate share of system-wide delays.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Most comprehensive submission with 9 KPIs in three narrative Acts</li>
+          <li>Switched from Housing to Healthcare as advised</li>
+          <li>Novel 'Wait Pressure' ratio metric</li>
+          <li>Python/Google Colab analysis with four figures</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Overlaps with Team 07 on hospital waiting lists; must differentiate</li>
+          <li>Single data source (NTPF) limits triangulation</li>
+          <li>KPI language risks being too technical for policy audience</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.30</div>
+          <span class="big-grade gAm">A-</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Differentiate from Team 07: focus on bottleneck mechanics, not budget</li>
+            <li>Add Slaintecare time targets as benchmark lines</li>
+            <li>Simplify KPI language for policy audience</li>
+            <li>Consider adding HSE funding by specialty</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 04 ==================== -->
+<div class="team-toggle" id="team04">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">04</div>
+    <div class="team-title">The Global Rise of Internet Shutdowns<div class="team-subtitle">Shree Nidhi V. Prabhu, Hitha Shetty, Poshita Gaur, Utham V. Ravichandran &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">3.75</div>
+    <span class="grade gBp">B+</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Shree Nidhi V. Prabhu (x24329801), Hitha Shetty (x24268615), Poshita Gaur (x24329797), Utham V. Ravichandran (x24298158)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">The Global Rise of Internet Shutdowns</span>
+          <span class="label">Submitted</span><span class="value">The Global Rise of Internet Shutdowns</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~846</span>
+        </div>
+        <p>Team 04 adopted the recommended topic, framing internet shutdowns not as emergency exceptions but as deliberate governance strategies. 2024 represented a record year for shutdowns globally. The team argues the problem is global but power is concentrated: a few recurrent states are responsible for the majority of incidents, and shutdowns are systematically tied to elections, conflict, and protest.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>Access Now #KeepItOn Shutdown Tracker (STOP): event-level data with dates, countries, scope, type, networks affected, reasons, legal justification, election/violence flags</li>
+          <li>Freedom House Freedom on the Net reports</li>
+          <li>NetBlocks Cost of Shutdown Tool (COST)</li>
+          <li>World Bank economic impact indicators</li>
+          <li>Top10VPN Global Cost of Internet Shutdowns 2024 report</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The submission presents four preliminary insights: the issue is rising, not isolated (2024 as record year); power is concentrated in few recurrent states; shutdowns are tied to moments of public pressure (conflict, protest, elections); and the costs are not only social but economic, with measurable GDP impact. The team reviewed the STOP spreadsheet structure and Access Now methodology. Their next steps are well-scoped: clean the working dataset, conduct introductory exploratory analysis, create first charts, decide on the strongest narrative scenario, and frame the front-page visual around one central insight. The topic is highly distinctive: digital rights and internet governance are rarely visualised in an accessible format for policymakers.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Ministers, regulators, CEOs, and editors. The key message: internet shutdowns are a growing, measurable, and economically costly tool of state control, concentrated in a small number of repeat offenders.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Highly distinctive topic: digital rights rarely visualised</li>
+          <li>Multiple complementary data sources including economic cost</li>
+          <li>Clear preliminary insights with well-scoped next steps</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Analytical depth is moderate: needs more specific statistics</li>
+          <li>Decision-maker audience not clearly specified</li>
+          <li>Submission length (846 words) below expectation for a 4-person team</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">3.75</div>
+          <span class="big-grade gBp">B+</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Download and explore the STOP dataset: cite specific counts and trends</li>
+            <li>Define a specific decision-maker (e.g. UN Special Rapporteur)</li>
+            <li>Lead with trend line: 'Shutdowns increased X% over Y years'</li>
+            <li>Include 'cost of silence' metric per shutdown event</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 05 ==================== -->
+<div class="team-toggle" id="team05">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">05</div>
+    <div class="team-title">The Invisible Pandemic: Antibiotic Resistance Funding<div class="team-subtitle">Habib Goloba, Ifeanyi K. Owonta, Van Trinh Vo, Adythio Niramoyo &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">3.35</div>
+    <span class="grade gB">B</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Habib Goloba (x24244350), Ifeanyi K. Owonta (x25132016), Van Trinh Vo (x24297470), Adythio Niramoyo (x24327875)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">The Invisible Pandemic: Antibiotic Resistance</span>
+          <span class="label">Submitted</span><span class="value">The Invisible Pandemic: Antibiotic Resistance Funding</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED (shifted to funding angle)</span>
+          <span class="label">Word Count</span><span class="value">~671</span>
+        </div>
+        <p>Team 05 followed the recommended AMR topic but shifted from the mortality/clinical angle to a research funding analysis. The dataset contains nearly 13,000 research projects tracking global investments in bacterial infectious diseases. The team investigates which countries invest the most, which research areas receive the most funding, and whether funding trends are increasing or stagnating. The shift from mortality to funding is a valid pivot but loses the powerful "AMR kills more than HIV/malaria" hook that made the original recommendation compelling.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>Global research funding dataset for bacterial infectious diseases: 13,000+ projects with Project ID, Research Organisation, PI, Country, Dates, Investment (USD), Research Area, Infectious Agent</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Python/pandas analysis reveals funding by research area: Basic Research $3.53B, Therapeutics $3.14B, Operational Research $2.07B, Vaccines $1.10B, Capacity Building $1.07B. Geographically, USA leads with $6.85B, followed by UK at $1.67B and Global Partnerships at $1.05B. Four insights emerge: research funding is highly concentrated geographically in developed countries (not surprising, but quantified); basic research receives the most funding; vaccines are underfunded compared to therapeutics; and current AMR research funding may not match the scale of the crisis (projected 10 million annual deaths by 2050). The insights, while valid, are somewhat expected. The geographic concentration finding is policy-relevant but not counterintuitive.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Policymakers and global health organisations. The message: the world is spending on AMR research, but not enough, not in the right areas, and not in the places where the crisis will hit hardest.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Funding angle provides a distinctive take on AMR</li>
+          <li>13,000+ project dataset enables meaningful aggregation</li>
+          <li>Vaccines-vs-therapeutics gap is communicable</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Lost the powerful mortality comparison hook</li>
+          <li>Dataset source and accessibility not documented (no URLs)</li>
+          <li>Insights are somewhat generic</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">3.35</div>
+          <span class="big-grade gB">B</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Re-integrate mortality comparison as opening hook</li>
+            <li>Provide dataset URL and verify open access</li>
+            <li>Quantify funding gaps: cost per death for AMR vs HIV vs malaria</li>
+            <li>Identify a specific decision-maker (e.g. WHO AMR Director)</li>
+            <li>Add temporal trends: is funding growing or stagnating?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 06 ==================== -->
+<div class="team-toggle" id="team06">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">06</div>
+    <div class="team-title">Flooded and Forgotten: Flood Risk and Deprivation in Ireland<div class="team-subtitle">Maheshwar Singh Thakur, Prabhakar Battula &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">4.55</div>
+    <span class="grade gA">A</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Maheshwar Singh Thakur (x24246522), Prabhakar Battula (x24283258)</span>
+          <span class="label">Team Size</span><span class="value">2 (smallest team)</span>
+          <span class="label">Recommended</span><span class="value">Flooded and Forgotten</span>
+          <span class="label">Submitted</span><span class="value">Flooded and Forgotten: Flood Risk and Socioeconomic Deprivation in Ireland</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~1,321</span>
+        </div>
+        <p>Team 06 is the most analytically rigorous submission in the cohort, despite being the only 2-person team. They test whether socioeconomic deprivation and flood risk are systematically co-located in Ireland, reframing flood risk as a social justice narrative rather than a hydrological one. The merged dataset of OPW flood zone classifications and Pobal deprivation index covers 209 Electoral Divisions across 33 counties and 8 NUTS3 regions, with 18 variables.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>OPW Flood Zone Classifications (data.gov.ie): Zone A (&gt;1% AEP), Zone B (0.1-1% AEP)</li>
+          <li>Pobal HP Deprivation Index: 209 Electoral Divisions, unemployment, education, lone-parent rates</li>
+          <li>Composite vulnerability score combining both sources</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The team found no missing values across 209 records. The HP Deprivation Score ranges from -28 (most deprived) to +28 (most affluent). Of the 209 EDs, 114 (55%) sit in Zone A, 50 (24%) in Zone B, and 45 (21%) outside any flood zone. The headline finding: Pearson correlation r = -0.76 (strong negative), meaning more deprivation systematically aligns with higher flood vulnerability. Mean deprivation in Zone A is -11.4 versus -2.8 in Zone B and -4.1 in non-flood zones. The team identified the top 10 most vulnerable EDs (vulnerability score &gt;9.0), concentrated in Dublin inner city and Cork City Northeast with average deprivation scores below -20. A critical policy gap: 7 of 31 Critically Vulnerable EDs (23%) lack any flood relief scheme, representing communities that are simultaneously the most at-risk and the least protected. Regional vulnerability scores: South-East 6.84, Midlands 6.68, Mid-West 6.66 versus Dublin Region 4.72, despite Dublin receiving disproportionate media and investment attention. Five figures support the analysis: deprivation by flood zone, scatter plot, regional vulnerability, box plots, and flood type breakdown.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Government, local authorities, and community investment institutions. The message: flood risk is not equally distributed; it falls hardest on communities already struggling, and seven critically vulnerable areas have no protection at all.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Strongest analytical rigour: Pearson r = -0.76 with five figures</li>
+          <li>Policy gap identified: 7 critically vulnerable EDs unprotected</li>
+          <li>Highly original: flood risk as social justice, not hydrology</li>
+          <li>Outstanding for a 2-person team</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Only 2 team members: capacity risk for remaining timeline</li>
+          <li>Spatial data joining is technically demanding</li>
+          <li>Decision-maker could be more specifically named</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.55</div>
+          <span class="big-grade gA">A</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Prioritise ruthlessly given 2-person capacity</li>
+            <li>Name the 7 unprotected EDs as the actionable finding</li>
+            <li>Build narrative: one flooded community, then zoom out</li>
+            <li>Simplify spatial approach to Electoral Division level</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 07 ==================== -->
+<div class="team-toggle" id="team07">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">07</div>
+    <div class="team-title">Ireland's Waiting List Crisis: Where EUR 420M Is Not Going<div class="team-subtitle">Mary Divya Prajesh, Ben Savio Yesudas, Anithu Yohannan, Shanu Ponnattu Shaji &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">4.20</div>
+    <span class="grade gAm">A-</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Mary Divya Prajesh (x24327409), Ben Savio Yesudas (x24328162), Anithu Yohannan (x24314099), Shanu Ponnattu Shaji (x24296911)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">Who Really Waits Longest in Ireland's Hospital Queues?</span>
+          <span class="label">Submitted</span><span class="value">Ireland's Waiting List Crisis: Where EUR 420M Is Not Going</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~1,033</span>
+        </div>
+        <p>Team 07 adopted the recommended waiting list topic with a distinctive budget accountability angle. Their framing: Ireland spent EUR 420 million on waiting lists in 2025, yet patients waiting over 18 months grew by 10%. Five specialties account for more than half of all extreme waits. The submission merges four CSV files into a 2,247-row dataset covering January 2025 through February 2026, with standardised dates and calculated extreme-wait metrics.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>NTPF Open Data: monthly outpatient counts by specialty (2,247 rows x 10 columns)</li>
+          <li>Government Waiting Time Action Plan 2025 (EUR 420M budget)</li>
+          <li>RTE News January 2026 (headline context)</li>
+          <li>NTPF Monthly Press Release February 2026</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Pareto analysis reveals the core insight: 57% of extreme waits are concentrated in just five specialties. Dermatology leads with 8,425 patients (17.4% of extreme waits), followed by Endocrinology (13.5%), Orthopaedics, Ophthalmology, and Neurology. Total outpatient waiting list grew from 1,138,498 (Jan 2025) to 1,284,319 (Feb 2026), an increase of 145,821 patients in 14 months. The extreme-waits percentage hovers persistently between 7.1-7.8% monthly. The team surfaces a key invisible pattern: chronic conditions like Dermatology and Endocrinology queue longer than emergencies because they have lower political priority, despite affecting far more patients. Four figures support the analysis, including a top-15 specialties breakdown, full waiting burden, total OPD trend, and a "growing faster than being cleared" trend chart.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Healthcare policymakers, hospital administrators, and government budget planners. The message: the EUR 420M investment is not reaching the specialties where the backlog concentrates, and the list is expanding faster than it is being cleared.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Powerful framing: EUR 420M spent yet extreme waits grew 10%</li>
+          <li>Pareto analysis: 5 specialties = 57% of extreme wait backlog</li>
+          <li>Insight that chronic conditions queue longer due to lower political priority</li>
+          <li>Four figures with clear policy implications</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Overlaps with Team 03; differentiation needed</li>
+          <li>Budget accountability angle needs spend-per-specialty data</li>
+          <li>Single primary data source (NTPF)</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.20</div>
+          <span class="big-grade gAm">A-</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Lead with budget allocation mismatch, not bottleneck mechanics</li>
+            <li>Source HSE spend-per-specialty data</li>
+            <li>Add Slaintecare targets as benchmark lines</li>
+            <li>Create 'money follows the problem' reallocation scenario</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 08 ==================== -->
+<div class="team-toggle" id="team08">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">08</div>
+    <div class="team-title">Geopolitical Conflict and Europe's Energy Transition<div class="team-subtitle">Nishant Ghawalkar, Shreyan Kulkarni, Rishabh Dixit, Jestin V. Thomas &bull; <span class="align aP">Pivoted</span></div></div>
+    <div class="team-score">3.50</div>
+    <span class="grade gBp">B+</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Nishant Ghawalkar (x24299421), Shreyan Kulkarni (x24320773), Rishabh Dixit (x24337366), Jestin V. Thomas (x24312550)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">Europe Energy Risk from Strait of Hormuz Conflict</span>
+          <span class="label">Submitted</span><span class="value">Geopolitical Conflict and Europe's Energy Transition</span>
+          <span class="label">Alignment</span><span class="value">PIVOTED (departed from Hormuz)</span>
+          <span class="label">Word Count</span><span class="value">~1,033</span>
+        </div>
+        <p>Team 08 departed from the recommended Hormuz energy vulnerability angle without providing an explicit rationale. Instead, they explore whether the Ukraine-related conflict accelerated Europe's renewable energy adoption: did the war's disruption of fossil fuel supply chains push European countries toward renewables faster than they otherwise would have? The question is interesting and distinctive, but the pivot away from the recommendation carries a scoring penalty.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>ACLED Europe and Central Asia Conflict Dataset: ~117,359 conflict events with geographic coordinates, event type, fatalities, actors, dates</li>
+          <li>Eurostat Renewable Energy Statistics: annual share of energy from renewables across European countries (2016-2024)</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Conflict event trends show a dramatic increase from 325 events in 2017 to 106,337 in 2024, with fatalities spiking sharply after 2022 (Russia-Ukraine escalation). Renewable energy share shows steady growth from 17.98% (2016) to 25.24% (2024). Pre-war average (2017-2021): 19.88%; post-war (2022-2024): 24.27%, an increase of 4.39 percentage points. Conflict intensity is geographically concentrated in specific Ukraine regions: Donetsk, Kherson, Kharkiv, Luhansk, and Zaporizhzhia. The team notes this is correlation, not causation; the renewable energy trajectory was already upward before the war, but the pace may have accelerated. The ACLED dataset is very large at 117K events and will require aggressive filtering to remain tractable for visualisation.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Policymakers and strategic decision-makers in energy infrastructure investment and geopolitical risk management. The message: geopolitical conflict may accelerate energy transitions not through climate policy but through supply security imperatives.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Two authoritative datasets (ACLED, Eurostat)</li>
+          <li>Pre/post comparison: renewables ~19.9% to ~24.3%</li>
+          <li>Distinctive angle: conflict as accelerant of energy transition</li>
+          <li>Well-structured, methodical analysis</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Pivoted from Hormuz without explaining rationale</li>
+          <li>Correlation does not establish causation</li>
+          <li>ACLED dataset (117K events) needs aggressive filtering</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">3.50</div>
+          <span class="big-grade gBp">B+</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Acknowledge the pivot and explain why the new angle is stronger</li>
+            <li>Focus on 5-6 specific European countries</li>
+            <li>Be explicit about correlation vs causation limitations</li>
+            <li>Identify a specific decision-maker (e.g. EU Energy Commissioner)</li>
+            <li>Add a counterfactual: renewable trajectory before the war</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 09 ==================== -->
+<div class="team-toggle" id="team09">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">09</div>
+    <div class="team-title">Irish Road Safety: A Nation Moving in the Wrong Direction<div class="team-subtitle">Parag Patel, Kanchan Prasad, Rincy Rajan Mathew &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">4.90</div>
+    <span class="grade gA">A</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Parag Patel (x24296821), Kanchan Prasad (x25105205), Rincy Rajan Mathew (x24335304)</span>
+          <span class="label">Team Size</span><span class="value">3</span>
+          <span class="label">Recommended</span><span class="value">Road Accident Analysis: Identifying High-Risk Conditions and Locations</span>
+          <span class="label">Submitted</span><span class="value">Irish Road Safety: A Nation Moving in the Wrong Direction</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED + IMPROVED (switched to Irish data as advised)</span>
+          <span class="label">Word Count</span><span class="value">~1,214</span>
+        </div>
+        <p>Team 09 is the top submission in the cohort. They adopted the recommended road safety topic and improved it by switching from UK data to Irish data as advised in the feedback, creating immediate local relevance. The headline finding is powerful: Ireland's road fatalities have risen 28% since 2019, contrary to the EU-wide trend of -12.3% improvement over the same period. Ireland missed its 2024 target of 117.6 fatalities by 45.4%, with 171 actual deaths. The 2030 target of 69 fatalities is now almost mathematically unreachable.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>ROA17 Traffic Collisions &amp; Casualties Monthly (RSA/CSO, 2005-2023)</li>
+          <li>ROA20 Traffic Collisions &amp; Casualties by County (RSA/CSO, 2005-2012)</li>
+          <li>RSA Provisional Fatality Statistics 2021-2026 (published March 2026)</li>
+          <li>EU Country Profile for Ireland (European Commission DG MOVE, Feb 2024)</li>
+          <li>ETSC 19th Road Safety Performance Index (PIN) Report (June 2025)</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Five figures support five key insights. Seasonality analysis reveals July (avg 19.6 fatalities), October (19.1), and December (18.8) as the deadliest months: 16-20% above the annual average, and notably not the winter months most people would expect. Rural roads account for 72% of Irish fatalities (versus EU average 53%), with Ireland's unique characteristics: road density 1.5 km/km2 (versus EU 1.1), low population density, and 85.5% car dependency. Young people aged 16-25 represent 27% of all deaths and the share is rising, disproportionate to their share of licensed drivers. Early 2026 data shows 11 of 24 fatalities were drivers. The team benchmarks Ireland against Lithuania, which achieved a 55% reduction in 10 years; Ireland now needs to match this in five years. Three evidence-based policy recommendations emerge: rural speed enforcement on 20 highest-risk corridors, seasonal behavioural campaigns targeting July, October, and December, and a young driver emergency intervention package including mandatory graduated licensing, zero-tolerance BAC, and hazard perception testing.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>Director of Road Safety Strategy, RSA Ireland. This is the most specific decision-maker persona in the cohort. The message: Ireland is moving in the wrong direction on road safety, and without immediate intervention on three specific fronts, the 2030 target is unreachable.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Best decision-maker alignment in the cohort: RSA Director</li>
+          <li>Strongest counter-trend finding: Ireland +28% vs EU -12.3%</li>
+          <li>Five authoritative data sources across Irish and EU levels</li>
+          <li>Three implementation-ready policy recommendations</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Road safety dashboards are a well-established genre</li>
+          <li>ROA20 dataset only runs to 2012; county-level data has a gap</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.90</div>
+          <span class="big-grade gA">A</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Design visually distinctive front page for the '5-second test'</li>
+            <li>Address ROA20 data gap (2012-present) for county-level analysis</li>
+            <li>Lead with the counter-trend: Ireland vs EU</li>
+            <li>Prototype the dashboard layout from submission sketch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 10 ==================== -->
+<div class="team-toggle" id="team10">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">10</div>
+    <div class="team-title">The Global Wheat Shock: How the Ukraine War Disrupted Food Security<div class="team-subtitle">Raghuveer Bakkolla, Harshitha Devireddy, Harini Sakali &bull; <span class="align aE">Evolved</span></div></div>
+    <div class="team-score">4.75</div>
+    <span class="grade gA">A</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Raghuveer Bakkolla (x24316466), Harshitha Devireddy (x24262421), Harini Sakali (x24279731)</span>
+          <span class="label">Team Size</span><span class="value">3</span>
+          <span class="label">Recommended</span><span class="value">Global Food Prices and Cost of Living Crisis</span>
+          <span class="label">Submitted</span><span class="value">The Global Wheat Shock: How the Ukraine War Disrupted Food Security</span>
+          <span class="label">Alignment</span><span class="value">EVOLVED (narrowed from generic food to Ukraine wheat)</span>
+          <span class="label">Word Count</span><span class="value">~1,233</span>
+        </div>
+        <p>Team 10 exemplifies "evolution done right". The original brainstorm proposed generic global food prices with vague framing and no specific decision-maker. The submission narrows to one commodity (wheat), one shock (Russian invasion of Ukraine, 24 Feb 2022), and one consequence (food security in import-dependent MENA nations). Ukraine and Russia supplied 30% of global wheat exports in 2021. The transformation from a generic data summary to a specific, time-bounded supply chain disruption analysis is exactly the kind of scope sharpening the feedback recommended.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>FAO Food Price Monitoring &amp; Analysis (FPMA): monthly wheat prices, Jan 2018-June 2024 (78 observations)</li>
+          <li>UN FAO Cereal Import Dependency Ratio (CIDR): 25 major nations (Item Code 21035)</li>
+          <li>FAO Trade Statistics: food CPI inflation for 17 countries (2021-2023)</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Pre-invasion average wheat price: USD 229/metric tonne. Within 60 days of invasion, prices surged to USD 458.7/tonne (a 58% gain). The six-month post-invasion average was USD 413.8/tonne versus pre-invasion USD 296.4/tonne, a USD 117.4 differential (39.6% increase). The shock persisted for 20 months, well beyond procurement system response capacity. Bubble chart analysis identifies six countries with cereal import dependency above 50% and high Ukrainian wheat share: Lebanon (81.4% import dependency, 49.8% Ukrainian wheat share), Libya (88.7%, 43.2%), Yemen (78.2%, 38.5%), Tunisia (67.4%, 54.6%), Egypt (62.3%, 32.1%), and Morocco (53.1%, 37.8%). These six nations collectively represent over 190 million people. The most striking finding: food inflation in very-high Ukraine-dependency countries averaged 167.4% in 2022 versus 11.3% in low-dependency countries, a 156 percentage-point gap. Lebanon serves as the sentinel case study. The Black Sea Grain Deal (July 2022) provided some relief, but prices remained elevated for 16 more months, demonstrating that reactive policy responses are structurally inadequate.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>World Food Programme (WFP) and national food security regulators in import-dependent economies. The message: six MENA countries were doubly exposed (high import dependency and high Ukraine share), affecting 190+ million people, and the 156-percentage-point inflation gap proves diversification policy must be proactive, not reactive.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Exceptional data exploration: $229 to $458.7/tonne in 60 days</li>
+          <li>Import dependency analysis identifies 6 doubly-exposed countries</li>
+          <li>156-percentage-point inflation gap is a headline finding</li>
+          <li>Clear decision-maker: WFP, national food security regulators</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Three FAO datasets need careful joining</li>
+          <li>Ukraine wheat narrative is well-covered in media</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">4</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:80%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">4.75</div>
+          <span class="big-grade gA">A</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Lead with the 156-percentage-point inflation gap</li>
+            <li>Build Lebanon as sentinel case study</li>
+            <li>Add 'strategic reserve' or 'early warning' policy dimension</li>
+            <li>Ensure all three FAO datasets join cleanly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 11 ==================== -->
+<div class="team-toggle" id="team11">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">11</div>
+    <div class="team-title">The Loneliness Epidemic<div class="team-subtitle">Salma Mohamed, Damaris F. Opadiran, Oluwakemi J. Alao, Whitney O. Oshodin &bull; <span class="align aF">Followed</span></div></div>
+    <div class="team-score">2.75</div>
+    <span class="grade gBm">B-</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Salma Mohamed (x25128841), Damaris F. Opadiran (x24262650), Oluwakemi J. Alao (x24309389), Whitney O. Oshodin (x25149598)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">The Loneliness Epidemic</span>
+          <span class="label">Submitted</span><span class="value">The Loneliness Epidemic</span>
+          <span class="label">Alignment</span><span class="value">FOLLOWED</span>
+          <span class="label">Word Count</span><span class="value">~410</span>
+        </div>
+        <p>Team 11 adopted the recommended topic and frames loneliness as a physical health crisis rather than a mental health narrative. The central claim, that loneliness is a "measurable killer", draws on the well-known comparison that loneliness is equivalent to smoking 15 cigarettes a day. Three complementary datasets are identified spanning different geographic and methodological scopes. However, the submission is substantially below expectations for a 4-person team: at 410 words it is the second-shortest in the cohort, contains a copy-paste error, and includes no evidence of having downloaded or explored any of the datasets.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>OECD How's Life? Social Connections: loneliness, social support, interactions, relationship satisfaction (47 countries including Ireland)</li>
+          <li>Meta-Gallup Global State of Social Connections: nationally representative survey data (7 countries: Brazil, Egypt, France, India, Indonesia, Mexico, USA)</li>
+          <li>Our World in Data: social support, one-person households, time spent with others, mortality linkage data (100+ countries, long-run time series)</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>The submission identifies datasets and their key variables but provides no evidence of preliminary analysis. No figures or charts are included. No "aha" insights are presented. No statistics from the actual data are cited. The OECD dataset covers 47 countries with variables including "Feeling lonely", "Lack of social support", and "Time spent in social interactions". The Meta-Gallup dataset provides nationally representative data from 7 countries via the Humanitarian Data Exchange, with variables like general loneliness, social media loneliness, and COVID comparison loneliness. Our World in Data offers cleaned time series covering 100+ countries. The team proposes triangulation across independent methodologies to strengthen credibility, but this remains aspirational at the submission stage. A copy-paste error repeats "We will draw on three complementary datasets" verbatim, suggesting incomplete review before submission.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>No target decision-maker is explicitly identified. This is a significant gap. The topic has inherent policy relevance, but without a named audience, the visualisation lacks focus.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Three complementary datasets spanning different scopes</li>
+          <li>Framing loneliness as physical health crisis is powerful</li>
+          <li>Topic has genuine policy relevance and emotional resonance</li>
+        </ul>
+        <ul class="concern-list">
+          <li>No exploratory analysis, no figures, no data-derived insights</li>
+          <li>Copy-paste error: repeated paragraph</li>
+          <li>No target decision-maker identified</li>
+          <li>Very short (410 words) for a 4-person team</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">5</span><div class="sc-bar-bg"><div class="sc-bar g" style="width:100%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">2.75</div>
+          <span class="big-grade gBm">B-</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Immediately download and explore all three datasets</li>
+            <li>Verify Gallup data access (may require paid licence)</li>
+            <li>Define a specific decision-maker</li>
+            <li>Lead with the mortality comparison: '15 cigarettes a day'</li>
+            <li>Produce at least 3 preliminary visualisations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEAM 12 ==================== -->
+<div class="team-toggle" id="team12">
+  <div class="team-header" onclick="toggle(this)">
+    <div class="team-num">12</div>
+    <div class="team-title">Conflict, Oil, and Economic Shockwaves<div class="team-subtitle">Sameeruddin Syed, Ismail Mohammed, Nishant Singh, Siddhesh A. Chavan &bull; <span class="align aD">Diverged</span></div></div>
+    <div class="team-score">1.70</div>
+    <span class="grade gD">D</span>
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+  </div>
+  <div class="team-body">
+    <div class="divider"></div>
+    <div class="team-content">
+      <div class="writeup">
+        <h3>Overview</h3>
+        <div class="meta-grid">
+          <span class="label">Members</span><span class="value">Sameeruddin Syed (x24257435), Ismail Mohammed (x24225321), Nishant Singh (x24296473), Siddhesh A. Chavan (x24312908)</span>
+          <span class="label">Team Size</span><span class="value">4</span>
+          <span class="label">Recommended</span><span class="value">From Glitches to Global Risk: Mapping the Escalation of AI Incidents</span>
+          <span class="label">Submitted</span><span class="value">Oil, Conflict, and Economic Shockwaves</span>
+          <span class="label">Alignment</span><span class="value">DIVERGED (ignored AI Incidents recommendation entirely)</span>
+          <span class="label">Word Count</span><span class="value">~253</span>
+        </div>
+        <p>Team 12 ignored the recommended AI Incidents topic entirely and reverted to their Idea 1 (Oil, Conflict, and Economic Shockwaves), which the feedback explicitly advised against as being widely explored. The submission is the shortest in the cohort at 253 words and reads as an early-stage outline rather than a completed deliverable. No rationale is provided for departing from the recommendation. The combination of oil prices, conflict, and GDP is the most saturated topic cluster in the cohort, with Teams 01 and 08 also operating in adjacent territory.</p>
+
+        <h3>Datasets</h3>
+        <ul class="ds-list">
+          <li>War Economic Impact Dataset (100,000 rows, 28 columns; source unspecified)</li>
+          <li>Oil Production by Country Dataset (17,992 rows, 4 columns; source unspecified)</li>
+          <li>GDP Growth Dataset (World Bank)</li>
+        </ul>
+
+        <h3>Analytical Approach</h3>
+        <p>Python/pandas analysis is mentioned with basic exploratory steps: inspecting dimensions, reviewing descriptive statistics, checking missing values, and identifying country/year fields for merging. Four "aha" statistics are cited: average GDP change across conflicts of -31.61%, worst observed GDP change of -85.00%, average inflation during conflicts of 69.95%, and maximum inflation of 295.56%. Average reconstruction cost is $689.5 billion. The key hypothesis, that oil-producing countries may experience different economic trajectories during conflicts, has potential but remains untested in the submission. The team plans to integrate all three datasets to compare economic performance across oil-rich and non-oil countries during conflicts, but this integration has not been performed. No figures or visualisations are included. No data quality assessment is provided. The datasets lack URLs, source documentation, and provenance verification.</p>
+
+        <h3>Decision-Maker &amp; Key Message</h3>
+        <p>No target decision-maker is identified. No key message is articulated. The submission lacks the strategic framing needed for the Decision-Maker Influence Challenge.</p>
+
+        <h3>Assessment</h3>
+        <ul class="strength-list">
+          <li>Basic descriptive statistics provided</li>
+          <li>Large dataset (100K rows) could enable analysis if explored</li>
+          <li>Oil-producer vs non-producer hypothesis has potential</li>
+        </ul>
+        <ul class="concern-list">
+          <li>Ignored lecturer recommendation without explanation</li>
+          <li>Shortest submission (253 words): outline, not a deliverable</li>
+          <li>No dataset URLs, no source provenance, no quality assessment</li>
+          <li>No target decision-maker identified</li>
+        </ul>
+      </div>
+      <div class="scorecard-panel">
+        <div class="sc-title">Scorecard</div>
+        <div class="sc-row"><span class="sc-dim">Alignment</span><span class="sc-score">1</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:20%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Dataset Quality</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Analytical Depth</span><span class="sc-score">2</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:40%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Decision-Maker</span><span class="sc-score">1</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:20%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Feasibility</span><span class="sc-score">3</span><div class="sc-bar-bg"><div class="sc-bar a" style="width:60%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Differentiation</span><span class="sc-score">1</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:20%"></div></div></div>
+        <div class="sc-row"><span class="sc-dim">Presentation</span><span class="sc-score">1</span><div class="sc-bar-bg"><div class="sc-bar r" style="width:20%"></div></div></div>
+        <div class="sc-overall">
+          <div class="big-score">1.70</div>
+          <span class="big-grade gD">D</span>
+        </div>
+        <div class="action-items">
+          <div class="act-title">Action Items</div>
+          <ul>
+            <li>Urgent: provide dataset URLs and verify provenance</li>
+            <li>Define a specific decision-maker and key message</li>
+            <li>Perform genuine exploratory analysis with 3+ visualisations</li>
+            <li>Consider returning to AI Incidents as recommended</li>
+            <li>Expand submission to demonstrate engagement with data</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end teams-container -->
+
+<div class="page-footer">
+  9DATAV Data Visualisation Challenge 2026 &bull; Dataset Approval Portal &bull; 23 March 2026
+</div>
+
+<script>
+function toggle(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+// Open from URL hash
+if (location.hash) {
+  const el = document.querySelector(location.hash);
+  if (el && el.classList.contains('team-toggle')) {
+    el.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+}
+</script>
+</body>
+</html>

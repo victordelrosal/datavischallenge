@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #fff;
+  }
+
+  /* Cover */
+  .cover {
+    text-align: center;
+    padding: 80px 40px 60px;
+  }
+  .cover-logo {
+    font-size: 12pt;
+    color: #003366;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+  }
+  .cover h1 {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #003366;
+    margin-bottom: 8px;
+  }
+  .cover h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  .cover-meta {
+    font-size: 10pt;
+    color: #888;
+  }
+  .cover-meta span { margin: 0 12px; }
+  .cover-line {
+    width: 80px;
+    height: 3px;
+    background: #003366;
+    margin: 24px auto;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #003366;
+    border-bottom: 2px solid #003366;
+    padding-bottom: 4px;
+    margin: 24px 0 14px;
+  }
+
+  /* Rankings table */
+  .rankings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin-bottom: 16px;
+  }
+  .rankings-table th {
+    background: #003366;
+    color: #fff;
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 600;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .rankings-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+  }
+  .rankings-table tr:nth-child(even) td {
+    background: #f8f9fa;
+  }
+  .rankings-table .rank { text-align: center; font-weight: 700; color: #003366; width: 5%; }
+  .rankings-table .team-num { text-align: center; width: 6%; }
+  .rankings-table .title-col { width: 34%; }
+  .rankings-table .align-col { width: 10%; text-align: center; }
+  .rankings-table .score-col { width: 8%; text-align: center; font-weight: 600; }
+  .rankings-table .grade-col { width: 6%; text-align: center; }
+  .rankings-table .size-col { width: 6%; text-align: center; }
+
+  /* Grade badges */
+  .grade-badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 3px;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #fff;
+  }
+  .grade-A  { background: #28a745; }
+  .grade-Am { background: #5cb85c; }
+  .grade-Bp { background: #8bc34a; }
+  .grade-B  { background: #ffc107; color: #1a1a1a; }
+  .grade-Bm { background: #ff9800; }
+  .grade-C  { background: #ff5722; }
+  .grade-D  { background: #dc3545; }
+
+  /* Alignment badges (small) */
+  .align-sm {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 7.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .align-FOLLOWED { background: #d4edda; color: #155724; }
+  .align-EVOLVED  { background: #cce5ff; color: #004085; }
+  .align-PIVOTED  { background: #fff3cd; color: #856404; }
+  .align-DIVERGED { background: #f8d7da; color: #721c24; }
+
+  /* Heatmap table */
+  .heatmap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    margin-bottom: 16px;
+  }
+  .heatmap-table th {
+    background: #003366;
+    color: #fff;
+    padding: 5px 4px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 7.5pt;
+  }
+  .heatmap-table th:first-child {
+    text-align: left;
+    padding-left: 8px;
+    width: 8%;
+  }
+  .heatmap-table td {
+    padding: 4px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .heatmap-table td:first-child {
+    text-align: left;
+    padding-left: 8px;
+    font-weight: 700;
+    color: #003366;
+  }
+  .heatmap-table tr:nth-child(even) td { background: #fafafa; }
+
+  .cell-5 { background: #1b5e20 !important; color: #fff; }
+  .cell-4 { background: #66bb6a !important; color: #fff; }
+  .cell-3 { background: #ffc107 !important; color: #1a1a1a; }
+  .cell-2 { background: #ff7043 !important; color: #fff; }
+  .cell-1 { background: #c62828 !important; color: #fff; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    flex: 1;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .stat-number {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #003366;
+  }
+  .stat-label {
+    font-size: 8pt;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Observations */
+  .obs-list {
+    list-style: none;
+    padding: 0;
+  }
+  .obs-list li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+    font-size: 9.5pt;
+  }
+  .obs-list li::before {
+    content: "\25A0";
+    position: absolute;
+    left: 0;
+    color: #003366;
+    font-size: 8pt;
+    top: 7px;
+  }
+
+  /* Verdicts */
+  .verdict-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  .verdict-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  .verdict-table td:first-child {
+    width: 10%;
+    font-weight: 700;
+    color: #003366;
+    text-align: center;
+  }
+  .verdict-table td:nth-child(2) { width: 15%; }
+  .verdict-table tr:nth-child(even) td { background: #f8f9fa; }
+
+  /* Footer */
+  .footer {
+    margin-top: 24px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+    font-size: 8pt;
+    color: #888;
+    text-align: center;
+  }
+
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover">
+  <div class="cover-logo">NCI &bull; 9DATAV</div>
+  <h1>Dataset Approval Evaluation</h1>
+  <h2>Data Visualisation Challenge 2026</h2>
+  <div class="cover-line"></div>
+  <div class="cover-meta">
+    <span>{{ meta.milestone_date }}</span>
+    <span>&bull;</span>
+    <span>12 Teams &bull; 43 Students</span>
+    <span>&bull;</span>
+    <span>Evaluator: {{ meta.evaluator }}</span>
+  </div>
+</div>
+
+<!-- Page 2: Rankings + Stats -->
+<div class="page-break"></div>
+
+<div class="section-title">Cohort Statistics</div>
+<div class="stats-grid">
+  <div class="stat-box">
+    <div class="stat-number">{{ '%.2f' % stats.mean }}</div>
+    <div class="stat-label">Mean Score</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number">{{ '%.2f' % stats.median }}</div>
+    <div class="stat-label">Median Score</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number">{{ '%.2f' % stats.highest }}</div>
+    <div class="stat-label">Highest</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number">{{ '%.2f' % stats.lowest }}</div>
+    <div class="stat-label">Lowest</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-number">{{ stats.followed }}/12</div>
+    <div class="stat-label">Followed Rec.</div>
+  </div>
+</div>
+
+<div class="section-title">Ranked Overview</div>
+<table class="rankings-table">
+  <tr>
+    <th class="rank">#</th>
+    <th class="team-num">Team</th>
+    <th class="title-col">Title</th>
+    <th class="align-col">Alignment</th>
+    <th class="size-col">Size</th>
+    <th class="score-col">Score</th>
+    <th class="grade-col">Grade</th>
+  </tr>
+  {% for t in ranked_teams %}
+  <tr>
+    <td class="rank">{{ loop.index }}</td>
+    <td class="team-num">{{ '%02d' % t.number }}</td>
+    <td class="title-col">{{ t.title }}</td>
+    <td class="align-col"><span class="align-sm align-{{ t.alignment }}">{{ t.alignment }}</span></td>
+    <td class="size-col">{{ t.members|length }}</td>
+    <td class="score-col">{{ '%.2f' % t.weighted_score }}</td>
+    <td class="grade-col"><span class="grade-badge grade-{{ t.grade_class }}">{{ t.grade }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- Page 3: Heatmap -->
+<div class="page-break"></div>
+
+<div class="section-title">Dimension Heatmap</div>
+<table class="heatmap-table">
+  <tr>
+    <th>Team</th>
+    {% for dim in dimensions %}
+    <th>{{ dim.short_name }}</th>
+    {% endfor %}
+    <th>Overall</th>
+  </tr>
+  {% for t in ranked_teams %}
+  <tr>
+    <td>{{ '%02d' % t.number }}</td>
+    {% for dim in dimensions %}
+    {% set s = t.scores[dim.id] %}
+    <td class="cell-{{ s }}">{{ s }}</td>
+    {% endfor %}
+    <td><strong>{{ '%.1f' % t.weighted_score }}</strong></td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div class="section-title">Notable Observations</div>
+<ul class="obs-list">
+  {% for obs in observations %}
+  <li>{{ obs }}</li>
+  {% endfor %}
+</ul>
+
+<!-- Page 4: Verdicts -->
+<div class="page-break"></div>
+
+<div class="section-title">Per-Team Verdicts</div>
+<table class="verdict-table">
+  {% for t in ranked_teams %}
+  <tr>
+    <td>
+      <span class="grade-badge grade-{{ t.grade_class }}">{{ t.grade }}</span>
+      <br>Team {{ '%02d' % t.number }}
+    </td>
+    <td><strong>{{ t.title }}</strong></td>
+    <td>{{ t.verdict }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div class="footer">
+  9DATAV Data Visualisation Challenge 2026 &bull; Dataset Approval Summary &bull; {{ meta.generated }} &bull; {{ meta.evaluator }}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Plan: Dataset Approval Cohort Review</title>
+<style>
+  :root {
+    --brand: #003366;
+    --brand-light: #eef4fa;
+    --brand-mid: #336699;
+    --must: #059669;
+    --must-bg: #d1fae5;
+    --enrichment: #d97706;
+    --enrichment-bg: #fef3c7;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --white: #ffffff;
+    --bg: #f8f9fb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; font-size: 15px; }
+
+  .site-header { background: var(--brand); color: white; padding: 2.5rem 2rem 2rem; }
+  .site-header .kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.4rem; }
+  .site-header h1 { font-size: 1.9rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.4rem; }
+  .site-header .subtitle { font-size: 1rem; opacity: 0.8; }
+  .site-header .meta { margin-top: 1.2rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .meta-pill { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 0.25rem 0.8rem; font-size: 0.8rem; font-weight: 600; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .context-box { background: var(--brand-light); border-radius: 10px; border: 1px solid var(--brand-mid); padding: 1.2rem 1.5rem; margin-bottom: 2rem; }
+  .context-box h3 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand); margin-bottom: 0.8rem; }
+  .context-box ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+  .context-box li { font-size: 0.88rem; display: flex; gap: 0.5rem; align-items: baseline; }
+  .context-box li::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); flex-shrink: 0; margin-top: 0.35rem; }
+
+  .activity { border-radius: 10px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 1rem; }
+  .activity-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1.1rem; }
+  .activity-header.must { background: var(--must-bg); }
+  .activity-header.enrichment { background: var(--enrichment-bg); }
+  .badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.25rem 0.6rem; border-radius: 20px; color: white; }
+  .badge.must { background: var(--must); }
+  .badge.enrichment { background: var(--enrichment); }
+  .activity-header h3 { font-size: 0.95rem; font-weight: 700; flex: 1; }
+  .time-pill { font-size: 0.72rem; font-weight: 700; color: var(--muted); background: white; border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+  .activity-body { padding: 1.1rem 1.2rem; font-size: 0.88rem; }
+  .activity-body p { margin-bottom: 0.5rem; }
+  .activity-body ul, .activity-body ol { padding-left: 1.4rem; margin: 0.3rem 0 0.5rem; }
+  .activity-body li { margin-bottom: 0.3rem; }
+  .activity-body .note { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 0.6rem 0.8rem; border-radius: 0 6px 6px 0; font-size: 0.82rem; color: #78350f; margin-top: 0.4rem; }
+
+  .takeaways { background: var(--bg); border-radius: 10px; border: 1px solid var(--border); padding: 1.1rem 1.3rem; margin-top: 1.5rem; }
+  .takeaways h4 { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.7rem; }
+  .takeaways ol { padding-left: 1.4rem; font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.3rem; }
+
+  .week-header { border-radius: 12px 12px 0 0; padding: 1.4rem 1.8rem 1.2rem; color: white; background: var(--brand); }
+  .week-header .wnum { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.7; margin-bottom: 0.3rem; }
+  .week-header h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .week-header .date-theme { font-size: 0.85rem; opacity: 0.85; }
+  .week-body { background: white; border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px; padding: 1.8rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0; }
+  th { background: var(--bg); text-align: left; padding: 0.5rem 0.8rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 2px solid var(--border); }
+  td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+
+  .site-footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); background: white; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="kicker">9DATAV Data Visualisation Challenge 2026</div>
+  <h1>Dataset Approval: Cohort Review</h1>
+  <div class="subtitle">Lesson plan for the in-class feedback session on dataset submissions</div>
+  <div class="meta">
+    <span class="meta-pill">20-25 minutes</span>
+    <span class="meta-pill">Milestone 2 of 4</span>
+    <span class="meta-pill">12 teams / 43 students</span>
+    <span class="meta-pill">Slides: dataset-approval-slides.html</span>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="context-box">
+  <h3>Session Context</h3>
+  <ul>
+    <li>This is the second milestone of four. Teams submitted brainstorm documents (Milestone 1), received SWOT feedback with a recommended idea, and have now submitted their dataset choice with rationale.</li>
+    <li>The session is not about individual team scores. It is about showing the cohort what separates strong submissions from weak ones, using anonymised patterns and named exemplars.</li>
+    <li>Every team receives a personalised PDF evaluation report separately. This session provides the cohort-level view.</li>
+    <li>The next milestone is the Prototype Sprint (due Mon 31 Mar). This session should set teams up with clear priorities.</li>
+  </ul>
+</div>
+
+<div class="week-header">
+  <div class="wnum">Lesson Plan</div>
+  <h2>Dataset Approval: What the Cohort Taught Us</h2>
+  <div class="date-theme">Target duration: 22 minutes + 3 min Q&amp;A</div>
+</div>
+<div class="week-body">
+
+<!-- Activity 1 -->
+<div class="activity">
+  <div class="activity-header must">
+    <span class="badge must">Core</span>
+    <h3>1. Where We Are</h3>
+    <span class="time-pill">2 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Challenge timeline with Milestone 2 highlighted.</p>
+    <p>Briefly frame the session. We are at Dataset Approval, the second of four milestones. Every team has submitted. Today we look at cohort-level patterns: what worked, what didn't, and what to prioritise for the prototype sprint.</p>
+    <p><strong>Key line:</strong> "Your individual reports are in your inbox. This session is about what we can learn from each other."</p>
+  </div>
+</div>
+
+<!-- Activity 2 -->
+<div class="activity">
+  <div class="activity-header must">
+    <span class="badge must">Core</span>
+    <h3>2. The Cohort Snapshot</h3>
+    <span class="time-pill">3 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Five stat cards (mean 3.85, median 4.05, highest 4.90, lowest 1.70, 10/12 followed recommendation).</p>
+    <p><strong>Slide:</strong> Heatmap table showing all 12 teams ranked by score with colour-coded dimension cells.</p>
+    <p>Walk through the high-level numbers. 10 of 12 teams followed the recommendation. The median is above 4.0, which means most teams did solid work. But the range from 4.90 to 1.70 tells a story about effort and engagement. Point out the colour bands: green columns (Dataset Quality, Analytical Depth) are strong across the board; amber-to-red columns (Decision-Maker, Differentiation) are where most teams have room to grow.</p>
+    <p class="note"><strong>Do not dwell on individual team scores.</strong> The heatmap is for pattern recognition, not ranking.</p>
+  </div>
+</div>
+
+<!-- Activity 3 -->
+<div class="activity">
+  <div class="activity-header must">
+    <span class="badge must">Core</span>
+    <h3>3. Three Things the Best Submissions Did</h3>
+    <span class="time-pill">5 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Three patterns with named exemplars.</p>
+    <p>This is the core teaching moment. Three patterns separated the top submissions from the rest:</p>
+    <ol>
+      <li><strong>They named a specific person.</strong> Not "policymakers" but "the Director of Road Safety Strategy at the RSA." When you name a person, every design decision has a filter: would this person care? Would they act on this? (Team 09)</li>
+      <li><strong>They showed the data, not just the topic.</strong> The best submissions cited specific numbers from their datasets: "$229 to $458.7 per tonne in 60 days" or "r = -0.76 correlation." This proves you have opened the data and found something. (Teams 10, 06)</li>
+      <li><strong>They found the counter-intuitive insight.</strong> "Ireland's road deaths are rising while the EU's are falling." "The most flood-vulnerable communities are the ones without flood relief schemes." The front page of a newspaper prints what surprises, not what confirms. (Teams 09, 06)</li>
+    </ol>
+    <p><strong>Key line:</strong> "If your submission said 'we will analyse this dataset,' you described an intention. The top submissions described a finding."</p>
+  </div>
+</div>
+
+<!-- Activity 4 -->
+<div class="activity">
+  <div class="activity-header must">
+    <span class="badge must">Core</span>
+    <h3>4. Three Gaps That Cost Marks</h3>
+    <span class="time-pill">5 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Three gaps with anonymised examples.</p>
+    <ol>
+      <li><strong>No evidence of data exploration.</strong> Some submissions named datasets but showed no statistics, no charts, no evidence of having opened the files. The difference between "we plan to analyse" and "we analysed and found X" is the difference between a B- and an A.</li>
+      <li><strong>No decision-maker.</strong> This is a Decision-Maker Influence Challenge. If your submission does not name who would act on your visualisation, it has no focus. "Policymakers" is not specific enough. Name a role, an office, a person.</li>
+      <li><strong>Submission length as a proxy for effort.</strong> The strongest submissions were 1,200-1,500 words with figures. The weakest were 250-400 words with no figures. For a team of 3-4 people working over a week, 253 words signals a problem. This is not about padding; it is about demonstrating genuine engagement with the data.</li>
+    </ol>
+    <p class="note"><strong>Tone check:</strong> Frame this as "here is what to fix" rather than "here is what you did wrong." Every team can recover; the prototype sprint is the real test.</p>
+  </div>
+</div>
+
+<!-- Activity 5 -->
+<div class="activity">
+  <div class="activity-header enrichment">
+    <span class="badge enrichment">Enrichment</span>
+    <h3>5. Same Topic, Different Angle</h3>
+    <span class="time-pill">3 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Side-by-side comparison of Teams 03 and 07 (Hospital Waiting Lists).</p>
+    <p>Two teams chose hospital waiting lists. This is a natural experiment in differentiation:</p>
+    <ul>
+      <li><strong>Team 03:</strong> "Which specialties create the most system-wide backlog?" Bottleneck mechanics. 9 KPIs. Three-act narrative structure.</li>
+      <li><strong>Team 07:</strong> "Where is the EUR 420M not going?" Budget accountability. Pareto analysis. Money-follows-the-problem framing.</li>
+    </ul>
+    <p>Same dataset (NTPF), completely different stories. This is what differentiation looks like. The lesson: the topic does not determine the story; the angle does.</p>
+  </div>
+</div>
+
+<!-- Activity 6 -->
+<div class="activity">
+  <div class="activity-header enrichment">
+    <span class="badge enrichment">Enrichment</span>
+    <h3>6. Evolution Done Right</h3>
+    <span class="time-pill">2 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Team 10 before/after comparison.</p>
+    <p>Team 10 was recommended "Global Food Prices." Their brainstorm was generic: vague framing, no specific decision-maker. Their dataset submission narrowed to one commodity (wheat), one shock (Ukraine invasion), and one set of victims (six MENA countries with &gt;50% import dependency). The finding: a 156-percentage-point inflation gap between high-dependency and low-dependency countries. This is a masterclass in scope sharpening.</p>
+    <p><strong>Key line:</strong> "Narrowing your scope does not make your story smaller. It makes it sharper."</p>
+  </div>
+</div>
+
+<!-- Activity 7 -->
+<div class="activity">
+  <div class="activity-header must">
+    <span class="badge must">Core</span>
+    <h3>7. What's Next: The Prototype Sprint</h3>
+    <span class="time-pill">3 min</span>
+  </div>
+  <div class="activity-body">
+    <p><strong>Slide:</strong> Three priorities for the next milestone.</p>
+    <p>The next milestone is the Prototype Sprint (Mon 31 Mar). You have 8 days. Three priorities:</p>
+    <ol>
+      <li><strong>Build one killer chart.</strong> Not five mediocre ones. One visualisation that would make a decision-maker stop scrolling. This is your front page.</li>
+      <li><strong>Write the headline first.</strong> Before you open Tableau or Python, write the one-sentence headline your visualisation proves. If you cannot write it, you do not have a story yet.</li>
+      <li><strong>Show the data, not the plan.</strong> Your prototype should contain real data, real numbers, real insights. Not mockups, not placeholders, not "we plan to."</li>
+    </ol>
+    <p class="note"><strong>Reminder:</strong> Check your individual PDF report for specific action items tailored to your team.</p>
+  </div>
+</div>
+
+<!-- Activity 8 -->
+<div class="activity">
+  <div class="activity-header enrichment">
+    <span class="badge enrichment">Enrichment</span>
+    <h3>8. Questions</h3>
+    <span class="time-pill">2-3 min</span>
+  </div>
+  <div class="activity-body">
+    <p>Open the floor. Likely questions: "Can we change our topic?" (discouraged but not forbidden), "How should we differentiate from the other waiting-list team?" (angle, not topic), "Is our score final?" (no, this is formative, not summative).</p>
+  </div>
+</div>
+
+</div><!-- end week-body -->
+
+<div class="takeaways">
+  <h4>Key Takeaways for Students</h4>
+  <ol>
+    <li>Name a specific decision-maker. Not "policymakers." A role, an office, a person.</li>
+    <li>Show the data, not the plan. Cite numbers from your dataset, not intentions.</li>
+    <li>Find the counter-intuitive insight. The front page prints what surprises.</li>
+    <li>The prototype sprint is 8 days. Build one killer chart. Write the headline first.</li>
+  </ol>
+</div>
+
+<table style="margin-top: 2rem;">
+  <thead>
+    <tr><th>Segment</th><th>Duration</th><th>Slides</th><th>Type</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1. Where We Are</td><td>2 min</td><td>1-2</td><td>Framing</td></tr>
+    <tr><td>2. Cohort Snapshot</td><td>3 min</td><td>3-4</td><td>Data</td></tr>
+    <tr><td>3. Three Things the Best Did</td><td>5 min</td><td>5-7</td><td>Teaching</td></tr>
+    <tr><td>4. Three Gaps That Cost Marks</td><td>5 min</td><td>8-10</td><td>Teaching</td></tr>
+    <tr><td>5. Same Topic, Different Angle</td><td>3 min</td><td>11</td><td>Case study</td></tr>
+    <tr><td>6. Evolution Done Right</td><td>2 min</td><td>12</td><td>Exemplar</td></tr>
+    <tr><td>7. Prototype Sprint</td><td>3 min</td><td>13-14</td><td>Action</td></tr>
+    <tr><td>8. Questions</td><td>2-3 min</td><td>15</td><td>Q&amp;A</td></tr>
+    <tr><td colspan="4" style="text-align:right; font-weight: 700;">Total: ~22-25 min</td></tr>
+  </tbody>
+</table>
+
+</div>
+
+<div class="site-footer">
+  9DATAV Data Visualisation Challenge 2026 &bull; Lesson Plan &bull; Dataset Approval Cohort Review
+</div>
+</body>
+</html>
